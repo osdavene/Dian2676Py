@@ -29,6 +29,7 @@ from app.ai_service import (
     extract_text_from_uploaded_file,
     add_custom_document_to_kb,
     load_knowledge_chunks,
+    summarize_long_question_with_ai,
 )
 
 router = APIRouter()
@@ -604,3 +605,44 @@ async def admin_audit_question(
 
     audit_result = audit_and_improve_question_with_ai(question)
     return JSONResponse({"success": True, "audit": audit_result})
+
+
+@router.post("/admin/ia/resumir-preguntas-largas")
+async def admin_summarize_long_questions(
+    request: Request,
+    db: Session = Depends(get_db),
+):
+    user = get_current_user(request, db)
+    if not user or not user.is_admin():
+        return JSONResponse({"success": False, "message": "No autorizado."}, status_code=403)
+
+    data = await _parse_json_or_form(request)
+    max_batch = min(int(data.get("limit") or 20), 100)
+
+    all_active = db.query(Question).filter(Question.is_active.is_(True)).all()
+    long_qs = [
+        q
+        for q in all_active
+        if len((q.case_text or "") + " " + (q.stem or "")) > 900
+        or (not q.case_text and len(q.stem or "") > 450)
+    ]
+
+    processed = 0
+    for q in long_qs[:max_batch]:
+        res = summarize_long_question_with_ai(q)
+        if res.get("case_text") and res.get("stem"):
+            q.case_text = res["case_text"]
+            q.stem = res["stem"]
+            processed += 1
+
+    db.commit()
+    remaining = max(0, len(long_qs) - processed)
+    return JSONResponse(
+        {
+            "success": True,
+            "processed": processed,
+            "remaining": remaining,
+            "message": f"Se resumieron y separaron {processed} preguntas largas exitosamente ({remaining} restantes).",
+        }
+    )
+

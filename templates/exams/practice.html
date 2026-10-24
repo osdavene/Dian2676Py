@@ -109,6 +109,14 @@
                             Base Legal: <span>{{ q.legal_basis }}</span>
                         </div>
                     {% endif %}
+                    <div class="pt-2 flex justify-end">
+                        <button type="button"
+                                onclick="window.openAiTutorModal({{ q.id }}, answeredPractice[{{ idx + 1 }}] || '', null)"
+                                class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white text-xs font-bold shadow-lg shadow-indigo-600/30 transition-all flex items-center gap-2">
+                            <i class="fa-solid fa-wand-magic-sparkles text-amber-300"></i>
+                            <span>Consultar al Tutor Jurídico IA</span>
+                        </button>
+                    </div>
                 </div>
 
                 {# Navegación #}

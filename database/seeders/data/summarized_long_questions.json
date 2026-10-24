@@ -1,0 +1,527 @@
+{
+  "57": {
+    "case_text": "Durante una capacitación sobre prevención de lavado de activos, un funcionario expone un caso donde una red criminal fragmentó recursos del exterior en múltiples giros con datos falsos. El objetivo es que los gremios comprendan las diferencias conceptuales entre las alertas tempranas y los esquemas históricos para diseñar políticas y formular hipótesis preventivas.",
+    "stem": "Para diferenciar los conceptos analizados en la capacitación, el funcionario aclara que mientras las señales de alerta diagnostican hechos inusuales específicos, las tipologías funcionan como",
+    "source": "gemini"
+  },
+  "359": {
+    "case_text": "Un servidor público es designado para actualizar la estrategia de gestión documental de una entidad estatal. Al iniciar, advierte la ausencia de información sobre el volumen de documentos físicos y electrónicos acumulados, así como sobre las condiciones de infraestructura de los archivos, requiriéndosele proponer lineamientos estratégicos desde la alta dirección para cumplir la política archivística.",
+    "stem": "De acuerdo con la normatividad archivística vigente, ¿qué acción inicial debe realizar el funcionario para planear adecuadamente la gestión documental?",
+    "source": "gemini"
+  },
+  "360": {
+    "case_text": "Un servidor público coordina la actualización de la estrategia de gestión documental en una entidad estatal. Al iniciar, identifica la falta de información sobre volúmenes documentales y condiciones de infraestructura, y recibe la solicitud de proponer un lineamiento estratégico desde la alta dirección para asegurar el cumplimiento normativo en todas las sedes.",
+    "stem": "De acuerdo con la situación descrita y la normativa de archivos, al proponer el lineamiento estratégico desde la alta dirección, ¿qué debe gestionar el funcionario?",
+    "source": "gemini"
+  },
+  "58": {
+    "case_text": "Durante una capacitación sobre tácticas de fraccionamiento criminal, un servidor público expone ante agremiaciones económicas cómo una red trasladó recursos desde el exterior dividiendo el dinero en pequeños montos remitidos a múltiples beneficiarios que cobraron con información falsa. El propósito es facilitar el diseño de políticas institucionales y la formulación de hipótesis preventivas en sus sectores.",
+    "stem": "En el desarrollo del análisis práctico sobre la modalidad de fraccionamiento, el servidor menciona que la utilización de múltiples beneficiarios para canalizar estas transacciones a menudo involucra a individuos denominados:",
+    "source": "gemini"
+  },
+  "49": {
+    "case_text": "Un funcionario que ejerce labores de inspección en una entidad pública analiza el caso de una empresa que realiza transacciones financieras inusuales para ocultar el origen de sus fondos mediante transferencias rápidas. El servidor debe comprender los impactos de esta economía criminal en una mesa de trabajo interinstitucional enfocada en la prevención de delitos económicos.",
+    "stem": "Para comprender el contexto de la economía criminal y sus efectos perjudiciales sobre el Estado, el funcionario debe considerar que estas prácticas ilícitas generan principalmente",
+    "source": "gemini"
+  },
+  "47": {
+    "case_text": "Un funcionario de inspección recibe un informe sobre una empresa que realiza transacciones financieras inusuales. Los recursos son depositados y transferidos rápidamente entre múltiples cuentas e instituciones para ocultar su rastro y el verdadero origen de los fondos, en el marco de una estrategia interinstitucional de prevención de delitos económicos.",
+    "stem": "Frente a la etapa delictiva descrita donde los fondos se transfieren entre instituciones para disimular su fuente, el funcionario identifica que esto corresponde a",
+    "source": "gemini"
+  },
+  "362": {
+    "case_text": "Un servidor público gestiona trámites administrativos que generan simultáneamente documentos físicos originales y formatos electrónicos. Al finalizar las actuaciones, debe garantizar que el conjunto documental conserve su integridad probatoria, secuencia lógica, datos descriptivos actualizados e inalterabilidad en el ciclo vital dentro de la plataforma tecnológica.",
+    "stem": "Para gestionar adecuadamente las actuaciones que generan documentos en soportes físicos y electrónicos simultáneamente, el servidor público debe garantizar que",
+    "source": "gemini"
+  },
+  "364": {
+    "case_text": "En una entidad pública, un funcionario del área de gestión documental administra trámites que generan documentos físicos y electrónicos simultáneamente. Al finalizar las actuaciones, el sistema exige garantizar la integridad probatoria, la secuencia lógica, la actualización de datos descriptivos y la inalterabilidad de los archivos digitales durante todo su ciclo vital dentro de la plataforma tecnológica.",
+    "stem": "De acuerdo con el procedimiento para la gestión de documentos electrónicos, al finalizar la actuación administrativa, el funcionario autorizado debe:",
+    "source": "gemini"
+  },
+  "363": {
+    "case_text": "En una entidad pública se implementa un sistema para gestionar trámites administrativos que combinan documentos físicos y electrónicos. Un servidor público debe garantizar la integridad probatoria, la secuencia lógica y los metadatos actualizados de los expedientes, asegurando el cierre definitivo de los trámites para impedir modificaciones posteriores y preservar su inalterabilidad conforme al marco normativo archivístico vigente.",
+    "stem": "Para mantener el control y la secuencia lógica de los documentos electrónicos de archivo dentro del sistema de gestión, ¿qué acción debe realizar el servidor público?",
+    "source": "gemini"
+  },
+  "365": {
+    "case_text": "Un servidor público es designado para organizar un depósito con cajas de documentos antiguos producidos en periodos sin instrumentos archivísticos. Además, atiende una reestructuración de dependencias y debe gestionar expedientes de apoyo y misionales que cumplieron su tiempo de retención, requiriendo definir la intervención del fondo acumulado y el procedimiento para la disposición final de la información.",
+    "stem": "De acuerdo con la normatividad archivística, frente a la documentación antigua dispuesta sin organización ni instrumentos previos, ¿qué metodología debe aplicar el funcionario?",
+    "source": "gemini"
+  },
+  "366": {
+    "case_text": "Un servidor público revisa un depósito con documentos antiguos sin instrumentos archivísticos y expedientes mixtos que cumplieron su retención. Paralelamente, una reestructuración institucional fusionó dos dependencias con funciones distintas, alterando la producción documental de la entidad.",
+    "stem": "Debido a la fusión de las dos dependencias y la modificación de la estructura orgánica en las oficinas actuales, el servidor debe propender por:",
+    "source": "gemini"
+  },
+  "367": {
+    "case_text": "Un servidor público revisa un depósito con documentos antiguos sin instrumentos archivísticos y expedientes de oficinas fusionadas. Verifica que algunos documentos de apoyo perdieron utilidad y otros misionales cumplieron su tiempo de retención. Debe determinar cómo intervenir el fondo acumulado, actualizar los instrumentos archivísticos y aplicar el procedimiento para la disposición final de la información.",
+    "stem": "Para proceder con la destrucción de los documentos misionales que han cumplido su tiempo de retención, ¿qué requisito normativo debe asegurar el funcionario?",
+    "source": "gemini"
+  },
+  "361": {
+    "case_text": "Un servidor público coordina la actualización de la estrategia de gestión documental y detecta que la entidad carece de información sobre la cantidad de documentos acumulados y las condiciones de infraestructura de los archivos. Ante la solicitud de proponer lineamientos estratégicos desde la alta dirección para cumplir la política archivística, debe definir los pasos iniciales y técnicos para organizar la administración de archivos y asegurar la custodia adecuada en todas las sedes según la normatividad.",
+    "stem": "Para la adecuación física de las áreas destinadas a la custodia y almacenamiento identificadas en la entidad, el servidor debe asegurar:",
+    "source": "gemini"
+  },
+  "369": {
+    "case_text": "Un servidor público administra un repositorio digital histórico y custodia acervos físicos declarados bienes de interés cultural, además de expedientes sobre derechos humanos. La entidad ha recibido una solicitud de préstamo internacional para una exposición de dichos bienes culturales, por lo que el funcionario debe gestionar adecuadamente su salida temporal del país conforme a la normativa archivística y cultural vigente.",
+    "stem": "Respecto a la solicitud internacional del acervo físico declarado bien de interés cultural, el servidor público debe tener en cuenta que la salida del país:",
+    "source": "gemini"
+  },
+  "370": {
+    "case_text": "Un servidor público administra un repositorio digital con expedientes históricos y custodia acervos físicos declarados bienes de interés cultural, incluyendo documentos sobre presuntas violaciones a derechos humanos ocurridas décadas atrás. El funcionario debe aplicar estrategias tecnológicas de preservación digital, gestionar préstamos internacionales de bienes culturales y garantizar medidas estrictas para la conformación y el acceso a los expedientes relacionados con vulneraciones a los derechos fundamentales.",
+    "stem": "Para la protección de los expedientes físicos que documentan presuntas violaciones a derechos humanos, el funcionario debe garantizar como medida principal:",
+    "source": "gemini"
+  },
+  "368": {
+    "case_text": "Un servidor público administra un repositorio digital con expedientes históricos y recibe alertas sobre la inminente obsolescencia de los formatos de archivo. Ante este riesgo, debe implementar medidas técnicas adecuadas para garantizar la preservación y lectura a largo plazo de la documentación digital alojada en la institución.",
+    "stem": "De acuerdo con el plan de preservación digital, ¿qué estrategias tecnológicas debe emplear el funcionario para mitigar la obsolescencia de los formatos?",
+    "source": "gemini"
+  },
+  "371": {
+    "case_text": "Un servidor público lidera un equipo para mejorar los flujos de comunicación con organismos de investigación judicial. El diagnóstico revela que las entidades operan de manera desarticulada, con políticas individuales e indicadores aislados. Se le encomienda proponer lineamientos para una actuación sincronizada en la prevención, detección y judicialización, fortaleciendo la comisión interinstitucional y promoviendo un análisis conjunto de inteligencia económica para desarticular redes delincuenciales.",
+    "stem": "De acuerdo con la situación planteada, ¿cuál es la acción prioritaria que debe plantear el servidor público para solucionar la desarticulación institucional?",
+    "source": "gemini"
+  },
+  "372": {
+    "case_text": "En una entidad nacional, un servidor público lidera un equipo para mejorar la comunicación con organismos de investigación judicial. Detecta que las entidades operan de manera desarticulada, con políticas individuales e indicadores aislados. Debe proponer lineamientos para una actuación sincronizada en prevención y judicialización, fortaleciendo la comisión interinstitucional y promoviendo el análisis conjunto de inteligencia económica contra redes delincuenciales.",
+    "stem": "Con el objetivo de elevar el nivel de la política pública y asegurar la participación intersectorial frente al riesgo de corrupción, ¿qué recomendación debe formular el funcionario?",
+    "source": "gemini"
+  },
+  "375": {
+    "case_text": "Un servidor público evalúa los riesgos en empresas de carga terrestre y detecta rezagos preventivos y recursos tecnológicos insuficientes para monitorear operaciones ilícitas. Ante esto, debe estructurar un plan de acción para dotar a la entidad de mejores herramientas de supervisión que fortalezcan los sistemas internos y garanticen el reporte de operaciones sospechosas.",
+    "stem": "Para centralizar los datos y facilitar la labor de inteligencia en el sector, ¿qué medida debe promover el funcionario?",
+    "source": "gemini"
+  },
+  "376": {
+    "case_text": "Un servidor público de una entidad de control del sector transporte evalúa los altos niveles de riesgo en empresas de carga y detecta recursos tecnológicos insuficientes para un monitoreo constante de operaciones sospechosas. Ante la limitación operativa para supervisar eficazmente a los vigilados, se requiere estructurar un plan de acción para fortalecer los sistemas de prevención y supervisión institucional.",
+    "stem": "De acuerdo con la situación expuesta y las funciones de inspección y vigilancia, ¿qué acción institucional procede recomendar para superar las limitaciones operativas?",
+    "source": "gemini"
+  },
+  "373": {
+    "case_text": "Un funcionario público lidera un equipo técnico para mejorar los flujos de comunicación con organismos de investigación judicial. Durante el diagnóstico, identifica que las entidades operan de manera desarticulada, midiendo su gestión con indicadores aislados. Se le encomienda proponer lineamientos para una actuación sincronizada y un análisis conjunto de la información de inteligencia económica que contribuya a la desarticulación financiera de redes delincuenciales.",
+    "stem": "Para lograr que los resultados de cada entidad aporten al sistema integral de forma coordinada, el funcionario estructurará un modelo operativo que garantice:",
+    "source": "gemini"
+  },
+  "378": {
+    "case_text": "Un servidor público de una dirección jurídica analiza vacíos regulatorios frente a las recomendaciones internacionales de protección económica. Identifica falta de información sistematizada sobre personas políticamente expuestas, como contratistas e interventores, además de debilidades en sanciones y delitos fiscales. El funcionario debe formular un documento técnico para promover ajustes normativos que cumplan los estándares internacionales y fortalezcan las investigaciones.",
+    "stem": "Frente a la vulnerabilidad detectada en la identificación de individuos con influencia en el sector público, ¿qué medida prioritaria debe plantear el documento técnico?",
+    "source": "gemini"
+  },
+  "379": {
+    "case_text": "Un servidor público de una dirección jurídica estatal identifica vacíos regulatorios en la protección del sistema económico, específicamente en la supervisión de entidades sin ánimo de lucro y personas políticamente expuestas. Asimismo, detecta ineficiencias en la celeridad de los procesos de extinción de dominio y debilidades en la tipificación de delitos fiscales. Ante este panorama, el funcionario debe formular un documento técnico que proponga ajustes normativos y herramientas tecnológicas para fortalecer la investigación y el seguimiento de los activos ilícitos.",
+    "stem": "Para mejorar el seguimiento de los procesos judiciales sobre el patrimonio de origen ilícito, ¿qué medida debe recomendar el funcionario?",
+    "source": "gemini"
+  },
+  "377": {
+    "case_text": "Un servidor público de una dirección jurídica identifica vacíos regulatorios en la normativa interna frente a entidades sin ánimo de lucro, la gestión de personas políticamente expuestas y la celeridad en procesos de extinción de dominio. Ante la necesidad de fortalecer la prevención de delitos fiscales y patrimoniales conforme a estándares internacionales, el funcionario debe formular un documento técnico que proponga ajustes normativos para dotar a los cuerpos investigativos de herramientas efectivas y cumplir con las recomendaciones globales vigentes.",
+    "stem": "Para alinear la legislación interna con las exigencias internacionales respecto a la prevención del delito fiscal y patrimonial, ¿qué acción debe proponer el servidor público?",
+    "source": "gemini"
+  },
+  "395": {
+    "case_text": "La entidad detectó filtraciones de agua y falta de señalización en el archivo central, lo que exige activar el programa de prevención de emergencias y atención de desastres. Como responsable de la custodia documental, usted debe mitigar los riesgos sobre el acervo mediante la actualización de inventarios, la priorización de la documentación misional y la implementación de protocolos de seguridad industrial para proteger los soportes afectados por la humedad.",
+    "stem": "Al priorizar la documentación para responder ante una posible inundación, ¿qué elementos debe identificar plenamente en la actualización de los inventarios?",
+    "source": "gemini"
+  },
+  "396": {
+    "case_text": "La entidad detectó filtraciones de agua en el archivo central, poniendo en riesgo la integridad del acervo documental. Como responsable de la custodia, usted debe activar el programa de prevención de emergencias y atención de desastres. Ante la afectación por humedad en los soportes físicos, es necesario implementar medidas técnicas inmediatas de conservación preventiva para mitigar los daños y asegurar la estabilidad de la documentación misional bajo los lineamientos del Archivo General de la Nación.",
+    "stem": "De acuerdo con los protocolos de primeros auxilios documentales ante afectaciones por humedad, ¿qué acción debe ejecutar el funcionario?",
+    "source": "gemini"
+  },
+  "382": {
+    "case_text": "Una servidora pública coordina un comité de fortalecimiento institucional y ética. Identifica que la alta rotación en entes de control afecta la detección de delitos complejos y que la escasa participación ciudadana deriva del desconocimiento sobre los efectos nocivos de los capitales ilícitos en la economía. Su objetivo es implementar programas de formación y estrategias de sensibilización sostenibles que involucren a diversos sectores sociales para mejorar la administración de alertas y la prevención de riesgos.",
+    "stem": "Al buscar aliados estratégicos para la sensibilización sobre la adecuada administración de alertas, ¿cuál debe ser la acción principal de la servidora?",
+    "source": "gemini"
+  },
+  "374": {
+    "case_text": "Un servidor público de una entidad de vigilancia en el sector transporte identifica que las empresas de carga terrestre carecen de medidas preventivas robustas y de herramientas tecnológicas para monitorear la integración de recursos ilícitos. Ante la insuficiencia de alertas tempranas y la necesidad de fortalecer la supervisión, el funcionario debe estructurar un plan de acción que garantice el reporte efectivo de operaciones sospechosas y el fortalecimiento de los sistemas de prevención interna en dichas organizaciones.",
+    "stem": "De acuerdo con el enfoque basado en riesgo y la normativa aplicable, ¿qué directriz debe estructurar el servidor público para fortalecer el esquema de supervisión?",
+    "source": "gemini"
+  },
+  "398": {
+    "case_text": "Como responsable de la conservación preventiva en el archivo central, usted evalúa expedientes con afectaciones físicas y biológicas. Según el Manual de Diagnóstico Integral del AGN, debe clasificar el nivel de deterioro basándose en el porcentaje de daño y el compromiso de la información, aplicando criterios de mínima intervención y reversibilidad para estabilizar los soportes documentales sin alterar su integridad histórica o funcional.",
+    "stem": "Al evaluar un documento que presenta rasgaduras y biodeterioro por hongos en un porcentaje inferior al veinte por ciento, ¿cómo debe clasificar el nivel de deterioro?",
+    "source": "gemini"
+  },
+  "401": {
+    "case_text": "Como servidor público encargado de la supervisión ambiental en los depósitos de archivo, usted debe garantizar el cumplimiento de los parámetros técnicos para la conservación de soportes físicos. El procedimiento exige el monitoreo constante de temperatura, humedad relativa y radiación lumínica, además de la limpieza técnica de instalaciones y la gestión de muestreos microbiológicos. Tras analizar los registros mensuales de las condiciones ambientales, usted debe consolidar la información técnica necesaria para el informe de gestión archivística.",
+    "stem": "De acuerdo con el Acuerdo AGN 049 de 2000, ¿qué información debe incluir el informe sobre las condiciones ambientales de los depósitos?",
+    "source": "gemini"
+  },
+  "400": {
+    "case_text": "Como responsable de la conservación preventiva en el archivo central, usted identifica expedientes en soporte papel con afectaciones físicas y biológicas. Según el plan institucional y los principios de mínima intervención, reversibilidad y compatibilidad, es obligatorio documentar rigurosamente los tratamientos aplicados para estabilizar los documentos sin alterar sus valores históricos, estéticos o funcionales, garantizando la trazabilidad técnica de cada intervención realizada sobre el material afectado.",
+    "stem": "Para dejar un registro técnico detallado de los tratamientos aplicados a los documentos intervenidos, ¿qué debe diligenciar el funcionario?",
+    "source": "gemini"
+  },
+  "402": {
+    "case_text": "La entidad ha programado una jornada integral de saneamiento y monitoreo ambiental en los depósitos de archivo para controlar agentes biológicos y contaminantes atmosféricos. Paralelamente, se requiere ejecutar la limpieza de instalaciones y mobiliario utilizando insumos específicos que no generen residuos nocivos, además de gestionar muestreos microbiológicos para identificar tipologías de microorganismos y proponer los sistemas de saneamiento más convenientes.",
+    "stem": "Para ejecutar la limpieza de las áreas de archivo sin alterar la estabilidad química de los documentos, usted exige el uso de:",
+    "source": "smart_condenser"
+  },
+  "397": {
+    "case_text": "La entidad detectó filtraciones de agua y falta de señalización en los depósitos de archivo central, poniendo en riesgo el acervo documental. Como responsable de la custodia, usted debe activar el programa de prevención de emergencias y atención de desastres. La normativa exige priorizar la documentación misional, actualizar inventarios y asegurar que el personal de salvamento cuente con los protocolos y elementos de protección necesarios antes de intervenir los soportes afectados por la humedad.",
+    "stem": "Para garantizar la seguridad del personal designado en las labores de salvamento documental, ¿qué debe verificar usted que posean antes de iniciar la intervención?",
+    "source": "gemini"
+  },
+  "431": {
+    "case_text": "En el departamento de fiscalización internacional, un servidor público evalúa una transacción donde una empresa extranjera invierte a través de una entidad financiera en un tercer país. El funcionario debe determinar la aplicabilidad complementaria de las medidas antiabuso vigentes para decidir la viabilidad legal de conceder el beneficio solicitado por el contribuyente.",
+    "stem": "Al evaluar el cumplimiento estricto de la regla de limitación de beneficios por parte de la entidad financiera, el funcionario debe considerar procedimentalmente que",
+    "source": "smart_condenser"
+  },
+  "403": {
+    "case_text": "Como servidor público encargado de supervisar el saneamiento ambiental en los depósitos de archivo, usted debe verificar el cumplimiento de los parámetros técnicos para la conservación de soportes. El procedimiento exige medir variables ambientales, realizar limpiezas con insumos no nocivos y gestionar muestreos microbiológicos para identificar microorganismos y determinar los sistemas de saneamiento más convenientes, garantizando así la integridad de los documentos bajo los lineamientos del Archivo General de la Nación.",
+    "stem": "De acuerdo con el Programa de Saneamiento Ambiental y Control Microbiológico, ¿qué acción debe gestionar para identificar las tipologías de microorganismos presentes en los depósitos?",
+    "source": "gemini"
+  },
+  "406": {
+    "case_text": "Durante la inspección periódica a las instalaciones físicas del archivo central, usted evidencia desgaste en algunos sistemas de estantería y necesidades de reorganización documental. Asimismo, se requiere proyectar la capacidad de almacenamiento, diligenciar adecuadamente los rótulos de identificación y utilizar unidades de conservación que respondan a las características físicas, tipologías y formatos específicos de los documentos custodiados.",
+    "stem": "Al proyectar el realmacenamiento técnico de los expedientes custodiados en el archivo central, usted selecciona las unidades de conservación teniendo en cuenta:",
+    "source": "smart_condenser"
+  },
+  "434": {
+    "case_text": "Durante una revisión técnica, un servidor público detecta inconsistencias en la solicitud de exención fiscal de una corporación que trasladó su residencia operativa sin una justificación comercial clara. El funcionario debe estructurar su respuesta fundamentada en la distribución de las cargas probatorias que exige el estándar internacional para rechazar beneficios económicos obtenidos mediante planificaciones agresivas y negocios artificiosos.",
+    "stem": "Para sustentar válidamente la configuración de la intención fiscal artificiosa en la reestructuración corporativa, la actuación inicial del funcionario requiere",
+    "source": "smart_condenser"
+  },
+  "433": {
+    "case_text": "Un funcionario de fiscalización internacional evalúa una inversión extranjera que cumple formalmente con la regla de limitación de beneficios por cotizar en bolsa. No obstante, la investigación demuestra que la operación fue estructurada exclusivamente para eludir la tarifa plena de retención mediante el traslado de ganancias a una compañía sin protección del convenio. El funcionario debe determinar la viabilidad de aplicar medidas antiabuso ante la posible superposición de normas de control fiscal.",
+    "stem": "Ante la posible superposición de normas de control sobre este hecho, ¿qué debe sostener el dictamen administrativo?",
+    "source": "gemini"
+  },
+  "432": {
+    "case_text": "Un servidor público evalúa una transacción donde una empresa extranjera invierte mediante una entidad financiera en un tercer país. Aunque la entidad cumple formalmente con la regla de limitación de beneficios por cotizar en bolsa, la investigación administrativa demuestra que la operación fue estructurada exclusivamente para transferir ganancias a una compañía sin protección del convenio, eludiendo así la tarifa plena de retención mediante un esquema de abuso tributario.",
+    "stem": "Ante la confirmación de que la operación busca favorecer a un tercero desprotegido, ¿qué actuación debe realizar la autoridad tributaria respecto al beneficio solicitado?",
+    "source": "gemini"
+  },
+  "435": {
+    "case_text": "Durante una revisión técnica, un servidor público detecta inconsistencias en la solicitud de exención fiscal de una corporación que trasladó su residencia operativa sin una justificación comercial clara. El funcionario debe estructurar su respuesta fundamentada en la distribución de las cargas probatorias que exige el estándar internacional para rechazar beneficios económicos obtenidos mediante planificaciones agresivas y negocios artificiosos.",
+    "stem": "Al responder a la exigencia del representante legal sobre la carga probatoria absoluta, el servidor público debe argumentar procedimentalmente que",
+    "source": "smart_condenser"
+  },
+  "436": {
+    "case_text": "Durante una revisión técnica, un servidor público detecta inconsistencias en la solicitud de exención fiscal de una corporación que trasladó su residencia operativa sin una justificación comercial clara. El funcionario debe estructurar su respuesta fundamentada en la distribución de las cargas probatorias que exige el estándar internacional para rechazar beneficios económicos obtenidos mediante planificaciones agresivas y negocios artificiosos.",
+    "stem": "Si el contribuyente intenta evitar la denegación demostrando que su proceder respeta el objeto del convenio, el análisis institucional requiere",
+    "source": "smart_condenser"
+  },
+  "399": {
+    "case_text": "Como responsable de la conservación preventiva en el archivo central de la DIAN, usted identifica expedientes en papel con afectaciones físicas y biológicas. Para su intervención, el plan institucional exige aplicar criterios técnicos rigurosos, priorizando los principios de mínima intervención, reversibilidad y compatibilidad de materiales, con el fin de estabilizar el soporte documental sin comprometer su integridad histórica, estética o funcional.",
+    "stem": "Al aplicar el principio de mínima intervención para estabilizar los soportes documentales, ¿qué característica debe cumplir la acción realizada?",
+    "source": "gemini"
+  },
+  "437": {
+    "case_text": "Un funcionario revisa una maniobra donde una sociedad residente transmite sus acciones a un tercero antes de la distribución de utilidades, para luego readquirirlas ajustando el precio. Ahora debe determinar el tratamiento tributario sustitutivo que aplicará a la operación económica real para finalizar la liquidación oficial.",
+    "stem": "En relación con la tipología de planificación ejecutada por la sociedad mediante la venta transitoria de acciones, el funcionario constata",
+    "source": "smart_condenser"
+  },
+  "438": {
+    "case_text": "Un funcionario revisa una maniobra donde una sociedad residente transmite sus acciones a un tercero antes de la distribución de utilidades, para luego readquirirlas ajustando el precio. Ahora debe determinar el tratamiento tributario sustitutivo que aplicará a la operación económica real para finalizar la liquidación oficial.",
+    "stem": "Al aplicar el mandato internacional contra esta práctica artificiosa, la consecuencia jurídica estricta que debe ordenar el servidor público es",
+    "source": "smart_condenser"
+  },
+  "439": {
+    "case_text": "Un funcionario revisa una maniobra donde una sociedad residente transmite sus acciones a un tercero antes de la distribución de utilidades, para luego readquirirlas ajustando el precio. Ahora debe determinar el tratamiento tributario sustitutivo que aplicará a la operación económica real para finalizar la liquidación oficial.",
+    "stem": "Para determinar los efectos impositivos finales tras desconocer la ventaja convencional en este negocio artificioso, el funcionario obligatoriamente debe proceder",
+    "source": "smart_condenser"
+  },
+  "441": {
+    "case_text": "En la dependencia de relacionamiento internacional, un servidor público recibe un derecho de petición elevado por un gremio comercial. El funcionario debe expedir un concepto técnico orientador explicando los efectos legales de esta omisión frente a la modernización de las herramientas antiabuso que rigen sus transacciones comerciales.",
+    "stem": "Para resolver la controversia y lograr la implementación de las restricciones antiabuso sin contar con la cobertura del instrumento, procede",
+    "source": "smart_condenser"
+  },
+  "404": {
+    "case_text": "Durante una inspección al archivo central, usted identifica desgaste en las estanterías y la necesidad de reorganizar el acervo documental. Como responsable del mantenimiento y almacenamiento, debe gestionar la adecuación de la infraestructura física y el mobiliario para garantizar la preservación de los documentos, cumpliendo con los estándares técnicos y de seguridad exigidos por la entidad para la correcta gestión de los espacios de archivo.",
+    "stem": "De acuerdo con el Manual del Sistema de Gestión de Mantenimiento y Servicios Administrativos, ¿qué herramienta debe utilizar para solicitar la atención de estos requerimientos?",
+    "source": "gemini"
+  },
+  "440": {
+    "case_text": "En la dependencia de relacionamiento internacional, un servidor público recibe un derecho de petición elevado por un gremio comercial. El funcionario debe expedir un concepto técnico orientador explicando los efectos legales de esta omisión frente a la modernización de las herramientas antiabuso que rigen sus transacciones comerciales.",
+    "stem": "Al fundamentar su concepto sobre la inaplicación automática de las medidas modernizadoras en este escenario particular, el funcionario debe aclarar",
+    "source": "smart_condenser"
+  },
+  "442": {
+    "case_text": "En la dependencia de relacionamiento internacional, un servidor público recibe un derecho de petición elevado por un gremio comercial. El funcionario debe expedir un concepto técnico orientador explicando los efectos legales de esta omisión frente a la modernización de las herramientas antiabuso que rigen sus transacciones comerciales.",
+    "stem": "Teniendo en cuenta la necesidad de proteger las políticas fiscales de la nación durante esta eventual actualización directa, la administración aconseja",
+    "source": "smart_condenser"
+  },
+  "467": {
+    "case_text": "Usted es un servidor público en el departamento de fiscalización de la administración tributaria. La administración tributaria le asigna el expediente para que revise la remuneración declarada, las funciones asumidas, y la valoración de posibles transferencias de activos intangibles locales.",
+    "stem": "Al analizar si la filial local requiere una compensación adicional tras la reestructuración corporativa, el funcionario debe verificar que",
+    "source": "smart_condenser"
+  },
+  "469": {
+    "case_text": "Usted es un servidor público en el departamento de fiscalización de la administración tributaria. La administración tributaria le asigna el expediente para que revise la remuneración declarada, las funciones asumidas, y la valoración de posibles transferencias de activos intangibles locales.",
+    "stem": "En el supuesto de que el activo intangible local permanezca en posesión de la entidad vinculada extranjera que no ejerce control sobre los riesgos vinculados, el funcionario debe considerar que",
+    "source": "smart_condenser"
+  },
+  "468": {
+    "case_text": "Usted es un servidor público en el departamento de fiscalización de la administración tributaria. La administración tributaria le asigna el expediente para que revise la remuneración declarada, las funciones asumidas, y la valoración de posibles transferencias de activos intangibles locales.",
+    "stem": "Si la filial local continúa desarrollando funciones de mantenimiento o protección sobre los intangibles transferidos, el análisis de precios de transferencia exige que",
+    "source": "smart_condenser"
+  },
+  "601": {
+    "case_text": "La División de Cobranzas de la Dirección Seccional de Impuestos de Bogotá adelanta proceso de cobro coactivo contra la sociedad Comercializadora Andina S.A.S. El apoderado del contribuyente formula excepción alegando que el acto administrativo de liquidación oficial fue demandado en acción de nulidad y restablecimiento del derecho.",
+    "stem": "¿Cuál de las siguientes causales del artículo 831 del Estatuto Tributario ampara dicha defensa?",
+    "source": "smart_condenser"
+  },
+  "754": {
+    "case_text": "La Ley General de Archivos estipula una clasificación de los archivos según sea la organización del Estado, es decir, archivos para la Rama Ejecutiva, legislativa y judicial. Así mismo, se encuentran los archivos de los Órganos de Control.",
+    "stem": "En este sentido, afirmar que la Procuraduría General de la Nación como órgano de control autónomo, tiene la libertad de establecer su normatividad para la organización de la gestión documental de su competencia es",
+    "source": "smart_condenser"
+  },
+  "759": {
+    "case_text": "Un funcionario de archivo verifica la instalación de la estantería, de acuerdo con especificaciones técnicas. Confirma que se dejó un espacio mínimo de 20 centímetros entre los muros y la estantería. En las baldas, tiene en cuenta que estas ofrecen la posibilidad de distribuirse a diferentes alturas para posibilitar el almacenamiento de diversos formatos en los que viene la documentación, permitiendo una graduación de 7cm o menos.",
+    "stem": "El funcionario debe examinar la balda inferior y verificar que quedó separada del piso a por lo menos",
+    "source": "smart_condenser"
+  },
+  "764": {
+    "case_text": "Un funcionario, debe intervenir los documentos de archivo deteriorados. Para lo cual tiene en cuenta que las estrategias, los procedimientos y las actividades, así como que las tareas propuestas deben obedecer a tratamientos estrictamente necesarios. También es relevante para dicha intervención que los materiales usados sean compatibles, estables y que mantengan la información intacta. Así mismo, debe tener en cuenta el medio en el cual se contiene y los valores del documento.",
+    "stem": "El funcionario capacitado para realizar la intervención de estos documentos, aplica los criterios de",
+    "source": "smart_condenser"
+  },
+  "765": {
+    "case_text": "Al Archivo Central de una Universidad, llegó un grupo de estudiantes de Archivística para realizar un recorrido guiado por las instalaciones de consulta y conocer las normas que un archivo debe cumplir. En medio del recorrido, un visitante notó que el archivo no contaba con uno de los criterios técnicos que deben cumplirse para la correcta conservación de la documentación.",
+    "stem": "De esta manera, el fallo que el visitante pudo notar fue",
+    "source": "smart_condenser"
+  },
+  "766": {
+    "case_text": "En una clase el profesor presentó a sus alumnos la siguiente imagen: IMAGEN 1 De acuerdo a la imagen anterior, el profesor pide a sus alumnos indicar cuáles son las condiciones ambientales en las que debería mantenerse la prensa que aún se conserva del siglo XVIII, para lo cual, uno de los estudiantes responde correctamente que",
+    "stem": "De acuerdo con el caso planteado, ¿cuál de las siguientes opciones es la correcta?",
+    "source": "smart_condenser"
+  },
+  "767": {
+    "case_text": "Un estudiante universitario, para realizar su trabajo final, necesita consultar un mapa que contenga las locaciones de su facultad. Para ello, acudió al archivo de la Universidad para localizar el material gráfico para su trabajo. Como ya conocía el lugar porque había realizado meses atrás unas prácticas, el estudiante se dirigió allí solo, tomó dicho material y procedió a realizar su respectivo análisis en el mismo recinto.",
+    "stem": "Debido a esta situación, puede decirse que el estudiante, con respecto a la consulta del material, actuó de forma",
+    "source": "smart_condenser"
+  },
+  "405": {
+    "case_text": "Como responsable del archivo central, usted detecta desgaste en las estanterías y necesidades de reorganización documental. Para cumplir con el programa de almacenamiento y mantenimiento, debe garantizar la estabilidad locativa y la preservación del acervo documental, asegurando que las instalaciones cumplan con los criterios técnicos de seguridad estructural, resistencia de placas, uso de materiales adecuados y correcta gestión de las unidades de conservación según la normativa vigente.",
+    "stem": "Para garantizar la seguridad estructural de los depósitos frente a eventos sísmicos y cargas pesadas, ¿qué requisitos debe cumplir la estantería según la normativa?",
+    "source": "gemini"
+  },
+  "768": {
+    "case_text": "En una reunión de empleados se va a proponer una serie de lineamientos para llevar a cabo un plan de conservación documental, con el que se pretende suplir la necesidad de organizar y preservar el archivo y los documentos.",
+    "stem": "Por ello, uno de los empleados comenta que la aplicación de dichos lineamientos corresponde a",
+    "source": "smart_condenser"
+  },
+  "770": {
+    "case_text": "Existen múltiples factores en un archivo que pueden ocasionar daños tanto al recinto como a los materiales allí alojados. Sin embargo, para contrarrestar esto, se deben evaluar y controlar las condiciones ambientales como la humedad y la temperatura.",
+    "stem": "Así, con base en el control de estos aspectos, es cierto decir que",
+    "source": "smart_condenser"
+  },
+  "771": {
+    "case_text": "Una entidad del Estado, por políticas que debe llevar a cabo, tiene que realizar el Plan de Conservación Documental para su archivo. Por lo tanto, los empleados encargados de este proceso saben que deben realizar su diseño e implementación para un óptimo plan de conservación.",
+    "stem": "Sin embargo, tienen una inquietud con respecto al tercer paso que deben realizar, así, deciden preguntarle a su jefe, el cual les responde que deben",
+    "source": "smart_condenser"
+  },
+  "772": {
+    "case_text": "El laboratorio de restauración, tras años de experiencia en el manejo de archivos, ha comprobado que, para que los archivos se conserven de manera óptima durante largo tiempo, hay que cumplir una serie de requisitos respecto a su almacenamiento.",
+    "stem": "Así, algunos de los requisitos que deben cumplir los espacios donde se guardan los archivos son que",
+    "source": "smart_condenser"
+  },
+  "774": {
+    "case_text": "Los empleados del archivo saben que una vez al año deben revisar las condiciones del edificio para comprobar si han aparecido cambios o deterioros para poderlos controlar a tiempo.",
+    "stem": "Así, se deberá tomar medidas de inmediato si se encuentran los siguientes problemas, excepto",
+    "source": "smart_condenser"
+  },
+  "769": {
+    "case_text": "Una entidad abrió un nuevo espacio para ampliar su archivo histórico, puesto que el que tiene actualmente es muy reducido, y la cantidad de documentos está creciendo en cada entrega, por lo que ya no hay donde ubicarlos. Debido a ello, se debe solicitar la realización de estanterías que soporten el peso de la gran cantidad de documentos que se trasladarán.",
+    "stem": "Por lo tanto, el coordinador encargado de dicha tarea, debe dar las siguientes descripciones sobre como realizar la estantería, excepto una de ellas, que es",
+    "source": "smart_condenser"
+  },
+  "797": {
+    "case_text": "Los estudiantes de archivística de una Universidad se encuentran realizando su proyecto final. Este se basa en la creación de las Tablas de Valoración Documental (TVD) de una empresa de la ciudad. Para ello, deben presentar un aval al comité de archivo de la empresa, quien es el encargado de garantizar las TVD.",
+    "stem": "Por lo tanto, para que el comité pueda hacer efectivo dicho aval, deben tener en cuenta algunos aspectos presentados a continuación, excepto",
+    "source": "smart_condenser"
+  },
+  "780": {
+    "case_text": "Cuando un funcionario de una entidad pública requiera realizar el traslado de documentos del archivo de gestión, que es donde permanecen los documentos mientras están en trámite, al archivo central, que es donde se conservan los documentos cuya consulta no es frecuente pero siguen teniendo vigencia; el funcionario debe utilizar el instrumento archivístico donde se describan las series y subseries documentales con su respectivo asunto para la entrega de la información, llamado",
+    "stem": "De acuerdo con el caso planteado, ¿cuál de las siguientes opciones es la correcta?",
+    "source": "smart_condenser"
+  },
+  "773": {
+    "case_text": "Una biblioteca pública requiere trasladar su archivo institucional debido a que las instalaciones actuales no garantizan la adecuada conservación documental. Para asegurar la integridad de los archivos a largo plazo, la entidad debe seleccionar un espacio físico que cumpla con los estándares técnicos de preservación, evitando factores ambientales y estructurales que aceleren el deterioro de los soportes, según lo establecido en la normativa archivística vigente sobre condiciones de almacenamiento y control de agentes externos.",
+    "stem": "De acuerdo con los criterios técnicos de conservación documental, ¿cuál de las siguientes condiciones NO es adecuada para la elección del nuevo lugar de archivo?",
+    "source": "gemini"
+  },
+  "792": {
+    "case_text": "Un funcionario de talento humano de una entidad pública considera que los documentos son de vital importancia para el desarrollo de las actividades de la entidad y la toma de decisiones. Por esta razón se acerca al archivo central para hacer el traslado de las historias laborales del personal retirado, ya que han cumplido el tiempo de permanencia en el archivo de gestión.",
+    "stem": "El colaborador de gestión documental una vez recibe las unidades documentales, a saber las historias laborales, deberá",
+    "source": "smart_condenser"
+  },
+  "802": {
+    "case_text": "El grupo administrativo de una empresa de la ciudad sabe que su entidad cumplirá el próximo año 1 siglo de haberse conformado. Por lo tanto, quieren organizar su archivo para saber qué documentos históricos poseen y qué otro tipo de información tienen archivada sin intervención alguna. Además, pretenden realizar posteriormente otro tipo de actividades con base en lo que encuentren.",
+    "stem": "Para llevar a cabo la búsqueda y organización del archivo de la forma que quiere, deben contactar con un profesional que se encargue de realizar las Tablas de Valoración Documental porque",
+    "source": "smart_condenser"
+  },
+  "801": {
+    "case_text": "En un parque público de la ciudad se realizarán algunas obras de construcción que tienen como finalidad el lucro de una empresa privada. Debido a esto, uno de los voceros de la comunidad afectada por la demolición, decidió demandar los planes que tiene la entidad privada, pero para ello necesita algunos soportes de documentación histórica donde se evidencie que fue un terreno donado a la población y por lo tanto, corresponde a ellos decidir si es posible realizar las obras en el parque.",
+    "stem": "Dado esto, podría decirse que los valores de la documentación que el vocero debe revisar corresponde a valores",
+    "source": "smart_condenser"
+  },
+  "803": {
+    "case_text": "Un grupo de profesionales encargados de desarrollar Tablas de Valoración Documental (TVD), fueron contratados por una entidad para llevar a cabo el proyecto de la realización de estas. Como dichos profesionales ya conocían muy bien el lugar y su funcionamiento, optaron por no realizar el estudio institucional previo a la realización de las TVD.",
+    "stem": "Con relación a las etapas de construcción de las TVD, es posible decir que la decisión de los profesionales de no realizar el estudio fue",
+    "source": "smart_condenser"
+  },
+  "806": {
+    "case_text": "La Tabla de Valoración Documental (TVD) es un instrumento archivístico que permite tener un control adecuado de la documentación generada por una entidad, clasificando cada uno de los documentos de archivo con el fin de determinar los tiempos de permanencia en el Archivo Central.",
+    "stem": "Teniendo esto en cuenta, es necesario decir que existen unos pasos adecuados para la implementación de este instrumento, y para llevarlo a cabo de forma ordenada y coherente se debe",
+    "source": "smart_condenser"
+  },
+  "799": {
+    "case_text": "La Junta Directiva de un hospital requiere organizar su archivo debido a la dispersión de espacios y la necesidad de habilitar nuevas áreas de servicio. Para optimizar la gestión documental y determinar la disposición final de la información, la entidad contrata a un profesional especializado para elaborar las Tablas de Valoración Documental (TVD), permitiendo así identificar qué documentos deben conservarse y cuáles pueden ser descartados conforme a la normativa archivística vigente.",
+    "stem": "Considerando la normativa archivística vigente, ¿cuál de las siguientes opciones NO representa una importancia o beneficio del uso de las Tablas de Valoración Documental?",
+    "source": "gemini"
+  },
+  "812": {
+    "case_text": "Con el fin de dar continuidad a la elaboración adecuada de las Tablas de Valoración Documental, se determina el siguiente paso para la ejecución de las mismas, el cual corresponde a la disposición final de cada una de las series y subseries establecidas para la entidad.",
+    "stem": "Con base en la situación descrita, ¿cuál es el procedimiento o actuación correcta que debe aplicarse?",
+    "source": "smart_condenser"
+  },
+  "810": {
+    "case_text": "Cada documento de archivo cuenta con un valor documental. Esos valores son asignados según el objeto o finalidad con el cual se creó el documento. Por lo anterior, se asignan valores primarios y valores secundarios, los cuales le dan la importancia que estos deben adquirir.",
+    "stem": "Al referirnos a los valores primarios se afirma que son aquellos documentos que para la entidad poseen valores que van más allá del valor corriente de los documentos, es decir, que son",
+    "source": "smart_condenser"
+  },
+  "811": {
+    "case_text": "Cada una de las series documentales debe ser definida de forma clara y concisa, de manera que se determine el nombre por agrupación documental con características uniformes, lo que quiere decir que se deberá encontrar una denominación adecuada para las diferentes temáticas que se producen en las oficinas que conforman la entidad. Así mismo, deberán incluirse los tipos documentales que conforman cada una de estas series.",
+    "stem": "Para lo anterior es preciso tener en cuenta aspectos que NO deben utilizarse en el momento de nombrar dichas series documentales, como lo son",
+    "source": "smart_condenser"
+  },
+  "815": {
+    "case_text": "En una entidad, un funcionario se acerca a uno de los archivos y pregunta al coordinador por una información especifica con un alto valor cultural para la investigación de esa entidad dado que se acerca el natalicio y se pretende hacer un texto con respecto a dicha entidad.",
+    "stem": "Con respecto a lo anterior, y para dar una indicación acertada, el coordinador debe responder que",
+    "source": "smart_condenser"
+  },
+  "818": {
+    "case_text": "Un funcionario está consultando la producción documental de la dirección jurídica, y encuentra que los documentos que ellos producen son contratos por distintas modalidades, una de ellas es por prestación de servicios.",
+    "stem": "Teniendo en cuenta los procesos técnicos a nivel archivístico el funcionario debe",
+    "source": "smart_condenser"
+  },
+  "817": {
+    "case_text": "En el archivo central de una Gobernación, se hizo la contratación de un grupo interdisciplinario para llevar a cabo la organización de la tabla de retención documental para dar un mejor orden en la documentación a la institución.",
+    "stem": "Por lo tanto, dentro de la metodología para la construcción de dichas tablas que debe tener en cuenta este grupo, lo primero que deberán hacer es",
+    "source": "smart_condenser"
+  },
+  "809": {
+    "case_text": "Todas las entidades requieren de un soporte funcional y administrativo que garantice su correcta trazabilidad. Por lo anterior, se hacen necesarios procedimientos específicos, entre ellos, diagnósticos integrales e investigaciones para realizar la propuesta de TVD.",
+    "stem": "Para llevar a cabo lo anterior los elementos iniciales a evaluar son la existencia de",
+    "source": "smart_condenser"
+  },
+  "819": {
+    "case_text": "En una entidad pública se va a comenzar un proceso de elaboración de tablas de retención documental, por lo que el grupo encargado de esto va a comenzar con la etapa de investigación preliminar sobre la institución, y para ello la información que deben recolectar es, excepto",
+    "stem": "De acuerdo con el caso planteado, ¿cuál de las siguientes opciones es la correcta?",
+    "source": "smart_condenser"
+  },
+  "785": {
+    "case_text": "El centro de administración documental de una entidad pública almacena su acervo en el primer piso de un edificio, priorizando la seguridad del terreno y la accesibilidad. Para garantizar la integridad y evitar el deterioro de los documentos a largo plazo, el espacio cuenta con sistemas de aire acondicionado, control de temperatura y ventilación adecuada, cumpliendo con los estándares técnicos necesarios para la preservación de la información institucional.",
+    "stem": "De acuerdo con la situación descrita y la normativa archivística vigente, ¿qué proceso técnico se está ejecutando en el centro de administración documental?",
+    "source": "gemini"
+  },
+  "820": {
+    "case_text": "Un funcionario de gestión documental en la elaboración de las tablas de retención documental, está llevando a cabo una parte del proceso denominada análisis de la información recolectada, por lo tanto, para poder llevar a buen término su labor, dicho funcionario debe proceder con",
+    "stem": "De acuerdo con el caso planteado, ¿cuál de las siguientes opciones es la correcta?",
+    "source": "smart_condenser"
+  },
+  "821": {
+    "case_text": "En una entidad que desarrolla la venta de licores, se está llevando a cabo una valoración inicial y la organización de las tablas de retención para dar un mayor orden a los diferentes tipos documentales que se tienen en esta entidad, por lo que, uno de los archivistas propone establecer como serie documental un campo denominado \"materiales orgánicos\" para ello, y bajo uno de los principios básicos de la creación de las TRD, los funcionarios encargados de su realización deberán",
+    "stem": "De acuerdo con el caso planteado, ¿cuál de las siguientes opciones es la correcta?",
+    "source": "smart_condenser"
+  },
+  "822": {
+    "case_text": "En el archivo histórico de una universidad se está llevando a cabo una revisión de la documentación que se maneja allí, por lo que, los funcionarios encargados se encuentran con un documento que refleja las memorias de uno de los personajes del ámbito artístico mas importante para la ciudad y el país, por lo tanto, estos funcionarios saben que con respecto a la valoración de este documento deben",
+    "stem": "De acuerdo con el caso planteado, ¿cuál de las siguientes opciones es la correcta?",
+    "source": "smart_condenser"
+  },
+  "823": {
+    "case_text": "Un grupo de funcionarios de una entidad, están comenzando un proyecto en el cuál realizarán la ordenación de la documentación que hay en el archivo central de dicha entidad.",
+    "stem": "Por lo tanto, se encuentran organizando el proyecto escrito en el que se está definiendo lo que son las tablas de retención documental para apoyar su proyecto, para ello, lo mas pertinente es que los funcionarios",
+    "source": "smart_condenser"
+  },
+  "824": {
+    "case_text": "Un funcionario de Gestión Documental con base en los resultados obtenidos en la conformación de series y subseries documentales, procede a realizar la estructuración de las tablas de retención documental.",
+    "stem": "Posteriormente, dicho funcionario como encargado de entregar las Tablas de Retención finalizadas, debe presentarlas en conjunto con la",
+    "source": "smart_condenser"
+  },
+  "825": {
+    "case_text": "El auxiliar de gestión documental es el nuevo integrante del archivo, por lo tanto tiene algunas inquietudes que en la inducción su jefe trata de resolver. Una de ellas, es la duda sobre qué son las series documentales, a lo cual su jefe responde que son documentos con características comunes que reflejan las actividades que desarrolla la oficina que lo produce.",
+    "stem": "Además, le presenta la siguiente imagen con respecto a la imagen, el auxiliar puede indicar que la serie son",
+    "source": "smart_condenser"
+  },
+  "828": {
+    "case_text": "En la construcción de las Tablas de Retención Documental, una vez se ha realizado la identificación de la documentación a intervenir por los respectivos profesionales y docentes en el tema, se procede con el siguiente paso correspondiente a la valoración documental. ​ Para llevar a cabo este proceso en ambos tipos de valoraciones, debe intervenir el área administrativa de la empresa y profesionales docentes de diferentes áreas.",
+    "stem": "De la anterior afirmación debemos decir que es incorrecta porque quienes deben intervenir en el proceso de valoración primaria son",
+    "source": "smart_condenser"
+  },
+  "830": {
+    "case_text": "La creación de las Tablas de Retención Documental (TRD) es un proceso que permite establecer qué documentación es necesaria para la entidad, así como su tiempo de permanencia y lo que posteriormente se debe hacer con los documentos una vez finalice su vigencia. Este proceso de creación conlleva unas etapas, las cuales es necesario realizarlas en un estricto orden para que pueda funcionar lógicamente el proceso.",
+    "stem": "Debido a esto último, podría decirse que las etapas son",
+    "source": "smart_condenser"
+  },
+  "833": {
+    "case_text": "En una entidad se está llevando a cabo la organización del archivo central. La información se está ordenando para conformar los expedientes de cada trabajador. En el interior de dichos expedientes se encuentran documentos como la hoja de vida, exámenes médicos, recomendaciones, formatos de permisos, formatos de solicitudes, entre otros.",
+    "stem": "Según la información presentada, puede decirse que la denominación que se le da a cada uno de estos tipos documentales es",
+    "source": "smart_condenser"
+  },
+  "829": {
+    "case_text": "El coordinador de un archivo le explica a su auxiliar que las tablas de retención documental se definen como una lista de series documentales, es decir, la agrupación de diferentes documentos con características comunes a las cuales se les asigna un tiempo de permanencia en cada etapa del ciclo vital del documento. Por lo tanto, el auxiliar pregunta si dichas tablas tienen importancia en el ámbito de la Gestión ​ Documental y por qué.",
+    "stem": "A lo cual el coordinador responde afirmativamente dando una serie de explicaciones, todas ciertas, EXCEPTO, la de",
+    "source": "smart_condenser"
+  },
+  "835": {
+    "case_text": "Durante una reunión en un archivo de una entidad pública se está pensando en establecer el Sistema de Gestión de Documentos Electrónicos de Archivos para la entidad, por lo cual, los funcionarios presentes se encuentran debatiendo sobre las acciones que debe permitir dicho sistema, por tanto, uno de ellos afirma correctamente que permite, excepto",
+    "stem": "De acuerdo con el caso planteado, ¿cuál de las siguientes opciones es la correcta?",
+    "source": "smart_condenser"
+  },
+  "836": {
+    "case_text": "En un archivo de la ciudad se está dando una capacitación sobre el sistema de archivos electrónicos, por lo tanto, el expositor en la sección de búsqueda y presentación explica de forma acertada, que dicho sistema en su funcionamiento debe permitir, excepto",
+    "stem": "De acuerdo con el caso planteado, ¿cuál de las siguientes opciones es la correcta?",
+    "source": "smart_condenser"
+  },
+  "838": {
+    "case_text": "En una reunión se está tratando el tema de la funcionalidad del Sistema de Gestión de Documentos Electrónicos de Archivo, por lo que, desde los requerimientos no funcionales de dicho sistema se debe establecer el tiempo máximo que debe demorar la búsqueda de los usuarios en el SGDEA.",
+    "stem": "Por esta razón, uno de los funcionarios encargados del manejo de este sistema electrónico debe indicar a sus compañeros que",
+    "source": "smart_condenser"
+  },
+  "839": {
+    "case_text": "En una entidad pública de la ciudad, las personas encargadas de la coordinación del archivo están interesadas en implementar un Sistema de Gestión de Documentos Electrónicos de Archivo, pero teniendo presente que, para optimizar tareas es necesario que esté bien estructurado el flujo de trabajo electrónico, y para ello el SGDEA debe permitir, excepto",
+    "stem": "De acuerdo con el caso planteado, ¿cuál de las siguientes opciones es la correcta?",
+    "source": "smart_condenser"
+  },
+  "837": {
+    "case_text": "El archivo de la Fiscalía de la ciudad, está integrando a sus labores un nuevo Sistema de Gestión de Documentos Electrónicos de Archivo, sin embargo, los funcionarios encargados del montaje de dicho sistema digital, conversan acerca de la seguridad que debe tener para evitar fugas de información u otros perjuicios que pueda causar la filtración o eliminación de información.",
+    "stem": "Con base en esto, debe indicarse que dichos funcionarios deben tener en cuenta que el SGDEA debe permitir, excepto",
+    "source": "smart_condenser"
+  },
+  "841": {
+    "case_text": "Un joven practicante de una universidad está desarrollando sus prácticas en el archivo central de la misma institución, así que al ingresar le fue creado un usuario en el Sistema de Gestión de Documentos Electrónicos de Archivos (SGDEA), para poder ayudar en las tareas asignadas.",
+    "stem": "Sin embargo, al terminar el tiempo de su práctica, con respecto a la seguridad de la información de dicho sistema, el funcionario encargado de esto debe",
+    "source": "smart_condenser"
+  },
+  "840": {
+    "case_text": "En el área de archivo de la alcaldía de la ciudad, el encargado de este debe proporcionar a su superior un informe que permita evidenciar las consultas de los documentos, la cantidad de usuarios que ingresan, cuáles son las áreas que consultan, cuáles son las que más lo hacen, entre otro tipo de información que se requiere para evidenciar el manejo del archivo electrónico.",
+    "stem": "Por lo tanto, para agilizar y hacer más práctico el informe, dicho encargado debe",
+    "source": "smart_condenser"
+  },
+  "844": {
+    "case_text": "En el archivo de una universidad pública, se está haciendo un barrido de la información que está próxima a caducar, es decir, se aproxima el tiempo que debe cumplir esa información en el sistema.",
+    "stem": "Con base en esto, la persona encargada de manejar la información desde el Sistema de Gestión de Documentos Electrónicos de Archivo (SGDEA) y de permitir la retención o eliminación de dicha información debe",
+    "source": "smart_condenser"
+  },
+  "843": {
+    "case_text": "Una empresa de textiles maneja un Sistema de Gestión de Documentos Electrónicos de Archivo para tener mejor organizada su documentación en medio virtual, por ello, existe un día de la semana específico, para poder hacer uso del mismo, ya que está programado para permitir el ingreso a los usuarios que van a realizar las consultas, sin embargo, en una auditoría que se pretende hacer al archivo, el funcionario encargado halló un error con base en el cual debe indicar que",
+    "stem": "De acuerdo con el caso planteado, ¿cuál de las siguientes opciones es la correcta?",
+    "source": "smart_condenser"
+  },
+  "842": {
+    "case_text": "En las oficinas de una Gobernación, los encargados del manejo de la documentación en la entidad presentaron una propuesta de implementación del Sistema de Gestión de Documentos Electrónicos de Archivos (SGDEA) el cual contribuye a mantener un control y organización de documentos físicos a digitales.",
+    "stem": "Por lo tanto, en medio de la presentación de la propuesta, el funcionario encargado de esta, para presentar las acciones de disposición que debe tener dicho sistema deberá, excepto",
+    "source": "smart_condenser"
+  },
+  "816": {
+    "case_text": "En una entidad pública, se estuvo elaborando la tabla de retención documental en cabeza de los funcionarios del archivo de dicha entidad, allí se establecieron las series, subseries, tiempos necesarios para la custodia de los archivos y bajo las necesidades administrativas de la entidad. Una vez finalizada, los funcionarios comentaron a sus compañeros de archivo las disposiciones que se establecieron en ese documento para que las tuvieran en cuenta al momento de realizar las búsquedas de los documentos.",
+    "stem": "Con base en la información descrita, es correcto decir que hay un error con respecto a la aplicación de los principios básicos de las Tablas de Retención, el cual es que",
+    "source": "smart_condenser"
+  }
+}

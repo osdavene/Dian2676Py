@@ -144,6 +144,62 @@
 
     </div>
 
+    {# Posición en Lista de Elegibles Simulada (Ranking Anónimo por Cargo OPEC) #}
+    {% if opecRanking %}
+        <div class="bg-gradient-to-r from-slate-900 via-indigo-950/40 to-slate-900 border border-indigo-500/30 rounded-2xl sm:rounded-3xl p-4 sm:p-6 shadow-xl">
+            <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-5">
+                <div class="space-y-2 max-w-xl">
+                    <div class="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-amber-500/20 border border-amber-500/30 text-amber-300 text-[11px] font-black uppercase tracking-wider">
+                        <i class="fa-solid fa-medal"></i>
+                        Lista de Elegibles Simulada &bull; {{ activeJob.name }}
+                    </div>
+                    <h2 class="text-base sm:text-xl font-black text-white">
+                        {% if opecRanking.user_rank %}
+                            Estás en el <span class="text-amber-400">Puesto #{{ opecRanking.user_rank }}</span> de {{ opecRanking.total_competitors }} aspirantes evaluados en tu empleo
+                        {% else %}
+                            Completa tu primer simulacro para ingresar a la Lista de Elegibles de {{ activeJob.name }}
+                        {% endif %}
+                    </h2>
+                    <p class="text-xs text-slate-300 leading-relaxed">
+                        Comparativa anónima en tiempo real frente a los <strong>{{ opecRanking.total_registered_cargo }} aspirantes inscritos</strong> en este mismo cargo OPEC.
+                        El promedio general del grupo es <strong class="text-indigo-300">{{ opecRanking.cargo_avg_score | number_format(2) }} pts</strong> (tu promedio: <strong class="text-white">{{ avgScore | number_format(2) }} pts</strong>).
+                    </p>
+                </div>
+
+                {# Indicadores Destacados + Mini Top 5 #}
+                <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 shrink-0">
+                    <div class="px-4 py-3 rounded-2xl bg-slate-950/90 border border-slate-800 text-center min-w-[125px]">
+                        <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">Tu Posición</span>
+                        <span class="text-2xl font-black text-amber-400 font-mono">
+                            {% if opecRanking.user_rank %}#{{ opecRanking.user_rank }}{% else %}&mdash;{% endif %}
+                        </span>
+                        <span class="text-[10px] text-slate-400 block">
+                            {% if opecRanking.percentile %}Percentil Top {{ 100 - opecRanking.percentile + 1 }}%{% else %}Sin clasificar{% endif %}
+                        </span>
+                    </div>
+
+                    {% if opecRanking.top_5 %}
+                        <div class="p-3 rounded-2xl bg-slate-950/90 border border-slate-800 text-xs min-w-[250px] space-y-1.5">
+                            <div class="text-[10px] font-black uppercase tracking-wider text-indigo-300 flex items-center justify-between border-b border-slate-800 pb-1">
+                                <span><i class="fa-solid fa-ranking-star mr-1 text-amber-400"></i> Top Elegibles OPEC</span>
+                                <span>Promedio</span>
+                            </div>
+                            {% for item in opecRanking.top_5[:3] %}
+                                <div class="flex items-center justify-between {{ 'text-amber-300 font-black' if item.is_me else 'text-slate-300' }}">
+                                    <span class="truncate max-w-[175px]">
+                                        <strong class="font-mono text-slate-400 mr-1">#{{ item.rank }}</strong>
+                                        {{ 'Tú (' ~ user.name[:14] ~ ')' if item.is_me else item.alias }}
+                                    </span>
+                                    <span class="font-mono font-bold {{ 'text-emerald-400' if item.avg_score >= 70 else 'text-amber-300' }}">{{ item.avg_score | number_format(1) }} pts</span>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
     {# 4 Modos Principales de Estudio #}
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         

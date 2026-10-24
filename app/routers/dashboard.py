@@ -156,6 +156,86 @@ def index(request: Request, db: Session = Depends(get_db)):
         if spent >= time_limit:
             active_session = None
 
+    # Ranking Anónimo y Percentil por Cargo OPEC ("Lista de Elegibles Simulada")
+    cargo_sessions = (
+        db.query(ExamSession)
+        .options(joinedload(ExamSession.user))
+        .filter(
+            ExamSession.completed_at.isnot(None),
+            or_(
+                ExamSession.job_profile_id == job_id,
+                ExamSession.user.has(User.job_profile_id == job_id),
+            ),
+        )
+        .all()
+    )
+    user_stats_map: dict[int, dict[str, Any]] = {}
+    for cs in cargo_sessions:
+        if not cs.user_id:
+            continue
+        uid = int(cs.user_id)
+        sc = float(cs.score or 0.0)
+        if uid not in user_stats_map:
+            u_name = (cs.user.name if cs.user and cs.user.name else f"Aspirante {uid}").strip()
+            parts = [p for p in u_name.split() if p]
+            initials = ". ".join(p[0].upper() for p in parts[:2]) + "." if parts else "A."
+            user_stats_map[uid] = {
+                "user_id": uid,
+                "alias": f"Aspirante #{100 + uid} ({initials})",
+                "scores": [],
+            }
+        user_stats_map[uid]["scores"].append(sc)
+
+    leaderboard = []
+    for uid, st in user_stats_map.items():
+        scores_list = st["scores"]
+        u_avg = round(sum(scores_list) / len(scores_list), 2)
+        u_best = round(max(scores_list), 2)
+        leaderboard.append(
+            {
+                "user_id": uid,
+                "alias": st["alias"],
+                "is_me": uid == user.id,
+                "avg_score": u_avg,
+                "best_score": u_best,
+                "exams_count": len(scores_list),
+            }
+        )
+
+    leaderboard.sort(
+        key=lambda x: (x["avg_score"], x["best_score"], x["exams_count"]),
+        reverse=True,
+    )
+    user_rank = None
+    for idx_r, row_r in enumerate(leaderboard, 1):
+        row_r["rank"] = idx_r
+        if row_r["is_me"]:
+            user_rank = idx_r
+
+    total_competitors = len(leaderboard)
+    total_registered_cargo = (
+        db.query(User).filter(User.job_profile_id == job_id).count()
+    )
+    cargo_avg_score = (
+        round(sum(x["avg_score"] for x in leaderboard) / total_competitors, 2)
+        if total_competitors > 0
+        else 0.0
+    )
+    percentile = (
+        max(1, min(99, round(((total_competitors - user_rank + 1) / total_competitors) * 100)))
+        if (user_rank and total_competitors > 1)
+        else (99 if user_rank == 1 else None)
+    )
+
+    opec_ranking = {
+        "user_rank": user_rank,
+        "total_competitors": total_competitors,
+        "total_registered_cargo": max(total_registered_cargo, total_competitors),
+        "cargo_avg_score": cargo_avg_score,
+        "percentile": percentile,
+        "top_5": leaderboard[:5],
+    }
+
     return render_template(
         request,
         "dashboard.html",
@@ -173,6 +253,7 @@ def index(request: Request, db: Session = Depends(get_db)):
             "totalJobQuestions": total_job_questions,
             "recentSessions": recent_sessions,
             "activeSession": active_session,
+            "opecRanking": opec_ranking,
         },
         db,
     )

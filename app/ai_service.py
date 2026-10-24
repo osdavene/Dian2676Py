@@ -945,3 +945,89 @@ def select_adaptive_questions_for_user(
         "failed_included": len([q for q in selected if q in bucket_failed]),
         "weak_axes_count": len(weak_set),
     }
+
+
+# ==============================================================================
+# 7. RESUMIDOR Y SEPARADOR INTELIGENTE DE PREGUNTAS LARGAS (>900 CHARS)
+# ==============================================================================
+def summarize_long_question_with_ai(question: Question) -> Dict[str, str]:
+    opts_map = question.options_map
+    correct_key = str(question.correct_option or "A").strip().upper()
+    correct_text = opts_map.get(correct_key, "")
+    full_text = f"{question.case_text or ''}\n{question.stem or ''}".strip()
+
+    system_prompt = (
+        "Eres un Editor Psicómetra Experto de la CNSC para el Concurso DIAN 2676. "
+        "Tu tarea es resumir casos excesivamente largos y separar limpiamente el Caso Situacional (case_text) "
+        "del Enunciado/Pregunta (stem), eliminando texto basura o preguntas infiltradas, sin alterar cuál es la respuesta correcta."
+    )
+    prompt = f"""La siguiente pregunta del banco DIAN 2676 es demasiado extensa ({len(full_text)} caracteres) o tiene todo el texto unido.
+Resúmela y sepárala limpiamente manteniendo el 100% de coherencia con la opción correcta oficial ({correct_key}):
+
+- **Texto actual (Caso + Enunciado)**:
+\"\"\"
+{full_text[:4500]}
+\"\"\"
+- **Opción Correcta Oficial ({correct_key})**: "{correct_text}"
+- **Base Legal**: "{question.legal_basis or ''}"
+
+Reglas estrictas:
+1. `case_text`: Redacta el contexto/situación en **1 solo párrafo claro, ejecutivo y directo de entre 45 y 85 palabras** (máximo 550 caracteres), conservando únicamente los hechos relevantes para resolver la pregunta y eliminando cualquier texto pegado de otras preguntas.
+2. `stem`: Redacta únicamente la pregunta final en **1 o 2 líneas directas** (máximo 240 caracteres), por ejemplo: *"De acuerdo con la situación anterior y la normativa aplicable, ¿qué actuación debe realizar el funcionario?"*
+
+Devuelve EXCLUSIVAMENTE un objeto JSON válido con esta estructura:
+{{
+  "case_text": "...",
+  "stem": "..."
+}}
+"""
+    ai_text, _ = call_gemini(
+        prompt, system_instruction=system_prompt, json_mode=True, temperature=0.2
+    )
+    if ai_text:
+        try:
+            cleaned = re.sub(r"^```(?:json)?\s*|\s*```$", "", ai_text.strip(), flags=re.I)
+            parsed = json.loads(cleaned)
+            if isinstance(parsed, dict) and parsed.get("stem") and parsed.get("case_text"):
+                return {
+                    "case_text": str(parsed["case_text"]).strip(),
+                    "stem": str(parsed["stem"]).strip(),
+                    "source": "gemini",
+                }
+        except Exception:
+            pass
+
+    # Fallback determinístico inteligente si hay texto concatenado o muy largo
+    clean_full = re.sub(r"\s+", " ", full_text).strip()
+    # Cortar si se coló texto de opciones " A. " o " B. " en medio de un bloque mal importado
+    clean_full = re.split(r"\s+[A-D]\.\s+", clean_full)[0].strip()
+
+    # Buscar la última oración interrogativa o de cierre como enunciado (stem)
+    q_match = re.search(r"([¿][^?]+[?])\s*$", clean_full)
+    if q_match:
+        new_stem = q_match.group(1).strip()
+        raw_case = clean_full[: q_match.start()].strip()
+    else:
+        sentences = [s.strip() for s in re.split(r"(?<=[.?!])\s+", clean_full) if s.strip()]
+        if len(sentences) > 1:
+            new_stem = sentences[-1]
+            if len(new_stem) > 240:
+                new_stem = "Con base en la situación descrita, ¿cuál es el procedimiento o actuación correcta que debe aplicarse?"
+            raw_case = " ".join(sentences[:-1])
+        else:
+            raw_case = clean_full[:520]
+            new_stem = "De acuerdo con el caso planteado, ¿cuál de las siguientes opciones es la correcta?"
+
+    if len(raw_case) > 550:
+        sents = [s.strip() for s in re.split(r"(?<=[.])\s+", raw_case) if s.strip()]
+        if len(sents) >= 2:
+            raw_case = f"{sents[0]} {sents[-1]}"
+        if len(raw_case) > 550:
+            raw_case = raw_case[:545].rsplit(" ", 1)[0] + "."
+
+    return {
+        "case_text": raw_case,
+        "stem": new_stem,
+        "source": "smart_condenser",
+    }
+

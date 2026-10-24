@@ -162,10 +162,10 @@
                             {# Botón Marcar para Revisar #}
                             <button type="button" onclick="toggleReviewMark({{ index + 1 }})" 
                                     id="btn-mark-{{ index + 1 }}"
-                                    class="text-xs px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-800/80 hover:bg-amber-500/20 text-slate-400 hover:text-amber-300 border border-slate-700/60 transition-colors flex items-center gap-1.5">
-                                <i class="fa-regular fa-bookmark"></i>
-                                <span class="hidden sm:inline">Marcar para revisión</span>
-                                <span class="sm:hidden">Marcar</span>
+                                    class="text-xs px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-800/80 hover:bg-amber-500/20 text-slate-300 hover:text-amber-300 border border-slate-700/60 transition-colors flex items-center gap-1.5 font-semibold">
+                                <i id="icon-mark-{{ index + 1 }}" class="fa-solid fa-flag text-amber-400"></i>
+                                <span id="text-mark-{{ index + 1 }}" class="hidden sm:inline">Marcar para revisar</span>
+                                <span class="sm:hidden">Revisar</span>
                             </button>
                         </div>
 
@@ -219,6 +219,10 @@
                         </div>
 
                         {# Opciones de Respuesta (Ergonómicas, Legibles y Justificadas) #}
+                        <div class="flex items-center justify-between text-[11px] text-slate-400 mb-2">
+                            <span class="font-bold uppercase tracking-wider">Selecciona una opción</span>
+                            <span class="flex items-center gap-1 text-slate-400"><i class="fa-solid fa-eye-slash text-[10px] text-rose-400"></i> Usa <strong>✕</strong> para tachar distractores</span>
+                        </div>
                         <div class="space-y-3 sm:space-y-3.5" id="options-group-{{ index + 1 }}">
                             {% set options = q.display_options or session.get_display_options_for(q) %}
 
@@ -226,6 +230,7 @@
                                 {% if text %}
                                     {% set isSelected = (savedOpt == letter) %}
                                     <label for="q{{ q.id }}_{{ letter }}" 
+                                           id="option-lbl-{{ index + 1 }}-{{ letter }}"
                                            data-letter="{{ letter }}"
                                            class="option-label w-full flex items-start gap-3.5 sm:gap-4 p-3.5 sm:p-4.5 rounded-2xl border cursor-pointer transition-all active:scale-[0.99] {{ 'border-blue-500 bg-blue-950/40 ring-1 ring-blue-500/50 shadow-md shadow-blue-500/10' if isSelected else 'border-slate-800 bg-slate-950/60 hover:bg-slate-800/60 hover:border-blue-500/50' }}">
                                         
@@ -243,10 +248,18 @@
                                             <span class="option-badge w-7 h-7 sm:w-8 sm:h-8 rounded-xl text-xs sm:text-sm font-black flex items-center justify-center shrink-0 transition-colors {{ 'bg-blue-600 text-white shadow-sm shadow-blue-500/40' if isSelected else 'bg-slate-800 text-slate-300' }}">
                                                 {{ letter }}
                                             </span>
-                                            <div class="flex-1 min-w-0 text-sm sm:text-base text-slate-200 font-medium leading-relaxed pt-0.5" style="text-align: justify; text-justify: inter-word; text-align-last: left; word-break: break-word;">
+                                            <div id="option-text-{{ index + 1 }}-{{ letter }}" class="flex-1 min-w-0 text-sm sm:text-base text-slate-200 font-medium leading-relaxed pt-0.5 transition-all" style="text-align: justify; text-justify: inter-word; text-align-last: left; word-break: break-word;">
                                                 {{ text }}
                                             </div>
                                         </div>
+
+                                        <button type="button"
+                                                id="btn-strike-{{ index + 1 }}-{{ letter }}"
+                                                onclick="event.preventDefault(); event.stopPropagation(); toggleStrikeOption({{ index + 1 }}, '{{ letter }}');"
+                                                title="Tachar / Descartar esta opción"
+                                                class="w-7 h-7 rounded-lg bg-slate-900/90 hover:bg-rose-500/20 text-slate-500 hover:text-rose-400 border border-slate-800 hover:border-rose-500/40 flex items-center justify-center text-xs font-black shrink-0 transition-colors">
+                                            ✕
+                                        </button>
                                     </label>
                                 {% endif %}
                             {% endfor %}
@@ -608,6 +621,15 @@
         {% endfor %}
     ]);
     let reviewSet = new Set();
+    let strikeSet = new Set();
+    const reviewStorageKey = 'dian2676_exam_reviews_{{ session.id }}';
+    const strikeStorageKey = 'dian2676_exam_strikes_{{ session.id }}';
+    try {
+        const savedReviews = JSON.parse(localStorage.getItem(reviewStorageKey) || '[]');
+        if (Array.isArray(savedReviews)) savedReviews.forEach(n => reviewSet.add(Number(n)));
+        const savedStrikes = JSON.parse(localStorage.getItem(strikeStorageKey) || '[]');
+        if (Array.isArray(savedStrikes)) savedStrikes.forEach(k => strikeSet.add(String(k)));
+    } catch (e) {}
     let currentBubbleFilter = 'all';
 
     // Temporizador continuo y persistente
@@ -897,19 +919,68 @@
         } catch (e) {}
     }
 
-    function toggleReviewMark(qNum) {
+    function applyReviewButtonUI(qNum) {
         const btnMark = document.getElementById(`btn-mark-${qNum}`);
+        const textMark = document.getElementById(`text-mark-${qNum}`);
+        const isRev = reviewSet.has(qNum);
+        if (btnMark) {
+            if (isRev) {
+                btnMark.classList.add('bg-amber-500/20', 'text-amber-300', 'border-amber-500/40');
+                if (textMark) textMark.textContent = 'Marcada para revisar';
+            } else {
+                btnMark.classList.remove('bg-amber-500/20', 'text-amber-300', 'border-amber-500/40');
+                if (textMark) textMark.textContent = 'Marcar para revisar';
+            }
+        }
+    }
 
+    function toggleReviewMark(qNum) {
         if (reviewSet.has(qNum)) {
             reviewSet.delete(qNum);
-            if (btnMark) btnMark.classList.remove('bg-amber-500/20', 'text-amber-300', 'border-amber-500/40');
         } else {
             reviewSet.add(qNum);
-            if (btnMark) btnMark.classList.add('bg-amber-500/20', 'text-amber-300', 'border-amber-500/40');
         }
+        try {
+            localStorage.setItem(reviewStorageKey, JSON.stringify(Array.from(reviewSet)));
+        } catch (e) {}
 
+        applyReviewButtonUI(qNum);
         updateBubbleStyle(qNum);
         updateMobileUI();
+    }
+
+    function applyStrikeUI(qNum, letter) {
+        const key = `${qNum}_${letter}`;
+        const isStruck = strikeSet.has(key);
+        const txtEl = document.getElementById(`option-text-${qNum}-${letter}`);
+        const btnEl = document.getElementById(`btn-strike-${qNum}-${letter}`);
+        if (txtEl) {
+            if (isStruck) {
+                txtEl.classList.add('line-through', 'opacity-40');
+            } else {
+                txtEl.classList.remove('line-through', 'opacity-40');
+            }
+        }
+        if (btnEl) {
+            if (isStruck) {
+                btnEl.className = 'w-7 h-7 rounded-lg bg-rose-500/25 text-rose-300 border border-rose-500/50 flex items-center justify-center text-xs font-black shrink-0 transition-colors';
+            } else {
+                btnEl.className = 'w-7 h-7 rounded-lg bg-slate-900/90 hover:bg-rose-500/20 text-slate-500 hover:text-rose-400 border border-slate-800 hover:border-rose-500/40 flex items-center justify-center text-xs font-black shrink-0 transition-colors';
+            }
+        }
+    }
+
+    function toggleStrikeOption(qNum, letter) {
+        const key = `${qNum}_${letter}`;
+        if (strikeSet.has(key)) {
+            strikeSet.delete(key);
+        } else {
+            strikeSet.add(key);
+        }
+        try {
+            localStorage.setItem(strikeStorageKey, JSON.stringify(Array.from(strikeSet)));
+        } catch (e) {}
+        applyStrikeUI(qNum, letter);
     }
 
     function filterBubbles(filterType) {
@@ -1145,6 +1216,8 @@
 
     // Inicializar estados de los bubbles, UI Móvil y enfocar bubble activo al cargar
     for (let i = 1; i <= totalQuestions; i++) {
+        applyReviewButtonUI(i);
+        ['A', 'B', 'C', 'D'].forEach(letKey => applyStrikeUI(i, letKey));
         updateBubbleStyle(i);
     }
     updateMobileUI();
