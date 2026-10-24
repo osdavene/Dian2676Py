@@ -528,10 +528,16 @@ def users_list(
     query = query.order_by(User.id.desc())
     paginator = Paginator(query, request, per_page=15)
 
+    from app.ai_service import get_ai_config
+    ai_cfg = get_ai_config()
+    unlimited_ids = {int(x) for x in (ai_cfg.get("unlimited_user_ids") or []) if str(x).isdigit()}
+    daily_limit = int(ai_cfg.get("daily_limit_per_user") or 25)
+
     for u in paginator.items:
         completed = [s for s in u.exam_sessions if s.completed_at is not None]
         u.exams_count = len(completed)
         u.passed_exams_count = sum(1 for s in completed if s.is_passed)
+        u.is_ai_unlimited = u.is_admin() or (u.id in unlimited_ids)
 
     jobs = (
         db.query(JobProfile)
@@ -549,6 +555,8 @@ def users_list(
             "search": search or "",
             "jobId": resolved_job_id,
             "role": role or "",
+            "unlimitedIds": unlimited_ids,
+            "dailyLimit": daily_limit,
         },
         db,
     )

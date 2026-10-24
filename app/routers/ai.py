@@ -287,6 +287,10 @@ def admin_ai_hub(request: Request, db: Session = Depends(get_db)):
     cfg = get_ai_config()
     today_str = datetime.now().strftime("%Y-%m-%d")
     today_usage_map = cfg.get("usage", {}).get(today_str, {})
+    unlimited_ids = {int(x) for x in (cfg.get("unlimited_user_ids") or []) if str(x).isdigit()}
+
+    all_users = db.query(User).order_by(User.name.asc()).all()
+    unlimited_users = [u for u in all_users if u.id in unlimited_ids and not u.is_admin()]
 
     user_usage_list = []
     if isinstance(today_usage_map, dict) and today_usage_map:
@@ -297,14 +301,17 @@ def admin_ai_hub(request: Request, db: Session = Depends(get_db)):
         for uid_str, count in today_usage_map.items():
             if not str(uid_str).isdigit():
                 continue
-            u_obj = users_by_id.get(int(uid_str))
+            uid_int = int(uid_str)
+            u_obj = users_by_id.get(uid_int)
             user_usage_list.append(
                 {
-                    "id": int(uid_str),
+                    "id": uid_int,
                     "name": u_obj.name if u_obj else f"Usuario #{uid_str}",
                     "email": u_obj.email if u_obj else "",
                     "cargo": u_obj.target_cargo if u_obj else "",
                     "count": int(count),
+                    "is_unlimited": uid_int in unlimited_ids or (u_obj.is_admin() if u_obj else False),
+                    "is_admin": u_obj.is_admin() if u_obj else False,
                 }
             )
         user_usage_list.sort(key=lambda x: x["count"], reverse=True)
@@ -333,6 +340,9 @@ def admin_ai_hub(request: Request, db: Session = Depends(get_db)):
             "today_str": today_str,
             "user_usage_list": user_usage_list,
             "total_queries_today": sum(x["count"] for x in user_usage_list),
+            "all_users": all_users,
+            "unlimited_users": unlimited_users,
+            "unlimited_ids": unlimited_ids,
             "job_profiles": job_profiles,
             "thematic_axes": thematic_axes,
             "kb_chunks_count": len(kb_chunks),
@@ -341,6 +351,47 @@ def admin_ai_hub(request: Request, db: Session = Depends(get_db)):
         },
         db,
     )
+
+
+@router.post("/admin/ia/usuarios-ilimitados")
+async def toggle_unlimited_ai_user(
+    request: Request,
+    user_id: int = Form(0),
+    action: str = Form("toggle"),
+    redirect_to: str = Form("/admin/ia"),
+    db: Session = Depends(get_db),
+):
+    admin_user = get_current_user(request, db)
+    if not admin_user or not admin_user.is_admin():
+        return RedirectResponse(url="/dashboard", status_code=302)
+
+    target_user = db.query(User).filter(User.id == int(user_id)).first() if user_id else None
+    if not target_user:
+        flash(request, "error", "Selecciona un usuario válido.")
+        return RedirectResponse(url=redirect_to or "/admin/ia", status_code=302)
+
+    cfg = get_ai_config()
+    unlimited_ids = {int(x) for x in (cfg.get("unlimited_user_ids") or []) if str(x).isdigit()}
+
+    act = (action or "toggle").strip().lower()
+    if act == "add" or (act == "toggle" and target_user.id not in unlimited_ids):
+        unlimited_ids.add(target_user.id)
+        save_ai_config({"unlimited_user_ids": sorted(unlimited_ids)})
+        flash(
+            request,
+            "success",
+            f"✨ ¡Listo! {target_user.name} ({target_user.email}) ahora tiene Consultas IA Ilimitadas.",
+        )
+    else:
+        unlimited_ids.discard(target_user.id)
+        save_ai_config({"unlimited_user_ids": sorted(unlimited_ids)})
+        flash(
+            request,
+            "success",
+            f"Se restableció el cupo diario normal ({cfg.get('daily_limit_per_user', 25)} consultas/día) para {target_user.name}.",
+        )
+
+    return RedirectResponse(url=redirect_to or "/admin/ia", status_code=302)
 
 
 @router.post("/admin/ia/config")

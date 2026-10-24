@@ -140,6 +140,19 @@
                     </div>
 
                     <div class="flex items-center justify-end gap-2 pt-1">
+                        {% if not u.is_admin() %}
+                            <form method="POST" action="/admin/ia/usuarios-ilimitados" class="inline">
+                                <input type="hidden" name="user_id" value="{{ u.id }}">
+                                <input type="hidden" name="action" value="toggle">
+                                <input type="hidden" name="redirect_to" value="/admin/usuarios">
+                                <button type="submit"
+                                        class="px-2.5 py-2 rounded-lg font-bold text-xs transition-colors flex items-center gap-1 {{ 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40' if u.is_ai_unlimited else 'bg-slate-800 text-slate-300 border border-slate-700' }}">
+                                    <i class="fa-solid fa-infinity text-[10px]"></i>
+                                    <span>{{ 'IA Ilimitada' if u.is_ai_unlimited else 'Dar IA ∞' }}</span>
+                                </button>
+                            </form>
+                        {% endif %}
+
                         <a href="/admin/usuarios/{{ u.id }}" 
                            class="flex-1 py-2 rounded-lg bg-blue-600/20 hover:bg-blue-600/40 text-blue-300 font-bold transition-colors text-xs flex items-center justify-center gap-1.5">
                             <i class="fa-solid fa-user-pen text-[11px]"></i> Ficha & Editar
@@ -172,6 +185,7 @@
                         <th class="py-3 px-3">Aspirante</th>
                         <th class="py-3 px-3">Cargo Concurso</th>
                         <th class="py-3 px-3 text-center">Rol</th>
+                        <th class="py-3 px-3 text-center">Cupo IA</th>
                         <th class="py-3 px-3 text-center">Simulacros</th>
                         <th class="py-3 px-3 text-center">Aprobados</th>
                         <th class="py-3 px-3">Fecha Alta</th>
@@ -203,6 +217,25 @@
                                     <span class="px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700/60 text-[10px] font-bold uppercase">
                                         Aspirante
                                     </span>
+                                {% endif %}
+                            </td>
+                            <td class="py-3.5 px-3 text-center">
+                                {% if u.is_admin() %}
+                                    <span class="px-2.5 py-1 rounded-lg bg-amber-500/15 text-amber-300 border border-amber-500/30 text-[10px] font-black inline-flex items-center gap-1">
+                                        <i class="fa-solid fa-infinity"></i> Admin &infin;
+                                    </span>
+                                {% else %}
+                                    <form method="POST" action="/admin/ia/usuarios-ilimitados" class="inline">
+                                        <input type="hidden" name="user_id" value="{{ u.id }}">
+                                        <input type="hidden" name="action" value="toggle">
+                                        <input type="hidden" name="redirect_to" value="/admin/usuarios">
+                                        <button type="submit"
+                                                title="{{ 'Haz clic para volver al cupo normal (' ~ dailyLimit ~ '/día)' if u.is_ai_unlimited else 'Haz clic para darle Consultas IA Ilimitadas a este usuario' }}"
+                                                class="px-2.5 py-1 rounded-lg font-bold text-[11px] transition-all inline-flex items-center gap-1 {{ 'bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40' if u.is_ai_unlimited else 'bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700' }}">
+                                            <i class="fa-solid {{ 'fa-infinity text-emerald-400' if u.is_ai_unlimited else 'fa-bolt text-slate-400' }} text-[10px]"></i>
+                                            <span>{{ 'Ilimitado' if u.is_ai_unlimited else (dailyLimit ~ '/día') }}</span>
+                                        </button>
+                                    </form>
                                 {% endif %}
                             </td>
                             <td class="py-3.5 px-3 text-center font-bold text-white">

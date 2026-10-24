@@ -55,6 +55,7 @@ def get_ai_config() -> Dict[str, Any]:
         "gemini_model": os.getenv("GEMINI_MODEL", "gemini-flash-lite-latest"),
         "ai_enabled": True,
         "daily_limit_per_user": 15,
+        "unlimited_user_ids": [],
         "usage": {},
     }
     if not AI_CONFIG_PATH.exists():
@@ -65,9 +66,22 @@ def get_ai_config() -> Dict[str, Any]:
             default_cfg.update(saved)
             if not default_cfg.get("gemini_api_key") and os.getenv("GEMINI_API_KEY"):
                 default_cfg["gemini_api_key"] = os.getenv("GEMINI_API_KEY", "")
+            if not isinstance(default_cfg.get("unlimited_user_ids"), list):
+                default_cfg["unlimited_user_ids"] = []
     except Exception:
         pass
     return default_cfg
+
+
+def is_user_ai_unlimited(user: User, cfg: Optional[Dict[str, Any]] = None) -> bool:
+    if not user:
+        return False
+    if user.is_admin():
+        return True
+    active_cfg = cfg if cfg is not None else get_ai_config()
+    raw_list = active_cfg.get("unlimited_user_ids") or []
+    unlimited_ids = {int(x) for x in raw_list if str(x).isdigit()}
+    return int(user.id) in unlimited_ids
 
 
 def save_ai_config(updates: Dict[str, Any]) -> Dict[str, Any]:
@@ -95,7 +109,7 @@ def get_user_daily_usage(user: User) -> Dict[str, Any]:
     limit = int(cfg.get("daily_limit_per_user") or 15)
     usage_today = cfg.get("usage", {}).get(today_str, {})
     used = int(usage_today.get(str(user.id), 0))
-    unlimited = user.is_admin()
+    unlimited = is_user_ai_unlimited(user, cfg)
     remaining = 999 if unlimited else max(0, limit - used)
     return {
         "used": used,
@@ -104,7 +118,7 @@ def get_user_daily_usage(user: User) -> Dict[str, Any]:
         "unlimited": unlimited,
         "ai_enabled": bool(cfg.get("ai_enabled", True)),
         "has_api_key": bool(str(cfg.get("gemini_api_key", "")).strip()),
-        "model": cfg.get("gemini_model", "gemini-2.5-flash"),
+        "model": cfg.get("gemini_model", "gemini-flash-lite-latest"),
     }
 
 
@@ -126,7 +140,8 @@ def check_and_increment_quota(user: User) -> Tuple[bool, str]:
         day_map = {}
 
     used = int(day_map.get(str(user.id), 0))
-    if not user.is_admin() and used >= limit:
+    unlimited = is_user_ai_unlimited(user, cfg)
+    if not unlimited and used >= limit:
         return (
             False,
             f"Has alcanzado tu límite diario de {limit} consultas de IA por hoy. Mañana se renovará tu cupo automáticamente.",
