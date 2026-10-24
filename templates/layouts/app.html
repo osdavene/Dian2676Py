@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full bg-slate-950">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+    <meta name="theme-color" content="#070b14">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="csrf-token" content="{{ csrf_token }}">
+    <title>{{ settings.APP_NAME }} — {% block title %}Simulador{% endblock %}</title>
+
+    <!-- Fuentes Google -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Estilos Locales Compilados y FontAwesome -->
+    <link rel="stylesheet" href="/css/app.css">
+    <link rel="stylesheet" href="/css/fontawesome.min.css">
+    <script defer src="/js/alpine.min.js"></script>
+    <style>
+        html { -webkit-tap-highlight-color: transparent; }
+        .touch-action-manipulation { touch-action: manipulation; }
+        [x-cloak] { display: none !important; }
+        @supports (padding-bottom: env(safe-area-inset-bottom)) {
+            .pb-safe { padding-bottom: env(safe-area-inset-bottom); }
+        }
+    </style>
+    {% block styles %}{% endblock %}
+</head>
+<body class="min-h-full font-sans antialiased text-slate-100 bg-[#070b14] flex flex-col touch-action-manipulation">
+
+    {% set path = request.url.path %}
+    {% set userJob = user.job_profile if user else None %}
+
+    {# Barra Superior de Navegación Responsive #}
+    <nav class="bg-slate-900/95 border-b border-slate-800/80 sticky top-0 z-50 backdrop-blur-md" x-data="{ mobileMenuOpen: false }">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                
+                {# Logo y Nombre #}
+                <div class="flex items-center gap-3">
+                    <a href="/dashboard" class="flex items-center gap-2.5 group">
+                        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-700 to-indigo-600 flex items-center justify-center shadow-lg shadow-blue-500/20 group-hover:scale-105 transition-transform">
+                            <i class="fa-solid fa-scale-balanced text-white text-lg"></i>
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-1.5">
+                                <span class="text-base font-black tracking-wider text-white">DIAN 2676</span>
+                                <span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-blue-600/30 text-blue-300 border border-blue-500/30 uppercase">
+                                    Simulador
+                                </span>
+                            </div>
+                            <span class="text-[11px] text-slate-400 block -mt-1 font-medium">Concurso de Méritos CNSC</span>
+                        </div>
+                    </a>
+                </div>
+
+                {# Navegación Central (Desktop) #}
+                <div class="hidden md:flex items-center gap-1">
+                    <a href="/dashboard" 
+                       class="px-3 py-2 rounded-xl text-xs font-semibold {{ 'bg-blue-600 text-white shadow-md shadow-blue-600/30' if path in ['/', '/dashboard'] else 'text-slate-300 hover:text-white hover:bg-slate-800/60' }} transition-all flex items-center gap-1.5">
+                        <i class="fa-solid fa-house"></i>
+                        Inicio
+                    </a>
+
+                    <a href="/simulacros/historial" 
+                       class="px-3 py-2 rounded-xl text-xs font-semibold {{ 'bg-blue-600 text-white shadow-md shadow-blue-600/30' if path.startswith('/simulacros/historial') else 'text-slate-300 hover:text-white hover:bg-slate-800/60' }} transition-all flex items-center gap-1.5">
+                        <i class="fa-solid fa-clock-rotate-left"></i>
+                        Historial
+                    </a>
+
+                    <a href="/practica" 
+                       class="px-3 py-2 rounded-xl text-xs font-semibold {{ 'bg-blue-600 text-white shadow-md shadow-blue-600/30' if path.startswith('/practica') else 'text-slate-300 hover:text-white hover:bg-slate-800/60' }} transition-all flex items-center gap-1.5">
+                        <i class="fa-solid fa-bullseye"></i>
+                        Práctica por Eje
+                    </a>
+
+                    <a href="/repaso-fallos" 
+                       class="px-3 py-2 rounded-xl text-xs font-semibold {{ 'bg-blue-600 text-white shadow-md shadow-blue-600/30' if path.startswith('/repaso-fallos') else 'text-slate-300 hover:text-white hover:bg-slate-800/60' }} transition-all flex items-center gap-1.5">
+                        <i class="fa-solid fa-rotate-left"></i>
+                        Repaso de Fallos
+                    </a>
+
+                    <a href="/banco-preguntas" 
+                       class="px-3 py-2 rounded-xl text-xs font-semibold {{ 'bg-blue-600 text-white shadow-md shadow-blue-600/30' if path.startswith('/banco-preguntas') else 'text-slate-300 hover:text-white hover:bg-slate-800/60' }} transition-all flex items-center gap-1.5">
+                        <i class="fa-solid fa-database"></i>
+                        Banco de Preguntas
+                    </a>
+
+                    {% if user and user.is_admin() %}
+                        <a href="/admin" 
+                           class="px-3 py-2 rounded-xl text-xs font-bold {{ 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/30' if path.startswith('/admin') else 'text-amber-300 hover:text-white hover:bg-amber-500/20' }} transition-all flex items-center gap-1.5">
+                            <i class="fa-solid fa-shield-halved"></i>
+                            Control Central
+                        </a>
+                    {% endif %}
+                </div>
+
+                {# Cargo Activo y Usuario (Desktop) #}
+                <div class="hidden md:flex items-center gap-3">
+                    
+                    {# Badge de Cargo Activo #}
+                    {% if user and user.is_admin() %}
+                        <div class="relative">
+                            <button type="button" onclick="document.getElementById('cargo-modal').classList.toggle('hidden')"
+                                    class="flex items-center gap-2 px-3 py-1.5 bg-slate-800/90 hover:bg-slate-700/80 border border-slate-700/80 rounded-xl text-xs transition-all text-left"
+                                    title="Modo Administrador: Alternar cargo de evaluación">
+                                <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+                                <div>
+                                    <span class="text-[10px] text-amber-300/80 block leading-none font-medium">Cargo simulado:</span>
+                                    <span class="font-bold text-white text-xs leading-tight">
+                                        {{ userJob.name if userJob else user.target_cargo }}
+                                    </span>
+                                </div>
+                                <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 ml-1"></i>
+                            </button>
+                        </div>
+                    {% elif user %}
+                        <div class="flex items-center gap-2 px-3 py-1.5 bg-slate-900/90 border border-slate-800 rounded-xl text-xs text-left cursor-default select-none shadow-sm"
+                             title="Tu cargo de concurso ha sido fijado por la Administración">
+                            <span class="w-2 h-2 rounded-full bg-blue-400"></span>
+                            <div>
+                                <span class="text-[10px] text-slate-400 block leading-none font-medium">Cargo Asignado:</span>
+                                <span class="font-bold text-slate-200 text-xs leading-tight">
+                                    {{ userJob.name if userJob else user.target_cargo }}
+                                </span>
+                            </div>
+                            <span class="ml-1 text-[10px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700/60 font-semibold flex items-center gap-1">
+                                <i class="fa-solid fa-lock text-[9px] text-slate-400"></i> Fijo
+                            </span>
+                        </div>
+                    {% endif %}
+
+                    {# Menú de Usuario #}
+                    {% if user %}
+                    <div class="flex items-center gap-2 pl-2 border-l border-slate-800">
+                        <a href="/perfil" class="flex items-center gap-2 p-1.5 rounded-xl hover:bg-slate-800/70 transition-colors">
+                            <div class="w-8 h-8 rounded-lg bg-blue-600/30 border border-blue-500/40 text-blue-300 flex items-center justify-center font-bold text-xs">
+                                {{ user.name[:2].upper() }}
+                            </div>
+                            <span class="text-xs font-semibold text-slate-200 max-w-[120px] truncate">
+                                {{ user.name }}
+                            </span>
+                        </a>
+
+                        <form method="POST" action="/logout" class="inline">
+                            <button type="submit" title="Cerrar Sesión"
+                                    class="p-2 text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 rounded-lg transition-colors text-xs">
+                                <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                            </button>
+                        </form>
+                    </div>
+                    {% endif %}
+
+                </div>
+
+                {# Controles Móviles (Avatar + Toggle Menú) #}
+                {% if user %}
+                <div class="md:hidden flex items-center gap-2.5">
+                    <a href="/perfil" title="Mi Perfil"
+                       class="w-8 h-8 rounded-lg bg-blue-600/30 border border-blue-500/40 text-blue-300 flex items-center justify-center font-bold text-xs">
+                        {{ user.name[:2].upper() }}
+                    </a>
+                    <button type="button" 
+                            @click="mobileMenuOpen = !mobileMenuOpen"
+                            class="p-2.5 rounded-xl text-slate-300 hover:text-white bg-slate-800/80 hover:bg-slate-700 border border-slate-700/60 focus:outline-none transition-all"
+                            aria-label="Abrir menú de navegación">
+                        <i class="fa-solid text-base transition-transform" :class="mobileMenuOpen ? 'fa-xmark rotate-90 text-rose-400' : 'fa-bars'"></i>
+                    </button>
+                </div>
+                {% endif %}
+
+            </div>
+        </div>
+
+        {# Menú Desplegable Móvil #}
+        {% if user %}
+        <div id="mobile-menu" 
+             x-show="mobileMenuOpen" 
+             x-cloak
+             @click.outside="mobileMenuOpen = false"
+             x-transition:enter="transition ease-out duration-200"
+             x-transition:enter-start="opacity-0 -translate-y-2"
+             x-transition:enter-end="opacity-100 translate-y-0"
+             x-transition:leave="transition ease-in duration-150"
+             x-transition:leave-start="opacity-100 translate-y-0"
+             x-transition:leave-end="opacity-0 -translate-y-2"
+             class="md:hidden border-t border-slate-800 bg-slate-900/98 backdrop-blur-xl px-4 pt-3.5 pb-6 space-y-2 shadow-2xl">
+            
+            <div class="p-3.5 bg-slate-800/70 border border-slate-700/60 rounded-2xl mb-3 flex items-center justify-between shadow-inner">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center font-bold text-sm shadow-md">
+                        {{ user.name[:2].upper() }}
+                    </div>
+                    <div>
+                        <span class="font-bold text-white text-xs block leading-tight">{{ user.name }}</span>
+                        <span class="text-[11px] text-blue-400 font-semibold block">{{ userJob.name if userJob else user.target_cargo }}</span>
+                        <span class="text-[9px] text-slate-400 uppercase tracking-wider block font-medium">{{ user.email }}</span>
+                    </div>
+                </div>
+                {% if user.is_admin() %}
+                    <button type="button" @click="mobileMenuOpen = false; document.getElementById('cargo-modal').classList.remove('hidden')"
+                            class="text-xs px-2.5 py-1.5 bg-amber-500/20 text-amber-300 border border-amber-500/40 rounded-xl font-bold flex items-center gap-1 shadow-sm">
+                        <i class="fa-solid fa-arrows-rotate text-[10px]"></i> Cambiar
+                    </button>
+                {% else %}
+                    <span class="text-[10px] px-2.5 py-1 bg-slate-900 text-slate-400 rounded-lg border border-slate-700/70 flex items-center gap-1 font-bold">
+                        <i class="fa-solid fa-lock text-[8px] text-slate-400"></i> Fijo
+                    </span>
+                {% endif %}
+            </div>
+
+            <div class="space-y-1">
+                <a href="/dashboard" 
+                   class="flex items-center gap-3 px-3.5 py-3 rounded-xl text-xs font-bold {{ 'bg-blue-600 text-white shadow-md shadow-blue-600/30' if path in ['/', '/dashboard'] else 'text-slate-300 hover:text-white hover:bg-slate-800/80' }} transition-colors">
+                    <i class="fa-solid fa-house text-sm w-5 text-center text-blue-400"></i>
+                    <span>Inicio</span>
+                </a>
+
+                <a href="/simulacros/historial" 
+                   class="flex items-center gap-3 px-3.5 py-3 rounded-xl text-xs font-bold {{ 'bg-blue-600 text-white shadow-md shadow-blue-600/30' if path.startswith('/simulacros/historial') else 'text-slate-300 hover:text-white hover:bg-slate-800/80' }} transition-colors">
+                    <i class="fa-solid fa-clock-rotate-left text-sm w-5 text-center text-amber-400"></i>
+                    <span>Historial y Estadísticas</span>
+                </a>
+                
+                <a href="/practica" 
+                   class="flex items-center gap-3 px-3.5 py-3 rounded-xl text-xs font-bold {{ 'bg-blue-600 text-white shadow-md shadow-blue-600/30' if path.startswith('/practica') else 'text-slate-300 hover:text-white hover:bg-slate-800/80' }} transition-colors">
+                    <i class="fa-solid fa-bullseye text-sm w-5 text-center text-emerald-400"></i>
+                    <span>Práctica por Eje</span>
+                </a>
+                
+                <a href="/repaso-fallos" 
+                   class="flex items-center gap-3 px-3.5 py-3 rounded-xl text-xs font-bold {{ 'bg-blue-600 text-white shadow-md shadow-blue-600/30' if path.startswith('/repaso-fallos') else 'text-slate-300 hover:text-white hover:bg-slate-800/80' }} transition-colors">
+                    <i class="fa-solid fa-rotate-left text-sm w-5 text-center text-amber-400"></i>
+                    <span>Repaso de Fallos</span>
+                </a>
+                
+                <a href="/banco-preguntas" 
+                   class="flex items-center gap-3 px-3.5 py-3 rounded-xl text-xs font-bold {{ 'bg-blue-600 text-white shadow-md shadow-blue-600/30' if path.startswith('/banco-preguntas') else 'text-slate-300 hover:text-white hover:bg-slate-800/80' }} transition-colors">
+                    <i class="fa-solid fa-database text-sm w-5 text-center text-purple-400"></i>
+                    <span>Banco de Preguntas</span>
+                </a>
+
+                {% if user.is_admin() %}
+                    <a href="/admin" 
+                       class="flex items-center gap-3 px-3.5 py-3 rounded-xl text-xs font-black {{ 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/30' if path.startswith('/admin') else 'text-amber-300 hover:text-white hover:bg-amber-500/20' }} transition-colors">
+                        <i class="fa-solid fa-shield-halved text-sm w-5 text-center text-amber-400"></i>
+                        <span>Control Central (Admin)</span>
+                    </a>
+                {% endif %}
+
+                <a href="/perfil" 
+                   class="flex items-center gap-3 px-3.5 py-3 rounded-xl text-xs font-bold {{ 'bg-blue-600 text-white shadow-md shadow-blue-600/30' if path.startswith('/perfil') else 'text-slate-300 hover:text-white hover:bg-slate-800/80' }} transition-colors">
+                    <i class="fa-solid fa-user-gear text-sm w-5 text-center text-slate-400"></i>
+                    <span>Mi Perfil y Credenciales</span>
+                </a>
+            </div>
+
+            <form method="POST" action="/logout" class="pt-3 border-t border-slate-800/80">
+                <button type="submit" class="w-full flex items-center gap-3 px-3.5 py-3 text-xs font-bold text-rose-400 hover:bg-rose-500/10 rounded-xl transition-colors">
+                    <i class="fa-solid fa-arrow-right-from-bracket text-sm w-5 text-center"></i>
+                    <span>Cerrar Sesión</span>
+                </button>
+            </form>
+        </div>
+        {% endif %}
+    </nav>
+
+    {% if user and user.is_admin() %}
+    {# Modal Selector de Cargo (Exclusivo Administradores) #}
+    <div id="cargo-modal" class="hidden fixed inset-0 z-50 overflow-y-auto bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-700/80 rounded-2xl max-w-md w-full p-6 shadow-2xl relative">
+            <div class="flex items-center justify-between pb-4 border-b border-slate-800">
+                <h3 class="text-base font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-id-badge text-blue-400"></i>
+                    Seleccionar Cargo de Entrenamiento
+                </h3>
+                <button type="button" onclick="document.getElementById('cargo-modal').classList.add('hidden')"
+                        class="text-slate-400 hover:text-white p-1 rounded-lg">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            <p class="text-xs text-slate-400 mt-3 mb-4">
+                Elige el cargo para el cual deseas que el simulador y las prácticas se ajusten de manera inmediata:
+            </p>
+            <div class="space-y-2.5">
+                {% for j in all_jobs_list %}
+                    <form method="POST" action="/cambiar-cargo/{{ j.id }}">
+                        <button type="submit"
+                                class="w-full text-left p-3.5 rounded-xl border transition-all flex items-center justify-between {{ 'bg-blue-600/20 border-blue-500/60 text-white' if (userJob.id if userJob else 1) == j.id else 'bg-slate-800/40 border-slate-700/50 hover:bg-slate-800 text-slate-300' }}">
+                            <div>
+                                <div class="font-bold text-xs text-white">{{ j.name }}</div>
+                                <div class="text-[11px] text-slate-400">{{ j.level }} (Grado {{ j.grade }})</div>
+                                <div class="text-[10px] text-blue-300/80">{{ j.subprocess or j.process }}</div>
+                            </div>
+                            {% if (userJob.id if userJob else 1) == j.id %}
+                                <span class="px-2 py-0.5 rounded-full bg-blue-600 text-white text-[10px] font-bold">Activo</span>
+                            {% else %}
+                                <span class="text-xs text-slate-500 hover:text-blue-400">Seleccionar</span>
+                            {% endif %}
+                        </button>
+                    </form>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {# Mensajes Flash #}
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        {% if flashes.get('success') %}
+            <div class="mb-5 p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs sm:text-sm flex items-center gap-3 shadow-lg">
+                <i class="fa-solid fa-circle-check text-emerald-400 text-base"></i>
+                <div class="font-medium">{{ flashes.get('success') }}</div>
+            </div>
+        {% endif %}
+
+        {% if flashes.get('info') %}
+            <div class="mb-5 p-4 rounded-2xl bg-blue-500/10 border border-blue-500/30 text-blue-300 text-xs sm:text-sm flex items-center gap-3 shadow-lg">
+                <i class="fa-solid fa-circle-info text-blue-400 text-base"></i>
+                <div class="font-medium">{{ flashes.get('info') }}</div>
+            </div>
+        {% endif %}
+
+        {% if flashes.get('error') %}
+            <div class="mb-5 p-4 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs sm:text-sm flex items-center gap-3 shadow-lg">
+                <i class="fa-solid fa-triangle-exclamation text-rose-400 text-base"></i>
+                <div class="font-medium">{{ flashes.get('error') }}</div>
+            </div>
+        {% endif %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    {# Footer #}
+    <footer class="border-t border-slate-900 bg-slate-950/80 py-6 text-center text-xs text-slate-500">
+        <div class="max-w-7xl mx-auto px-4">
+            <p>Simulador DIAN Convocatoria 2676 &bull; Concurso de Méritos CNSC</p>
+            <p class="text-[11px] text-slate-600 mt-1">Estatuto Tributario Nacional &bull; Decreto 1165 de 2019 &bull; CPACA &bull; Código de Integridad DIAN</p>
+        </div>
+    </footer>
+
+    {# Botón Flotante de Soporte WhatsApp #}
+    {% if not path.startswith('/simulacro/') %}
+        <aside aria-label="Soporte WhatsApp" style="position: fixed !important; bottom: 20px !important; right: 20px !important; z-index: 99999 !important;">
+            <a href="/soporte" target="_blank" rel="noopener noreferrer"
+               title="¿Tienes preguntas o dudas? Escríbenos por WhatsApp"
+               style="background-color: #25D366; color: #ffffff !important; text-decoration: none; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4), 0 8px 10px -6px rgba(0, 0, 0, 0.3);"
+               class="flex items-center gap-2.5 px-4 py-3 rounded-full hover:scale-105 active:scale-95 transition-all text-white font-bold text-sm group">
+                <svg class="w-6 h-6 fill-current flex-shrink-0" viewBox="0 0 24 24" style="color: #ffffff !important;">
+                    <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
+                </svg>
+                <span class="font-extrabold tracking-wide" style="color: #ffffff !important;">Soporte WhatsApp</span>
+            </a>
+        </aside>
+    {% endif %}
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>

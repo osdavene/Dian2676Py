@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reporte de Resultados #{{ session.id }} — DIAN 2676</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/fontawesome.min.css') }}">
+
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #0f172a;
+            color: #1e293b;
+        }
+
+        .heading-font {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .mono-font {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        @media print {
+            body {
+                background-color: #ffffff !important;
+                color: #000000 !important;
+                font-size: 11pt;
+            }
+
+            .no-print {
+                display: none !important;
+            }
+
+            .print-container {
+                max-width: 100% !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                box-shadow: none !important;
+                border: none !important;
+            }
+
+            .page-break {
+                page-break-before: always;
+            }
+
+            .avoid-break {
+                page-break-inside: avoid;
+            }
+
+            .print-border {
+                border-color: #cbd5e1 !important;
+            }
+        }
+    </style>
+</head>
+<body class="py-6 px-3 sm:px-6">
+
+    {# Barra Superior Flotante de Acciones (No se imprime) #}
+    <div class="no-print max-w-4xl mx-auto mb-6 bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-2xl flex flex-wrap items-center justify-between gap-3 sticky top-3 z-50">
+        <div class="flex items-center gap-2">
+            <a href="/simulacro/{{ session.id }}/resultado" class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold transition-colors flex items-center gap-1.5">
+                <i class="fa-solid fa-arrow-left"></i> Volver a Resultados
+            </a>
+            <span class="text-xs text-slate-400 hidden sm:inline">&bull; Sesión de Examen #{{ session.id }}</span>
+        </div>
+
+        <div class="flex items-center gap-2">
+            <button onclick="window.print()" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white text-xs font-black uppercase tracking-wider shadow-lg shadow-blue-600/30 transition-all flex items-center gap-2">
+                <i class="fa-solid fa-file-pdf text-sm"></i> Guardar como PDF / Imprimir
+            </button>
+        </div>
+    </div>
+
+    {# Documento Oficial (Hoja A4) #}
+    <main class="print-container max-w-4xl mx-auto bg-white rounded-3xl shadow-2xl p-6 sm:p-10 border border-slate-200">
+        
+        {# Encabezado Institucional #}
+        <header class="border-b-2 border-slate-900 pb-6 mb-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div class="flex items-center gap-3.5">
+                    <div class="w-14 h-14 rounded-2xl bg-blue-900 text-white flex items-center justify-center text-2xl font-black shadow-md">
+                        <i class="fa-solid fa-scale-balanced"></i>
+                    </div>
+                    <div>
+                        <span class="text-[10px] font-black tracking-widest text-blue-800 uppercase block">República de Colombia &bull; CNSC</span>
+                        <h1 class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight heading-font">
+                            CONCURSO DE MÉRITOS DIAN 2676
+                        </h1>
+                        <span class="text-xs font-semibold text-slate-600 block">
+                            Informe Oficial de Desempeño y Calificación en Simulacro
+                        </span>
+                    </div>
+                </div>
+
+                <div class="text-left sm:text-right text-xs text-slate-600 space-y-0.5">
+                    <div><strong>Folio ID:</strong> <span class="mono-font font-bold text-slate-900">#{{ '%06d' | format(session.id) }}</span></div>
+                    <div><strong>Fecha:</strong> {{ session.completed_at | format_date('%d/%m/%Y %H:%M') if session.completed_at else now() | format_date('%d/%m/%Y %H:%M') }}</div>
+                    <div><strong>Modalidad:</strong> {{ 'Simulacro Express (50 Reactivos)' if session.mode == 'simulacro_express' else 'Simulacro Oficial (100 Reactivos)' }}</div>
+                </div>
+            </div>
+        </header>
+
+        {# Datos del Aspirante y Cargo Meta #}
+        <section class="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 rounded-2xl bg-slate-50 border border-slate-200 text-xs mb-6">
+            <div>
+                <span class="text-[10px] uppercase font-bold text-slate-500 block">Aspirante Evaluado</span>
+                <strong class="text-sm text-slate-900 block mt-0.5">{{ session.user.name if session.user else 'Aspirante DIAN' }}</strong>
+                <span class="text-slate-600">{{ session.user.email if session.user else 'N/A' }}</span>
+            </div>
+
+            <div>
+                <span class="text-[10px] uppercase font-bold text-slate-500 block">Empleo Convocado</span>
+                <strong class="text-sm text-blue-900 block mt-0.5">{{ session.job_profile.name if session.job_profile else 'Cargo' }}</strong>
+                <span class="text-slate-600">{{ session.job_profile.level if session.job_profile else 'Nivel' }} &bull; Grado {{ session.job_profile.grade if session.job_profile else '01' }}</span>
+            </div>
+        </section>
+
+        {# Cuadro Principal de Resultados y Veredicto CNSC #}
+        <section class="grid grid-cols-2 sm:grid-cols-4 gap-3 p-5 rounded-2xl {{ 'bg-emerald-50 border border-emerald-300' if session.is_passed else 'bg-rose-50 border border-rose-300' }} mb-6 avoid-break">
+            
+            <div class="col-span-2 sm:col-span-1">
+                <span class="text-[10px] uppercase font-bold text-slate-600 block">Puntaje Final</span>
+                <strong class="text-3xl font-black {{ 'text-emerald-700' if session.is_passed else 'text-rose-700' }} mono-font">
+                    {{ session.score | number_format(2) }}
+                </strong>
+                <span class="text-[10px] text-slate-500 block">Escala 0 - 100</span>
+            </div>
+
+            <div>
+                <span class="text-[10px] uppercase font-bold text-slate-600 block">Veredicto Oficial</span>
+                <div class="mt-1">
+                    {% if session.is_passed %}
+                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-600 text-white font-black text-xs uppercase tracking-wider">
+                            <i class="fa-solid fa-circle-check text-[10px]"></i> Aprobado
+                        </span>
+                    {% else %}
+                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-rose-600 text-white font-black text-xs uppercase tracking-wider">
+                            <i class="fa-solid fa-circle-xmark text-[10px]"></i> No Aprobado
+                        </span>
+                    {% endif %}
+                </div>
+                <span class="text-[9px] text-slate-500 block mt-1">Mínimo eliminatorio: 70.00 pts</span>
+            </div>
+
+            <div>
+                <span class="text-[10px] uppercase font-bold text-slate-600 block">Efectividad</span>
+                <strong class="text-2xl font-black text-slate-900 mono-font">
+                    {{ session.correct_answers }} / {{ session.total_questions }}
+                </strong>
+                {% set effPercent = ((session.correct_answers / (session.total_questions if session.total_questions and session.total_questions > 0 else 1)) * 100) | round(1) %}
+                <span class="text-[10px] text-slate-500 block">{{ effPercent }}% aciertos</span>
+            </div>
+
+            <div>
+                <span class="text-[10px] uppercase font-bold text-slate-600 block">Tiempo Empleado</span>
+                <strong class="text-xl font-bold text-slate-900 mono-font">
+                    {{ (session.time_spent_seconds or 0) | gmdate('H:i:s') }}
+                </strong>
+                <span class="text-[10px] text-slate-500 block">Límite: {{ (session.time_limit_seconds or 18000) | gmdate('H:i:s') }}</span>
+            </div>
+
+        </section>
+
+        {# Desglose por Ejes Temáticos #}
+        <section class="mb-8 avoid-break">
+            <h2 class="text-sm font-black text-slate-900 uppercase tracking-wider mb-3 flex items-center gap-2 border-b border-slate-200 pb-2">
+                <i class="fa-solid fa-chart-pie text-blue-800"></i> Rendimiento por Eje Temático
+            </h2>
+
+            <table class="w-full text-xs text-left border-collapse">
+                <thead>
+                    <tr class="bg-slate-100 text-slate-700 font-bold border-b border-slate-300">
+                        <th class="py-2 px-3">Eje Temático Evaluado</th>
+                        <th class="py-2 px-2 text-center">Reactivos</th>
+                        <th class="py-2 px-2 text-center">Aciertos</th>
+                        <th class="py-2 px-2 text-center">Fallos</th>
+                        <th class="py-2 px-3 text-right">Efectividad</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-200 text-slate-800">
+                    {% set axisIter = axisStats.values() if axisStats is mapping else axisStats %}
+                    {% for st in axisIter %}
+                        <tr>
+                            <td class="py-2 px-3 font-semibold">{{ st['name'] }}</td>
+                            <td class="py-2 px-2 text-center mono-font">{{ st['total'] }}</td>
+                            <td class="py-2 px-2 text-center font-bold text-emerald-700 mono-font">{{ st['correct'] }}</td>
+                            <td class="py-2 px-2 text-center font-bold text-rose-700 mono-font">{{ st['incorrect'] }}</td>
+                            <td class="py-2 px-3 text-right">
+                                <span class="font-black mono-font {{ 'text-emerald-700' if st['percent'] >= 70 else 'text-rose-700' }}">
+                                    {{ st['percent'] }}%
+                                </span>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+
+        {# Detalle Completo de Preguntas y Respuestas #}
+        <section class="page-break pt-4">
+            <h2 class="text-sm font-black text-slate-900 uppercase tracking-wider mb-4 flex items-center gap-2 border-b-2 border-slate-900 pb-2">
+                <i class="fa-solid fa-list-check text-blue-800"></i> Auditoría Detallada de Preguntas
+            </h2>
+
+            <div class="space-y-6">
+                {% for ans in answers %}
+                    {% set idx = loop.index0 %}
+                    {% set q = ans.question %}
+                    {% if q %}
+                        {% set userOption = ans.selected_option %}
+                        {% set correctOption = q.correct_option %}
+                        {% set isCorrect = ans.is_correct %}
+                        <article class="p-4 rounded-xl border {{ 'border-slate-200 bg-white' if isCorrect else 'border-rose-200 bg-rose-50/20' }} text-xs space-y-2.5 avoid-break">
+                            <div class="flex items-center justify-between gap-2 border-b border-slate-100 pb-1.5">
+                                <span class="font-bold text-slate-700">
+                                    Pregunta {{ idx + 1 }} de {{ answers | length }}
+                                    <span class="text-slate-400 font-normal"> &bull; {{ q.thematic_axis.name if q.thematic_axis else 'General' }}</span>
+                                </span>
+                                {% if isCorrect %}
+                                    <span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-bold text-[10px]">
+                                        <i class="fa-solid fa-check"></i> Acertada (+1.0)
+                                    </span>
+                                {% else %}
+                                    <span class="px-2 py-0.5 rounded-full bg-rose-100 text-rose-800 font-bold text-[10px]">
+                                        <i class="fa-solid fa-xmark"></i> Errada (0.0)
+                                    </span>
+                                {% endif %}
+                            </div>
+
+                            {% if q.case_text %}
+                                <div class="p-2.5 rounded-lg bg-slate-50 border border-slate-200/70 text-slate-700 leading-relaxed italic text-[11px]">
+                                    <strong>Caso:</strong> {{ q.case_text }}
+                                </div>
+                            {% endif %}
+
+                            <p class="font-bold text-slate-900 leading-relaxed">
+                                {{ q.stem }}
+                            </p>
+
+                            <div class="space-y-1.5 pt-1">
+                                {% for opt in (q.options or []) %}
+                                    {% set k = opt['key'] if opt is mapping else '' %}
+                                    {% set optText = opt['text'] if opt is mapping else '' %}
+                                    {% set isSelected = (userOption == k) %}
+                                    {% set isClave = (correctOption == k) %}
+                                    <div class="p-2 rounded-lg border text-[11px] flex items-start gap-2 {{ 'bg-emerald-50 border-emerald-300 text-emerald-950 font-semibold' if isClave else ('bg-rose-50 border-rose-300 text-rose-950 line-through' if (isSelected and not isClave) else 'bg-white border-slate-200 text-slate-700') }}">
+                                        <span class="font-mono font-bold">{{ k }}.</span>
+                                        <span class="flex-1">{{ optText }}</span>
+                                        {% if isClave %}
+                                            <span class="text-[9px] font-bold text-emerald-700 shrink-0 uppercase">[Clave Correcta]</span>
+                                        {% elif isSelected %}
+                                            <span class="text-[9px] font-bold text-rose-700 shrink-0 uppercase">[Tu Marcación]</span>
+                                        {% endif %}
+                                    </div>
+                                {% endfor %}
+                            </div>
+
+                            {% if q.legal_basis or q.explanation_summary %}
+                                <div class="mt-2 p-2.5 rounded-lg bg-blue-50/60 border border-blue-200 text-slate-800 space-y-1 text-[11px]">
+                                    {% if q.legal_basis %}
+                                        <div><strong>Fundamento Legal:</strong> {{ q.legal_basis }}</div>
+                                    {% endif %}
+                                    {% if q.explanation_summary %}
+                                        <div><strong>Argumentación Técnica:</strong> {{ q.explanation_summary }}</div>
+                                    {% endif %}
+                                </div>
+                            {% endif %}
+                        </article>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </section>
+
+        {# Pie de Página Institucional #}
+        <footer class="mt-8 pt-4 border-t border-slate-200 text-center text-[10px] text-slate-500">
+            Simulador Oficial Concurso DIAN 2676 &bull; Plataforma Especializada de Preparación CNSC &bull; Generado el {{ now() | format_date('%d/%m/%Y %H:%M:%S') }}
+        </footer>
+
+    </main>
+
+</body>
+</html>

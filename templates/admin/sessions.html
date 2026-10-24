@@ -1,0 +1,241 @@
+{% extends "layouts/app.html" %}
+
+{% block title %}Monitoreo de Simulacros — Control Central{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+
+    {# Encabezado #}
+    <div class="bg-gradient-to-r from-indigo-950/60 via-slate-900 to-slate-900 border border-slate-800 rounded-2xl sm:rounded-3xl p-4 sm:p-8 shadow-xl flex flex-wrap items-center justify-between gap-4">
+        <div>
+            <div class="flex items-center gap-2">
+                <span class="px-2.5 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 text-xs font-bold uppercase tracking-wider">
+                    Control Central
+                </span>
+                <a href="/admin" class="text-xs text-slate-400 hover:text-white flex items-center gap-1">
+                    <i class="fa-solid fa-arrow-left text-[10px]"></i> Volver al panel
+                </a>
+            </div>
+            <h1 class="text-xl sm:text-2xl font-black text-white mt-1">
+                Monitoreo General de Simulacros
+            </h1>
+            <p class="text-xs text-slate-400">
+                Audita cada uno de los intentos de evaluación registrados en la plataforma en tiempo real.
+            </p>
+        </div>
+
+        <div class="text-xs text-slate-400">
+            Total sesiones: <strong class="text-white text-sm">{{ sessions.total() }}</strong>
+        </div>
+    </div>
+
+    {# Barra de Filtros #}
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl">
+        <form method="GET" action="/admin/sesiones" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 items-end">
+            <div>
+                <label for="status" class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">
+                    Estado del Examen
+                </label>
+                <select name="status" id="status" onchange="this.form.submit()"
+                        class="w-full bg-slate-950 border border-slate-700/80 rounded-xl px-3.5 py-2 text-xs text-white focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                    <option value="all" {{ 'selected' if status == 'all' else '' }}>Todos los estados</option>
+                    <option value="in_progress" {{ 'selected' if status == 'in_progress' else '' }}>En Curso (Activos ahora)</option>
+                    <option value="completed" {{ 'selected' if status == 'completed' else '' }}>Finalizados</option>
+                    <option value="passed" {{ 'selected' if status == 'passed' else '' }}>Aprobados (&ge; 70 pts)</option>
+                    <option value="failed" {{ 'selected' if status == 'failed' else '' }}>No Aprobados</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="job_id" class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">
+                    Cargo Evaluado
+                </label>
+                <select name="job_id" id="job_id" onchange="this.form.submit()"
+                        class="w-full bg-slate-950 border border-slate-700/80 rounded-xl px-3.5 py-2 text-xs text-white focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                    <option value="">Todos los cargos</option>
+                    {% for j in jobs %}
+                        <option value="{{ j.id }}" {{ 'selected' if (jobId | string) == (j.id | string) else '' }}>
+                            {{ j.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="flex items-center gap-2">
+                <button type="submit" 
+                        class="flex-1 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs shadow-md shadow-blue-600/30 transition-colors flex items-center justify-center gap-1.5">
+                    <i class="fa-solid fa-filter"></i> Aplicar Filtros
+                </button>
+                {% if status != 'all' or jobId %}
+                    <a href="/admin/sesiones" 
+                       class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold transition-colors">
+                        <i class="fa-solid fa-xmark"></i>
+                    </a>
+                {% endif %}
+            </div>
+        </form>
+    </div>
+
+    {# Tabla de Simulacros #}
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl sm:rounded-3xl p-4 sm:p-6 shadow-xl">
+        
+        {# Vista de Tarjetas para Celulares (< sm) #}
+        <div class="grid grid-cols-1 gap-3 sm:hidden">
+            {% for s in sessions %}
+                <div class="p-4 rounded-xl bg-slate-950/70 border border-slate-800/80 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="font-mono font-bold text-blue-400 text-xs">
+                            Sesión #{{ s.id }}
+                        </span>
+                        {% if s.completed_at %}
+                            {% if s.is_passed %}
+                                <span class="px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 font-bold text-[10px]">
+                                    APROBADO
+                                </span>
+                            {% else %}
+                                <span class="px-2.5 py-0.5 rounded-full bg-rose-500/10 border border-rose-500/30 text-rose-300 font-bold text-[10px]">
+                                    NO APROBADO
+                                </span>
+                            {% endif %}
+                        {% else %}
+                            <span class="px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold text-[10px] animate-pulse">
+                                EN CURSO
+                            </span>
+                        {% endif %}
+                    </div>
+
+                    <div>
+                        {% if s.user_id %}
+                            <a href="/admin/usuarios/{{ s.user_id }}" class="font-bold text-white hover:text-blue-400 text-sm">
+                                {{ s.user.name if s.user else 'Usuario #' ~ s.user_id }}
+                            </a>
+                            <span class="block text-[11px] text-slate-400">{{ s.user.email if s.user else '' }}</span>
+                        {% else %}
+                            <span class="text-slate-400 font-normal text-sm">Aspirante demo / anónimo</span>
+                        {% endif %}
+                        <span class="inline-block mt-1 text-[11px] text-blue-300 px-2 py-0.5 rounded bg-blue-500/10 border border-blue-500/20">
+                            {{ s.job_profile.name if s.job_profile else 'N/A' }}
+                        </span>
+                    </div>
+
+                    <div class="flex items-center justify-between text-xs py-2 border-y border-slate-800/60 text-slate-300">
+                        <div>
+                            <span class="text-[10px] text-slate-400 block">Puntaje</span>
+                            <span class="font-mono font-black text-sm text-white">{{ s.score | number_format(2) }}</span>
+                            <span class="text-[10px] text-slate-400">({{ s.correct_answers }}/{{ s.total_questions }})</span>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-[10px] text-slate-400 block">Fecha</span>
+                            <span class="font-mono text-xs text-slate-300">{{ s.created_at | format_date('%d/%m/%Y %H:%M') if s.created_at else 'N/A' }}</span>
+                        </div>
+                    </div>
+
+                    <div>
+                        {% if s.completed_at %}
+                            <a href="/simulacro/{{ s.id }}/resultado" 
+                               class="w-full py-2 rounded-lg bg-blue-600/20 hover:bg-blue-600/40 text-blue-300 font-semibold transition-colors text-xs flex items-center justify-center gap-1.5">
+                                <i class="fa-solid fa-file-lines text-[11px]"></i> Ver Examen Completo
+                            </a>
+                        {% else %}
+                            <div class="w-full py-1.5 text-center text-slate-500 text-xs font-mono">
+                                Examen en desarrollo
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            {% else %}
+                <div class="py-8 text-center text-slate-500 text-xs">
+                    No se encontraron simulacros con los criterios seleccionados.
+                </div>
+            {% endfor %}
+        </div>
+
+        {# Vista de Tabla para Pantallas Medianas y Grandes (>= sm) #}
+        <div class="hidden sm:block overflow-x-auto">
+            <table class="w-full text-left text-xs">
+                <thead>
+                    <tr class="border-b border-slate-800 text-slate-400 uppercase tracking-wider text-[10px]">
+                        <th class="py-3 px-3">Sesión</th>
+                        <th class="py-3 px-3">Aspirante</th>
+                        <th class="py-3 px-3">Cargo</th>
+                        <th class="py-3 px-3 text-center">Aciertos</th>
+                        <th class="py-3 px-3 text-center">Puntaje</th>
+                        <th class="py-3 px-3 text-center">Estado</th>
+                        <th class="py-3 px-3">Fecha y Hora</th>
+                        <th class="py-3 px-3 text-right">Acción</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-800/60 text-slate-300">
+                    {% for s in sessions %}
+                        <tr class="hover:bg-slate-800/30 transition-colors">
+                            <td class="py-3.5 px-3 font-mono font-bold text-blue-400">
+                                #{{ s.id }}
+                            </td>
+                            <td class="py-3.5 px-3">
+                                {% if s.user_id %}
+                                    <a href="/admin/usuarios/{{ s.user_id }}" class="font-bold text-white hover:text-blue-400 transition-colors">
+                                        {{ s.user.name if s.user else 'Usuario #' ~ s.user_id }}
+                                    </a>
+                                    <span class="block text-[11px] text-slate-400">{{ s.user.email if s.user else '' }}</span>
+                                {% else %}
+                                    <span class="text-slate-400 font-normal">Aspirante demo / anónimo</span>
+                                {% endif %}
+                            </td>
+                            <td class="py-3.5 px-3 text-slate-200">
+                                {{ s.job_profile.name if s.job_profile else 'N/A' }}
+                            </td>
+                            <td class="py-3.5 px-3 text-center font-bold text-emerald-400">
+                                {{ s.correct_answers }} / {{ s.total_questions }}
+                            </td>
+                            <td class="py-3.5 px-3 text-center font-mono font-black text-sm text-white">
+                                {{ s.score | number_format(2) }}
+                            </td>
+                            <td class="py-3.5 px-3 text-center">
+                                {% if s.completed_at %}
+                                    {% if s.is_passed %}
+                                        <span class="px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 font-bold text-[10px]">
+                                            APROBADO
+                                        </span>
+                                    {% else %}
+                                        <span class="px-2.5 py-1 rounded-full bg-rose-500/10 border border-rose-500/30 text-rose-300 font-bold text-[10px]">
+                                            NO APROBADO
+                                        </span>
+                                    {% endif %}
+                                {% else %}
+                                    <span class="px-2.5 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold text-[10px] animate-pulse">
+                                        EN CURSO
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td class="py-3.5 px-3 text-slate-400 font-mono text-[11px] whitespace-nowrap">
+                                {{ s.created_at | format_date('%d/%m/%Y %H:%M') if s.created_at else 'N/A' }}
+                            </td>
+                            <td class="py-3.5 px-3 text-right">
+                                {% if s.completed_at %}
+                                    <a href="/simulacro/{{ s.id }}/resultado" 
+                                       class="px-2.5 py-1 rounded-lg bg-blue-600/20 hover:bg-blue-600/40 text-blue-300 font-semibold transition-colors text-[11px]">
+                                        Ver Examen
+                                    </a>
+                                {% else %}
+                                    <span class="text-slate-500 text-[11px]">En progreso</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="8" class="py-8 text-center text-slate-500">
+                                No se encontraron simulacros con los criterios seleccionados.
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="pt-4 flex justify-center">
+            {{ sessions.links() | safe }}
+        </div>
+    </div>
+
+</div>
+{% endblock %}

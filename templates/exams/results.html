@@ -1,0 +1,434 @@
+{% extends "layouts/app.html" %}
+
+{% block title %}Resultados del Examen — DIAN 2676{% endblock %}
+
+{% block content %}
+<div class="space-y-8">
+
+    {# Encabezado y Tarjeta Principal de Puntaje #}
+    <div class="bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950 border border-slate-800 rounded-2xl sm:rounded-3xl p-4 sm:p-8 shadow-2xl relative overflow-hidden">
+        
+        {# Efecto de Luz de Fondo según Aprobado o Reprobado #}
+        {% if session.is_passed %}
+            <div class="absolute -top-24 -right-24 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        {% else %}
+            <div class="absolute -top-24 -right-24 w-96 h-96 bg-rose-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        {% endif %}
+
+        <div class="relative z-10 grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
+            
+            {# Columna 1 & 2: Veredicto y Detalles #}
+            <div class="md:col-span-2 space-y-3">
+                <div class="flex flex-wrap items-center gap-2">
+                    <span class="px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider {{ 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40' if session.is_passed else 'bg-rose-500/20 text-rose-400 border border-rose-500/40' }}">
+                        {{ 'Aspirante Aprobado' if session.is_passed else 'Aspirante No Aprobado' }}
+                    </span>
+                    <span class="text-xs text-slate-400">
+                        Sesión #{{ session.id }} &bull; {{ session.completed_at | format_date('%d/%m/%Y %H:%M') if session.completed_at else now() | format_date('%d/%m/%Y %H:%M') }}
+                    </span>
+                    {% if session.user %}
+                        <span class="text-xs px-2.5 py-0.5 rounded-full bg-blue-500/20 border border-blue-500/30 text-blue-300 font-semibold">
+                            <i class="fa-solid fa-user text-[10px]"></i> {{ session.user.name }} ({{ session.user.email }})
+                        </span>
+                    {% endif %}
+                </div>
+
+                <h1 class="text-2xl sm:text-3xl font-extrabold text-white">
+                    {% if current_user.is_admin() and current_user.id != session.user_id %}
+                        Auditoría de Examen: {{ session.user.name if session.user else 'Aspirante #' ~ session.user_id }}
+                    {% else %}
+                        {{ '¡Felicitaciones! Has superado el umbral eliminatorio' if session.is_passed else 'No alcanzaste el puntaje mínimo de 70.00 pts' }}
+                    {% endif %}
+                </h1>
+
+                <p class="text-xs sm:text-sm text-slate-300 leading-relaxed max-w-2xl">
+                    De acuerdo con los acuerdos de convocatoria de la CNSC y DIAN, el componente eliminatorio de competencias funcionales exige un puntaje mínimo aprobatorio de <strong>70.00 puntos</strong> sobre 100.
+                </p>
+
+                <div class="flex flex-col sm:flex-row flex-wrap gap-2.5 sm:gap-3 pt-2">
+                    {% if current_user.is_admin() %}
+                        <a href="/admin/sesiones" 
+                           class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow-lg shadow-indigo-600/30 transition-all flex items-center justify-center gap-1.5">
+                            <i class="fa-solid fa-arrow-left"></i>
+                            Volver al Monitoreo General
+                        </a>
+                        {% if session.user_id %}
+                            <a href="/admin/usuarios/{{ session.user_id }}" 
+                               class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-bold text-xs transition-colors flex items-center justify-center gap-1.5">
+                                <i class="fa-solid fa-user-gear"></i>
+                                Ficha del Aspirante
+                            </a>
+                        {% endif %}
+                    {% else %}
+                        <a href="/repaso-fallos" 
+                           class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 font-bold text-xs transition-colors flex items-center justify-center gap-1.5">
+                            <i class="fa-solid fa-rotate-left"></i>
+                            Repasar Fallos de esta Sesión
+                        </a>
+
+                        <form method="POST" action="/simulacro/iniciar" class="w-full sm:w-auto inline-block">
+                            <input type="hidden" name="_token" value="{{ csrf_token }}">
+                            <button type="submit" 
+                                    class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs shadow-lg shadow-blue-600/30 transition-all flex items-center justify-center gap-1.5">
+                                <i class="fa-solid fa-play"></i>
+                                Iniciar Nuevo Simulacro
+                            </button>
+                        </form>
+                    {% endif %}
+
+                    <a href="/simulacro/{{ session.id }}/reporte-impresion" target="_blank"
+                       class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-xs shadow-lg shadow-blue-600/30 transition-all flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-file-pdf"></i>
+                        Descargar Reporte en PDF
+                    </a>
+
+                    <a href="/dashboard" 
+                       class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs transition-colors flex items-center justify-center gap-1.5">
+                        <i class="fa-solid fa-house"></i>
+                        Ir al Inicio
+                    </a>
+                </div>
+            </div>
+
+            {# Columna 3: Tarjeta de Puntaje Oficial #}
+            <div class="text-center p-5 sm:p-6 rounded-2xl bg-slate-950/70 border border-slate-800/80 shadow-inner">
+                <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400 block mb-1">
+                    Calificación Oficial CNSC
+                </span>
+                <div class="text-4xl sm:text-5xl font-black {{ 'text-emerald-400' if session.is_passed else 'text-rose-400' }} tracking-tight">
+                    {{ session.score | number_format(2) }}
+                </div>
+                <div class="text-xs text-slate-400 mt-1 font-semibold">
+                    sobre 100.00 puntos
+                </div>
+                <div class="mt-3 pt-3 border-t border-slate-800 text-[11px] text-slate-400">
+                    Cargo: <strong class="text-slate-200">{{ session.job_profile.name if session.job_profile else 'Analista III' }}</strong>
+                </div>
+            </div>
+
+        </div>
+
+        {# 4 Indicadores Estadísticos #}
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-4 mt-6 sm:mt-8 pt-5 sm:pt-6 border-t border-slate-800/80">
+            
+            <div class="p-3.5 rounded-xl bg-emerald-950/20 border border-emerald-500/20 flex items-center gap-3">
+                <div class="w-10 h-10 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-lg font-bold">
+                    <i class="fa-solid fa-circle-check"></i>
+                </div>
+                <div>
+                    <span class="text-[10px] text-slate-400 font-medium block">Aciertos</span>
+                    <span class="text-base font-extrabold text-white">
+                        {{ session.correct_answers }} / {{ session.total_questions }}
+                    </span>
+                </div>
+            </div>
+
+            <div class="p-3.5 rounded-xl bg-rose-950/20 border border-rose-500/20 flex items-center gap-3">
+                <div class="w-10 h-10 rounded-lg bg-rose-500/20 text-rose-400 flex items-center justify-center text-lg font-bold">
+                    <i class="fa-solid fa-circle-xmark"></i>
+                </div>
+                <div>
+                    <span class="text-[10px] text-slate-400 font-medium block">Errores</span>
+                    <span class="text-base font-extrabold text-rose-300">
+                        {{ session.incorrect_answers }}
+                    </span>
+                </div>
+            </div>
+
+            <div class="p-3.5 rounded-xl bg-slate-800/40 border border-slate-700/40 flex items-center gap-3">
+                <div class="w-10 h-10 rounded-lg bg-slate-800 text-slate-400 flex items-center justify-center text-lg font-bold">
+                    <i class="fa-solid fa-circle-minus"></i>
+                </div>
+                <div>
+                    <span class="text-[10px] text-slate-400 font-medium block">Omitidas</span>
+                    <span class="text-base font-extrabold text-slate-300">
+                        {{ session.omitted_answers }}
+                    </span>
+                </div>
+            </div>
+
+            <div class="p-3.5 rounded-xl bg-blue-950/20 border border-blue-500/20 flex items-center gap-3">
+                <div class="w-10 h-10 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center text-lg font-bold">
+                    <i class="fa-solid fa-clock"></i>
+                </div>
+                <div>
+                    <span class="text-[10px] text-slate-400 font-medium block">Tiempo Empleado</span>
+                    <span class="text-base font-extrabold text-blue-300">
+                        {% set s = session.time_spent_seconds or 0 %}
+                        {% set hrs = (s // 3600) %}
+                        {% set mins = ((s % 3600) // 60) %}
+                        {% set secs = (s % 60) %}
+                        {{ '%02dh %02dm %02ds' | format(hrs, mins, secs) }}
+                    </span>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    {# Desglose por Componente de Competencias CNSC #}
+    {% if competencyStats and competencyStats | length > 0 %}
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {% for k, c in competencyStats.items() %}
+                {% if c['total'] > 0 %}
+                    <div class="p-5 rounded-2xl bg-slate-900 border border-slate-800 space-y-3 shadow-xl">
+                        <div class="flex items-center justify-between">
+                            <span class="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded bg-blue-500/20 text-blue-300">
+                                {{ 'BÁSICAS' if k == 'BASICA' else ('CONDUCTUALES' if k == 'CONDUCTUAL' else 'FUNCIONALES') }}
+                            </span>
+                            <span class="font-mono font-black text-sm {{ 'text-emerald-400' if c['percent'] >= 70 else 'text-amber-400' }}">
+                                {{ c['percent'] }}%
+                            </span>
+                        </div>
+                        <h4 class="text-xs font-bold text-white">{{ c['name'] }}</h4>
+                        <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                            <div class="h-full rounded-full {{ 'bg-emerald-500' if c['percent'] >= 70 else ('bg-amber-500' if c['percent'] >= 50 else 'bg-rose-500') }}" style="width: {{ c['percent'] }}%"></div>
+                        </div>
+                        <div class="flex justify-between text-[11px] text-slate-400 font-medium pt-1">
+                            <span>Aciertos: <strong class="text-white">{{ c['correct'] }}</strong> / {{ c['total'] }}</span>
+                            <span>{{ 'Supera umbral' if c['percent'] >= 70 else 'A reforzar' }}</span>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {# Desglose de Desempeño por Eje Temático #}
+    {% if axisStats and axisStats | length > 0 %}
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
+            <h2 class="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
+                <i class="fa-solid fa-chart-pie text-blue-400"></i>
+                Desempeño por Eje Temático Evaluado
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {% for axisName, stats in axisStats.items() %}
+                    {% set axisPercent = ((stats['correct'] / stats['total']) * 100) | round(1) if stats['total'] > 0 else 0 %}
+                    <div class="p-4 rounded-xl bg-slate-950/60 border border-slate-800/80 space-y-2">
+                        <div class="flex items-center justify-between text-xs">
+                            <span class="font-bold text-slate-200 truncate max-w-[280px]">{{ axisName }}</span>
+                            <span class="font-mono font-bold {{ 'text-emerald-400' if axisPercent >= 70 else 'text-amber-400' }}">
+                                {{ stats['correct'] }}/{{ stats['total'] }} ({{ axisPercent }}%)
+                            </span>
+                        </div>
+                        <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                            <div class="h-full rounded-full {{ 'bg-emerald-500' if axisPercent >= 70 else ('bg-amber-500' if axisPercent >= 50 else 'bg-rose-500') }}"
+                                 style="width: {{ axisPercent }}%"></div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+
+    {# Plan de Mejora Pedagógico y Diagnóstico Personalizado #}
+    <div class="bg-gradient-to-br from-slate-900 via-slate-900 to-indigo-950/30 border border-slate-800 rounded-3xl p-6 sm:p-8 space-y-5 shadow-2xl">
+        <div class="flex flex-wrap items-center justify-between gap-4">
+            <div>
+                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-300 text-xs font-bold uppercase tracking-wider mb-2">
+                    <i class="fa-solid fa-compass"></i>
+                    Diagnóstico Pedagógico y Plan de Mejora
+                </div>
+                <h3 class="text-lg font-black text-white">
+                    ¿En qué debes trabajar más para asegurar tu nombramiento en la DIAN?
+                </h3>
+                <p class="text-xs text-slate-300 max-w-3xl leading-relaxed">
+                    Identificamos los ejes temáticos donde tu puntaje estuvo por debajo del 70.00% eliminatorio. Reforzar estas áreas de forma focalizada garantizará el máximo rendimiento en la prueba real.
+                </p>
+            </div>
+            {% if improvementPlan and improvementPlan | length > 0 %}
+                <span class="px-3 py-1.5 rounded-xl bg-rose-500/20 border border-rose-500/30 text-rose-300 text-xs font-extrabold flex items-center gap-1.5">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    {{ improvementPlan | length }} temas a priorizar
+                </span>
+            {% else %}
+                <span class="px-3 py-1.5 rounded-xl bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 text-xs font-extrabold flex items-center gap-1.5">
+                    <i class="fa-solid fa-circle-check"></i>
+                    ¡Dominio en todos los ejes!
+                </span>
+            {% endif %}
+        </div>
+
+        {% if improvementPlan and improvementPlan | length > 0 %}
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+                {% for plan in improvementPlan %}
+                    <div class="p-5 rounded-2xl bg-slate-950/80 border {{ 'border-rose-500/40' if plan['priority'] == 'CRÍTICA' else 'border-amber-500/30' }} space-y-3 flex flex-col justify-between">
+                        <div class="space-y-2">
+                            <div class="flex items-center justify-between">
+                                <span class="px-2.5 py-0.5 rounded-md text-[10px] font-black uppercase tracking-wider {{ 'bg-rose-500/20 text-rose-300 border border-rose-500/30' if plan['priority'] == 'CRÍTICA' else 'bg-amber-500/20 text-amber-300 border border-amber-500/30' }}">
+                                    Prioridad {{ plan['priority'] }} &bull; {{ plan['percent'] }}%
+                                </span>
+                                <span class="text-xs font-mono text-slate-400">
+                                    {{ plan['incorrect'] }} fallos de {{ plan['total'] }} reactivos
+                                </span>
+                            </div>
+
+                            <h4 class="text-sm font-extrabold text-white">{{ plan['axis_name'] }}</h4>
+
+                            {% if plan['legal_references'] %}
+                                <div class="text-[11px] text-slate-400 space-y-1 pt-1">
+                                    <strong class="text-slate-300 block text-[10px] uppercase font-bold">Normas y Fundamentos Clave a Estudiar:</strong>
+                                    <div class="flex flex-wrap gap-1.5">
+                                        {% for ref in plan['legal_references'] %}
+                                            <span class="px-2 py-0.5 rounded bg-slate-900 border border-slate-800 text-blue-300 text-[10px] font-mono">
+                                                {{ ref | limit(45) }}
+                                            </span>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="pt-3 border-t border-slate-900 flex items-center justify-between">
+                            <span class="text-[11px] text-slate-400 font-medium">Entrenamiento específico</span>
+                            {% if plan['axis_id'] %}
+                                <a href="/practica/eje/{{ plan['axis_id'] }}" 
+                                   class="px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs transition-colors flex items-center gap-1.5 shadow-md shadow-blue-600/30">
+                                    <i class="fa-solid fa-play text-[10px]"></i>
+                                    Entrenar este Eje
+                                </a>
+                            {% else %}
+                                <a href="/practica" 
+                                   class="px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs transition-colors">
+                                    Ver Prácticas
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="p-6 rounded-2xl bg-emerald-950/20 border border-emerald-500/30 text-emerald-200 text-xs flex items-center gap-3">
+                <i class="fa-solid fa-circle-check text-2xl text-emerald-400"></i>
+                <div>
+                    <h4 class="font-bold text-sm text-white">Rendimiento Integral Sólido</h4>
+                    <p class="text-slate-300 mt-0.5">Has obtenido una efectividad superior al 70.00% en todas las temáticas. Para mantener tu ventaja competitiva, continúa realizando simulacros completos para perfeccionar tu velocidad y gestión del tiempo.</p>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    {# Revisión Detallada Pregunta por Pregunta #}
+    <div class="space-y-4" x-data="{ filter: 'all' }">
+        
+        <div class="flex flex-wrap items-center justify-between gap-4 pb-2 border-b border-slate-800">
+            <div>
+                <h2 class="text-base font-extrabold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-list-check text-blue-400"></i>
+                    Retroalimentación y Justificaciones Jurídicas
+                </h2>
+                <p class="text-xs text-slate-400">
+                    Revisa la sustentación con fundamento normativo y doctrina de cada pregunta evaluada
+                </p>
+            </div>
+
+            {# Filtros de visualización #}
+            <div class="grid grid-cols-3 sm:flex items-center gap-1.5 p-1 bg-slate-900 border border-slate-800 rounded-xl text-xs w-full sm:w-auto">
+                <button type="button" @click="filter = 'all'"
+                        :class="filter === 'all' ? 'bg-blue-600 text-white font-bold' : 'text-slate-400 hover:text-white'"
+                        class="px-2.5 sm:px-3 py-1.5 rounded-lg transition-colors text-center">
+                    Todas ({{ answers | length }})
+                </button>
+                <button type="button" @click="filter = 'incorrect'"
+                        :class="filter === 'incorrect' ? 'bg-rose-600 text-white font-bold' : 'text-slate-400 hover:text-white'"
+                        class="px-2.5 sm:px-3 py-1.5 rounded-lg transition-colors text-center">
+                    Solo Fallos ({{ session.incorrect_answers }})
+                </button>
+                <button type="button" @click="filter = 'correct'"
+                        :class="filter === 'correct' ? 'bg-emerald-600 text-white font-bold' : 'text-slate-400 hover:text-white'"
+                        class="px-2.5 sm:px-3 py-1.5 rounded-lg transition-colors text-center">
+                    Aciertos ({{ session.correct_answers }})
+                </button>
+            </div>
+        </div>
+
+        {# Lista de Preguntas con Rationale Oficial #}
+        <div class="space-y-4">
+            {% for ans in answers %}
+                {% set idx = loop.index0 %}
+                {% set q = ans.question %}
+                {% if q %}
+                {% set statusType = 'correct' if ans.is_correct else ('omitted' if ans.is_omitted else 'incorrect') %}
+                <div x-show="filter === 'all' || (filter === 'incorrect' && '{{ statusType }}' === 'incorrect') || (filter === 'correct' && '{{ statusType }}' === 'correct')"
+                     class="bg-slate-900 border {{ 'border-emerald-500/30' if ans.is_correct else ('border-slate-800' if ans.is_omitted else 'border-rose-500/30') }} rounded-2xl p-4 sm:p-6 shadow-xl space-y-4 transition-all">
+                    
+                    {# Header de la Pregunta #}
+                    <div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-800/80">
+                        <div class="flex items-center gap-2">
+                            <span class="px-2.5 py-0.5 rounded-lg text-xs font-black {{ 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' if ans.is_correct else ('bg-slate-800 text-slate-400' if ans.is_omitted else 'bg-rose-500/20 text-rose-400 border border-rose-500/30') }}">
+                                #{{ idx + 1 }} &bull; {{ 'ACIERTO' if ans.is_correct else ('OMITIDA' if ans.is_omitted else 'FALLO') }}
+                            </span>
+                            {% if q.thematic_axis %}
+                                <span class="px-2 py-0.5 rounded-md bg-slate-800 text-blue-300 text-[11px] font-medium border border-slate-700/60">
+                                    {{ q.thematic_axis.name }}
+                                </span>
+                            {% endif %}
+                        </div>
+
+                        <div class="text-xs text-slate-400">
+                            Tu respuesta: <strong class="{{ 'text-emerald-400' if ans.is_correct else 'text-rose-400' }}">{{ ans.selected_option or 'Ninguna' }}</strong>
+                            &bull; Correcta: <strong class="text-emerald-400">{{ session.get_correct_display_option_for(q) }}</strong>
+                        </div>
+                    </div>
+
+                    {# Caso / Situación (si existe) #}
+                    {% if q.case_text %}
+                        <div class="p-4 rounded-xl bg-slate-950/50 border border-slate-800 text-slate-300 text-xs sm:text-sm">
+                            <strong class="text-blue-400 block mb-2 font-semibold uppercase tracking-wider text-[11px]">
+                                <i class="fa-solid fa-book-open mr-1"></i> Contexto / Caso
+                            </strong>
+                            {% for cp in q.case_text.strip().replace('\r\n', '\n').split('\n\n') %}
+                                <p class="mb-2.5 last:mb-0" style="text-align: justify; text-justify: inter-word; text-align-last: left; word-break: break-word;">{{ cp.strip() | nl2br | safe }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    {# Enunciado #}
+                    <p class="text-sm font-semibold text-white leading-relaxed" style="text-align: justify; text-justify: inter-word; text-align-last: left; word-break: break-word;">
+                        {{ q.stem }}
+                    </p>
+
+                    {# Opciones detalladas #}
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                        {% set letters = session.get_display_options_for(q) %}
+                        {% set correctDisplay = session.get_correct_display_option_for(q) %}
+                        {% for let, txt in letters.items() %}
+                            {% if txt %}
+                                <div class="p-3 rounded-xl border flex items-start gap-2.5 {{ 'bg-emerald-950/30 border-emerald-500/50 text-emerald-200' if let == correctDisplay else ('bg-rose-950/30 border-rose-500/50 text-rose-200' if let == ans.selected_option else 'bg-slate-950/40 border-slate-800/80 text-slate-400') }}">
+                                    <span class="w-5 h-5 rounded-md font-bold text-xs flex items-center justify-center shrink-0 {{ 'bg-emerald-600 text-white' if let == correctDisplay else ('bg-rose-600 text-white' if let == ans.selected_option else 'bg-slate-800 text-slate-300') }}">
+                                        {{ let }}
+                                    </span>
+                                    <span class="leading-relaxed">{{ txt }}</span>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+
+                    {# Retroalimentación / Justificación Jurídica y Fundamento Legal #}
+                    <div class="p-4 rounded-xl bg-blue-950/30 border border-blue-500/30 space-y-2">
+                        <div class="flex items-center gap-2 text-xs font-bold text-blue-300 uppercase tracking-wider">
+                            <i class="fa-solid fa-scale-balanced"></i>
+                            Sustentación Oficial y Fundamento Jurídico
+                        </div>
+                        <div class="text-xs sm:text-sm text-slate-200 leading-relaxed font-normal" style="text-align: justify; text-justify: inter-word; text-align-last: left; word-break: break-word;">
+                            {{ q.rationale or 'No se registró explicación adicional.' }}
+                        </div>
+                        {% if q.legal_basis %}
+                            <div class="pt-2 border-t border-blue-500/20 text-xs text-blue-300 flex items-center gap-1.5 font-semibold">
+                                <i class="fa-solid fa-gavel"></i>
+                                Base Legal: <span>{{ q.legal_basis }}</span>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,187 @@
+{% extends "layouts/app.html" %}
+
+{% block title %}Mi Perfil de Aspirante — DIAN 2676{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto space-y-6">
+
+    {# Banner de Encabezado #}
+    <div class="bg-gradient-to-r from-blue-900/60 via-slate-900 to-slate-950 border border-slate-800 rounded-2xl sm:rounded-3xl p-4 sm:p-8 shadow-xl flex items-center justify-between gap-4">
+        <div class="space-y-1">
+            <span class="px-2.5 py-0.5 rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/30 text-xs font-bold uppercase tracking-wider">
+                Configuración de Aspirante
+            </span>
+            <h1 class="text-xl sm:text-2xl font-black text-white">
+                Perfil de Usuario y Cargo Objetivo
+            </h1>
+            <p class="text-xs text-slate-400">
+                Administra tus credenciales de acceso y el cargo de postulación para el Concurso DIAN 2676.
+            </p>
+        </div>
+        <div class="w-12 h-12 sm:w-16 sm:h-16 rounded-2xl bg-blue-600/20 border border-blue-500/40 text-blue-400 flex items-center justify-center text-xl sm:text-2xl font-bold shrink-0">
+            {{ user.name[:2].upper() }}
+        </div>
+    </div>
+
+    {# Formulario de Edición de Perfil #}
+    <form method="POST" action="/perfil" class="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-8 shadow-xl space-y-6">
+        <input type="hidden" name="_method" value="PUT">
+
+        {% if errors %}
+            <div class="p-4 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs space-y-1">
+                <div class="font-bold flex items-center gap-2">
+                    <i class="fa-solid fa-circle-exclamation"></i>
+                    Corrige los siguientes errores:
+                </div>
+                <ul class="list-disc list-inside">
+                    {% for field, msgs in errors.items() %}
+                        {% for err in msgs %}
+                            <li>{{ err }}</li>
+                        {% endfor %}
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+
+        {# Sección 1: Datos Personales #}
+        <div>
+            <h3 class="text-sm font-bold text-white uppercase tracking-wider pb-3 border-b border-slate-800 flex items-center gap-2">
+                <i class="fa-solid fa-user text-blue-400"></i>
+                Datos Básicos
+            </h3>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+                <div>
+                    <label for="name" class="block text-xs font-semibold text-slate-300 mb-1.5">Nombre Completo</label>
+                    <input type="text" name="name" id="name" value="{{ old('name', user.name) }}" required
+                           class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-white focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                </div>
+
+                <div>
+                    <label for="email" class="block text-xs font-semibold text-slate-300 mb-1.5">Correo Electrónico</label>
+                    <input type="email" name="email" id="email" value="{{ old('email', user.email) }}" required
+                           class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-white focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                </div>
+            </div>
+        </div>
+
+        {# Sección 2: Cargo de Postulación #}
+        <div class="pt-4 border-t border-slate-800">
+            <h3 class="text-sm font-bold text-white uppercase tracking-wider pb-3 border-b border-slate-800 flex items-center justify-between">
+                <span class="flex items-center gap-2">
+                    <i class="fa-solid fa-briefcase text-emerald-400"></i>
+                    Cargo Asignado Convocatoria 2676
+                </span>
+                {% if not user.is_admin() %}
+                    <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/10 border border-amber-500/20 text-amber-300 flex items-center gap-1.5">
+                        <i class="fa-solid fa-lock text-[9px]"></i> Bloqueado por Administración
+                    </span>
+                {% else %}
+                    <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-blue-500/10 border border-blue-500/20 text-blue-300 flex items-center gap-1.5">
+                        <i class="fa-solid fa-user-shield text-[9px]"></i> Modo Administrador
+                    </span>
+                {% endif %}
+            </h3>
+
+            {% if not user.is_admin() %}
+                <div class="mt-4 p-5 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-4">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-800/80">
+                        <div class="flex items-center gap-3.5">
+                            <div class="w-11 h-11 rounded-2xl bg-blue-500/10 border border-blue-500/20 text-blue-400 flex items-center justify-center text-xl shrink-0">
+                                <i class="fa-solid fa-id-card-clip"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-base font-black text-white tracking-wide">
+                                    {{ user.job_profile.name if user.job_profile else user.target_cargo }}
+                                </h4>
+                                <p class="text-xs text-slate-400">
+                                    {{ user.job_profile.level if user.job_profile else 'Nivel Técnico' }} &bull; Grado {{ user.job_profile.grade if user.job_profile else '02' }} &bull; Código Ficha: <span class="font-mono text-slate-300">{{ user.job_profile.code if user.job_profile else 'N/A' }}</span>
+                                </p>
+                            </div>
+                        </div>
+                        <span class="self-start sm:self-center px-3 py-1 rounded-xl text-xs font-bold font-mono bg-blue-600/20 text-blue-300 border border-blue-500/30">
+                            {{ (user.job_profile.subprocess or user.job_profile.process) if user.job_profile else 'Misional' }}
+                        </span>
+                    </div>
+
+                    <div class="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-200/90 text-xs flex items-start gap-2.5">
+                        <i class="fa-solid fa-circle-exclamation text-amber-400 text-sm mt-0.5 shrink-0"></i>
+                        <p class="leading-relaxed">
+                            <strong>Nivel Asignado Exclusivo:</strong> Tu cargo de postulación ha sido fijado para tu usuario aspirante. Por directriz de seguridad de la prueba, los aspirantes no pueden cambiar de nivel. Si requieres un cambio de cargo, contacta a un <strong>Administrador del Control Central</strong>.
+                        </p>
+                    </div>
+
+                    <div class="text-[11px] text-slate-400 bg-slate-950/60 p-3 rounded-xl border border-slate-800/60 flex items-start gap-2">
+                        <i class="fa-solid fa-bullseye text-blue-400 mt-0.5"></i>
+                        <span><strong>Propósito Misional:</strong> {{ user.job_profile.purpose if (user.job_profile and user.job_profile.purpose) else 'Cumplimiento misional de obligaciones tributarias, aduaneras y cambiarias.' }}</span>
+                    </div>
+                </div>
+            {% else %}
+                <p class="text-xs text-slate-400 mt-2 mb-4">
+                    Como Administrador, puedes alternar tu cargo meta para auditar y verificar el comportamiento de los simulacros y bancos de preguntas:
+                </p>
+
+                <div class="space-y-3">
+                    {% for j in jobProfiles %}
+                        <label class="flex items-center justify-between p-4 rounded-xl border cursor-pointer transition-all {{ 'bg-blue-600/15 border-blue-500/60 text-white' if (user.job_profile_id or 1) == j.id else 'bg-slate-950/60 border-slate-800 hover:border-slate-700 text-slate-300' }}">
+                            <div class="flex items-center gap-3">
+                                <input type="radio" name="job_profile_id" value="{{ j.id }}" {{ 'checked' if (user.job_profile_id or 1) == j.id else '' }}
+                                       class="w-4 h-4 text-blue-600 bg-slate-900 border-slate-700 focus:ring-blue-500">
+                                <div>
+                                    <div class="text-xs font-bold text-white">{{ j.name }}</div>
+                                    <div class="text-[11px] text-slate-400">{{ j.level }} (Grado {{ j.grade }}) &bull; {{ j.code }}</div>
+                                </div>
+                            </div>
+                            <span class="text-[11px] text-blue-400 font-semibold px-2.5 py-1 rounded-lg bg-blue-500/10 border border-blue-500/20">
+                                {{ j.subprocess or j.process }}
+                            </span>
+                        </label>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        {# Sección 3: Cambio de Contraseña (Opcional) #}
+        <div class="pt-4 border-t border-slate-800">
+            <h3 class="text-sm font-bold text-white uppercase tracking-wider pb-3 border-b border-slate-800 flex items-center gap-2">
+                <i class="fa-solid fa-lock text-amber-400"></i>
+                Cambiar Contraseña (Opcional)
+            </h3>
+            <p class="text-xs text-slate-400 mt-2 mb-4">
+                Deja estos campos en blanco si no deseas modificar tu contraseña actual.
+            </p>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                    <label for="current_password" class="block text-xs font-semibold text-slate-300 mb-1.5">Contraseña Actual</label>
+                    <input type="password" name="current_password" id="current_password"
+                           class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-white focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                </div>
+
+                <div>
+                    <label for="new_password" class="block text-xs font-semibold text-slate-300 mb-1.5">Nueva Contraseña</label>
+                    <input type="password" name="new_password" id="new_password"
+                           class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-white focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                </div>
+
+                <div>
+                    <label for="new_password_confirmation" class="block text-xs font-semibold text-slate-300 mb-1.5">Confirmar Nueva Contraseña</label>
+                    <input type="password" name="new_password_confirmation" id="new_password_confirmation"
+                           class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-white focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                </div>
+            </div>
+        </div>
+
+        {# Botón Guardar #}
+        <div class="pt-4 border-t border-slate-800 flex justify-end">
+            <button type="submit" 
+                    class="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs shadow-lg shadow-blue-600/30 transition-all flex items-center justify-center gap-2">
+                <i class="fa-solid fa-floppy-disk"></i>
+                Guardar Cambios
+            </button>
+        </div>
+
+    </form>
+
+</div>
+{% endblock %}

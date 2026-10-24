@@ -1,0 +1,31 @@
+# Environment variables & secrets
+.env
+.env.backup
+.env.production
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+.venv/
+env/
+ENV/
+*.egg-info/
+.pytest_cache/
+
+# Logs & temporary files
+*.log
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+.cursor/
+.codex/
+
+# Backups runtime folder (keep gitkeep if needed, ignore generated json backups)
+/storage/app/backups/*.json

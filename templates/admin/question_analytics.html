@@ -1,0 +1,106 @@
+{% extends "layouts/app.html" %}
+
+{% block title %}Analítica de Preguntas Más Falladas — Control Central{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+
+    {# Encabezado #}
+    <div class="bg-gradient-to-r from-rose-950/60 via-slate-900 to-slate-900 border border-slate-800 rounded-2xl sm:rounded-3xl p-4 sm:p-8 shadow-xl flex flex-wrap items-center justify-between gap-4">
+        <div>
+            <div class="flex items-center gap-2">
+                <span class="px-2.5 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30 text-xs font-bold uppercase tracking-wider">
+                    Diagnóstico Institucional
+                </span>
+                <a href="/admin" class="text-xs text-slate-400 hover:text-white flex items-center gap-1">
+                    <i class="fa-solid fa-arrow-left text-[10px]"></i> Volver al panel
+                </a>
+            </div>
+            <h1 class="text-xl sm:text-2xl font-black text-white mt-1">
+                Preguntas de Mayor Complejidad y Tasa de Fallo
+            </h1>
+            <p class="text-xs text-slate-400">
+                Identifica los reactivos jurídicos y técnicos donde los aspirantes cometen más equivocaciones para enfocar el refuerzo académico.
+            </p>
+        </div>
+
+        <div class="text-xs text-slate-400">
+            Top <strong class="text-white text-sm">{{ failedQuestions | length }}</strong> preguntas analizadas
+        </div>
+    </div>
+
+    {# Lista de Preguntas con Mayor Tasa de Error #}
+    <div class="space-y-4">
+        {% for q in failedQuestions %}
+            {% set idx = loop.index0 %}
+            {% set failPct = ((q.fail_count / q.total_attempts) * 100) | round(1) if q.total_attempts > 0 else 0 %}
+            <div class="bg-slate-900 border border-rose-500/30 rounded-2xl p-4 sm:p-6 shadow-xl space-y-4">
+                
+                {# Encabezado de la Pregunta #}
+                <div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-800">
+                    <div class="flex items-center gap-2">
+                        <span class="px-3 py-1 rounded-xl bg-rose-500/20 border border-rose-500/40 text-rose-300 font-black text-xs">
+                            #{{ idx + 1 }} Mayor Tasa de Error
+                        </span>
+                        <span class="px-2.5 py-1 rounded-xl bg-slate-800 text-blue-300 border border-slate-700/60 text-xs font-semibold">
+                            {{ q.thematic_axis.name if q.thematic_axis else 'General' }}
+                        </span>
+                        <span class="px-2 py-0.5 rounded-md text-[10px] text-slate-400 border border-slate-800">
+                            {{ q.job_profile.name if q.job_profile else 'Cargo' }}
+                        </span>
+                    </div>
+
+                    {# Indicador Porcentual de Fallo #}
+                    <div class="flex items-center gap-3">
+                        <div class="text-right">
+                            <span class="text-[10px] text-slate-400 block font-medium">Intentos totales: {{ q.total_attempts }}</span>
+                            <span class="text-xs font-bold text-rose-400">
+                                {{ q.fail_count }} fallos ({{ failPct }}% error)
+                            </span>
+                        </div>
+                        <div class="w-10 h-10 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-400 flex items-center justify-center font-bold text-sm">
+                            {{ failPct }}%
+                        </div>
+                    </div>
+                </div>
+
+                {# Caso Situacional #}
+                {% if q.case_text %}
+                    <div class="p-4 rounded-xl bg-slate-950/60 border border-slate-800 text-slate-300 text-xs sm:text-sm whitespace-pre-line leading-relaxed">
+                        <div class="text-blue-400 font-bold text-xs uppercase tracking-wider mb-1 flex items-center gap-1.5">
+                            <i class="fa-solid fa-file-invoice"></i> Situación de Hecho
+                        </div>
+                        {{ q.case_text }}
+                    </div>
+                {% endif %}
+
+                {# Enunciado #}
+                <p class="text-sm font-semibold text-white leading-relaxed">
+                    {{ q.stem }}
+                </p>
+
+                {# Clave Correcta y Fundamento Legal #}
+                <div class="p-4 rounded-xl bg-blue-950/20 border border-blue-500/30 flex flex-wrap items-center justify-between gap-3 text-xs">
+                    <div class="flex items-center gap-2">
+                        <span class="font-bold text-emerald-400 flex items-center gap-1">
+                            <i class="fa-solid fa-circle-check"></i> Opción Correcta: {{ q.correct_option }}
+                        </span>
+                        {% if q.legal_basis %}
+                            <span class="text-slate-400">&bull; Base Legal: <strong class="text-blue-300">{{ q.legal_basis }}</strong></span>
+                        {% endif %}
+                    </div>
+                    <span class="text-[11px] text-slate-400">ID Reactivo: #{{ q.id }}</span>
+                </div>
+
+            </div>
+        {% else %}
+            <div class="py-12 text-center bg-slate-900 border border-slate-800 rounded-2xl">
+                <i class="fa-solid fa-circle-check text-4xl text-emerald-500 mb-3 block"></i>
+                <h3 class="text-base font-bold text-white">Aún no hay suficientes intentos registrados</h3>
+                <p class="text-xs text-slate-400 mt-1">Conforme los aspirantes presenten más simulacros, aquí se consolidarán los reactivos más difíciles.</p>
+            </div>
+        {% endfor %}
+    </div>
+
+</div>
+{% endblock %}

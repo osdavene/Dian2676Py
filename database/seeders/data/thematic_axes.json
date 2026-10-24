@@ -1,0 +1,434 @@
+[
+    {
+        "id": 1,
+        "job_profile_id": 1,
+        "category": "funcional_especifica",
+        "name": "Determinación y Control Tributario (Fiscalización y Liquidación)",
+        "description": "Estatuto Tributario Nacional: Facultades de fiscalización (Art. 684), Requerimiento Especial, Emplazamiento para Corregir, Inspección Tributaria y Contable, Liquidación Oficial de Revisión y Pliegos de Cargos.",
+        "weight_pct": "25.00",
+        "created_at": "2026-10-09 20:47:49.961292-05"
+    },
+    {
+        "id": 2,
+        "job_profile_id": 1,
+        "category": "funcional_especifica",
+        "name": "Fiscalización Aduanera y Destrucción de Mercancías",
+        "description": "Decreto 1165 de 2019 y Decreto 920 de 2023: Procedimiento de control posterior, aprehensión y decomiso, y diligencias de destrucción de mercancía averiada, defectuosa o impropia.",
+        "weight_pct": "20.00",
+        "created_at": "2026-10-09 20:47:49.961292-05"
+    },
+    {
+        "id": 3,
+        "job_profile_id": 1,
+        "category": "funcional_especifica",
+        "name": "Régimen Cambiario y Detección de Lavado de Activos (UIAF \/ ROS)",
+        "description": "Decreto Ley 2245 de 2011, Circular DCIN-83 Banco de la República, operaciones canalizables, infracciones cambiarias y Reportes de Operaciones Sospechosas (ROS).",
+        "weight_pct": "15.00",
+        "created_at": "2026-10-09 20:47:49.961292-05"
+    },
+    {
+        "id": 4,
+        "job_profile_id": 1,
+        "category": "funcional_basica",
+        "name": "Procedimiento Administrativo General (CPACA Ley 1437 de 2011)",
+        "description": "Disposiciones generales, derecho de petición, notificaciones, recursos en sede administrativa, revocatoria directa y firmeza de los actos administrativos.",
+        "weight_pct": "10.00",
+        "created_at": "2026-10-09 20:47:49.961292-05"
+    },
+    {
+        "id": 5,
+        "job_profile_id": 1,
+        "category": "funcional_basica",
+        "name": "Conceptos de Evasión, Elusión, Contrabando y Ley de Transparencia (Ley 1712)",
+        "description": "Definiciones doctrinales y normativas de evasión, elusión tributaria, contrabando abierto y técnico, y aplicación de la Ley de Transparencia y Acceso a la Información Pública.",
+        "weight_pct": "10.00",
+        "created_at": "2026-10-09 20:47:49.961292-05"
+    },
+    {
+        "id": 6,
+        "job_profile_id": 1,
+        "category": "funcional_basica",
+        "name": "Gestión Documental y Modelo MIPG",
+        "description": "Ley 594 de 2000, Tablas de Retención Documental (TRD), expediente electrónico, trazabilidad probatoria y Dimensiones del Modelo Integrado de Planeación y Gestión.",
+        "weight_pct": "10.00",
+        "created_at": "2026-10-09 20:47:49.961292-05"
+    },
+    {
+        "id": 7,
+        "job_profile_id": 1,
+        "category": "comportamental",
+        "name": "Competencias Comportamentales (Nivel Técnico)",
+        "description": "Comportamiento Ético (Nivel 4), Comunicación Efectiva (Nivel 2), Adaptabilidad (Nivel 2), Trabajo en Equipo (Nivel 2) y Orientación al Logro y al Usuario.",
+        "weight_pct": "15.00",
+        "created_at": "2026-10-09 20:47:49.961292-05"
+    },
+    {
+        "id": 8,
+        "job_profile_id": 1,
+        "category": "integridad",
+        "name": "Código de Integridad y Ética Pública DIAN",
+        "description": "Valores institucionales: Honestidad, Respeto, Compromiso, Diligencia, Justicia y subescalas de control de deseabilidad social.",
+        "weight_pct": "10.00",
+        "created_at": "2026-10-09 20:47:49.961292-05"
+    },
+    {
+        "id": 9,
+        "job_profile_id": 1,
+        "category": "funcional_especifica",
+        "name": "Acciones de Control DIAN",
+        "description": "Procedimientos y facultades de control y fiscalización DIAN: acciones intensivas y masivas, visitas de verificación física e inspección ocular, actas de hechos, informes de cierre y trámites de investigación.",
+        "weight_pct": "15.00",
+        "created_at": "2026-10-10 07:53:17.671999-05"
+    },
+    {
+        "id": 10,
+        "job_profile_id": 1,
+        "category": "funcional_especifica",
+        "name": "ABC del LA - FT",
+        "description": "Cuestionario y casos de estudio sobre prevención, detección y reporte de Lavado de Activos y Financiación del Terrorismo (LA\/FT) en la DIAN.",
+        "weight_pct": "15.00",
+        "created_at": "2026-10-10 07:53:17.683917-05"
+    },
+    {
+        "id": 11,
+        "job_profile_id": 1,
+        "category": "funcional_basica",
+        "name": "Carrera Administrativa y Función Pública",
+        "description": "Ley 909 de 2004, Decreto 1083 de 2015, situaciones administrativas, evaluación del desempeño laboral (EDL), Comisión de Personal y Régimen Disciplinario.",
+        "weight_pct": "10.00",
+        "created_at": "2026-10-10 08:23:59.565083-05"
+    },
+    {
+        "id": 12,
+        "job_profile_id": 1,
+        "category": "funcional_basica",
+        "name": "Constitución Política y Derechos Fundamentales",
+        "description": "Principios fundamentales de la Constitución de 1991, debido proceso (art. 29), derecho de petición (art. 23), tutela y estructura administrativa.",
+        "weight_pct": "10.00",
+        "created_at": "2026-10-10 08:23:59.567301-05"
+    },
+    {
+        "id": 13,
+        "job_profile_id": 3,
+        "category": "integridad",
+        "name": "Código de Integridad y Ética Pública DIAN",
+        "description": "Valores institucionales: Honestidad, Respeto, Compromiso, Diligencia, Justicia y dilemas éticos anticorrupción (Estatuto Anticorrupción Ley 1474 \/ Ley 1952).",
+        "weight_pct": "10.00",
+        "created_at": "2026-10-10 08:23:59.569653-05"
+    },
+    {
+        "id": 14,
+        "job_profile_id": 3,
+        "category": "comportamental",
+        "name": "Competencias Comportamentales (Nivel Profesional)",
+        "description": "Situaciones de liderazgo colaborativo, toma de decisiones, análisis estratégico y orientación al logro en nivel profesional.",
+        "weight_pct": "15.00",
+        "created_at": "2026-10-10 08:23:59.571442-05"
+    },
+    {
+        "id": 15,
+        "job_profile_id": 3,
+        "category": "funcional_basica",
+        "name": "Gestión Documental y Modelo MIPG",
+        "description": "Ley 594 de 2000, Tablas de Retención Documental (TRD), foliación técnica, AGN, ciclo vital del documento y MIPG.",
+        "weight_pct": "10.00",
+        "created_at": "2026-10-10 08:23:59.572999-05"
+    },
+    {
+        "id": 16,
+        "job_profile_id": 3,
+        "category": "funcional_basica",
+        "name": "Carrera Administrativa y Función Pública",
+        "description": "Ley 909 de 2004, Decreto 1083 de 2015, situaciones administrativas, evaluación del desempeño laboral (EDL), Comisión de Personal y Régimen Disciplinario.",
+        "weight_pct": "10.00",
+        "created_at": "2026-10-10 08:23:59.574547-05"
+    },
+    {
+        "id": 17,
+        "job_profile_id": 3,
+        "category": "funcional_basica",
+        "name": "Constitución Política y Derechos Fundamentales",
+        "description": "Principios fundamentales de la Constitución de 1991, debido proceso (art. 29), derecho de petición (art. 23), tutela y estructura administrativa.",
+        "weight_pct": "10.00",
+        "created_at": "2026-10-10 08:23:59.575904-05"
+    },
+    {
+        "id": 18,
+        "job_profile_id": 4,
+        "category": "integridad",
+        "name": "Código de Integridad y Ética Pública DIAN",
+        "description": "Código de Buen Gobierno y Código de Integridad DIAN, dilemas éticos, conflicto de intereses y valores institucionales del servicio público.",
+        "weight_pct": "10.00",
+        "created_at": "2026-10-10 13:14:41.141669-05"
+    },
+    {
+        "id": 19,
+        "job_profile_id": 4,
+        "category": "comportamental",
+        "name": "Competencias Comportamentales (Nivel Profesional)",
+        "description": "Comportamiento ético (Nivel 4), Orientación al logro (Nivel 3), Comunicación efectiva (Nivel 3) y Trabajo en equipo (Nivel 3).",
+        "weight_pct": "15.00",
+        "created_at": "2026-10-10 13:14:41.144374-05"
+    },
+    {
+        "id": 20,
+        "job_profile_id": 4,
+        "category": "funcional_basica",
+        "name": "Gestión Documental y Modelo MIPG",
+        "description": "Ley 594 de 2000, Acuerdo 001 de 2024 AGN, expedientes electrónicos, archivo institucional y Dimensiones del Modelo Integrado de Planeación y Gestión.",
+        "weight_pct": "10.00",
+        "created_at": "2026-10-10 13:14:41.146354-05"
+    },
+    {
+        "id": 21,
+        "job_profile_id": 4,
+        "category": "funcional_basica",
+        "name": "Carrera Administrativa y Función Pública",
+        "description": "Ley 909 de 2004, Decreto 1083 de 2015, situaciones administrativas, evaluación del desempeño y deberes del servidor público.",
+        "weight_pct": "10.00",
+        "created_at": "2026-10-10 13:14:41.147887-05"
+    },
+    {
+        "id": 22,
+        "job_profile_id": 4,
+        "category": "funcional_basica",
+        "name": "Constitución Política y Derechos Fundamentales",
+        "description": "Principios fundamentales de la Constitución de 1991, debido proceso (art. 29), derecho de petición (art. 23) y estructura administrativa del Estado.",
+        "weight_pct": "10.00",
+        "created_at": "2026-10-10 13:14:41.149395-05"
+    },
+    {
+        "id": 23,
+        "job_profile_id": 4,
+        "category": "funcional_basica",
+        "name": "Conceptos de Evasión, Elusión, Contrabando y Ley de Transparencia (Ley 1712)",
+        "description": "Definiciones de evasión, elusión tributaria, contrabando abierto y técnico, y aplicación de la Ley de Transparencia y Acceso a la Información Pública.",
+        "weight_pct": "10.00",
+        "created_at": "2026-10-10 13:14:41.151356-05"
+    },
+    {
+        "id": 24,
+        "job_profile_id": 4,
+        "category": "funcional_especifica",
+        "name": "Auditoría Interna, Análisis de Riesgos y Evaluación de Control Interno",
+        "description": "Aplicación de técnicas y herramientas de auditoría interna, mapas de riesgos institucionales y evaluación del Sistema de Control Interno (MECI\/MIPG).",
+        "weight_pct": "15.00",
+        "created_at": "2026-10-10 13:14:41.153701-05"
+    },
+    {
+        "id": 25,
+        "job_profile_id": 4,
+        "category": "funcional_especifica",
+        "name": "Gestión Organizacional y Sistema de Gestión Pública",
+        "description": "Metodologías, formulación, seguimiento y evaluación de planes, programas, convenios de cooperación institucional y herramientas de gestión estratégica.",
+        "weight_pct": "10.00",
+        "created_at": "2026-10-10 13:14:41.160043-05"
+    },
+    {
+        "id": 26,
+        "job_profile_id": 4,
+        "category": "funcional_especifica",
+        "name": "Anti Lavado de Activos y Contra la Financiación del Terrorismo (ALA\/CFT)",
+        "description": "Detección, prevención y reporte de LA\/FT, UIAF, Reportes de Operaciones Sospechosas (ROS), personas expuestas políticamente (PEP) y extinción de dominio.",
+        "weight_pct": "10.00",
+        "created_at": "2026-10-10 13:14:41.162222-05"
+    },
+    {
+        "id": 27,
+        "job_profile_id": 2,
+        "category": "integridad",
+        "name": "Código de Integridad y Ética Pública DIAN",
+        "description": "Valores institucionales: Honestidad, Respeto, Compromiso, Diligencia, Justicia y Código de Buen Gobierno.",
+        "weight_pct": "10.00",
+        "created_at": "2026-10-10 13:32:56.489496-05"
+    },
+    {
+        "id": 28,
+        "job_profile_id": 2,
+        "category": "comportamental",
+        "name": "Competencias Comportamentales (Nivel Técnico)",
+        "description": "Comportamiento ético (Nivel 4), Adaptabilidad (Nivel 2), Comunicación efectiva (Nivel 2) y Trabajo en equipo (Nivel 2).",
+        "weight_pct": "15.00",
+        "created_at": "2026-10-10 13:32:56.49259-05"
+    },
+    {
+        "id": 29,
+        "job_profile_id": 2,
+        "category": "funcional_basica",
+        "name": "Gestión Documental y Modelo MIPG",
+        "description": "Ley 594 de 2000, Acuerdo 001 de 2024 AGN, archivo, expediente electrónico y Dimensiones MIPG.",
+        "weight_pct": "10.00",
+        "created_at": "2026-10-10 13:32:56.494322-05"
+    },
+    {
+        "id": 30,
+        "job_profile_id": 2,
+        "category": "funcional_basica",
+        "name": "Carrera Administrativa y Función Pública",
+        "description": "Ley 909 de 2004, Decreto 1083 de 2015, situaciones administrativas, evaluación del desempeño y deberes del servidor público.",
+        "weight_pct": "10.00",
+        "created_at": "2026-10-10 13:32:56.495897-05"
+    },
+    {
+        "id": 31,
+        "job_profile_id": 2,
+        "category": "funcional_basica",
+        "name": "Constitución Política y Derechos Fundamentales",
+        "description": "Principios constitucionales de 1991, debido proceso (art. 29), derecho de petición (art. 23) y estructura administrativa.",
+        "weight_pct": "10.00",
+        "created_at": "2026-10-10 13:32:56.499142-05"
+    },
+    {
+        "id": 32,
+        "job_profile_id": 2,
+        "category": "funcional_basica",
+        "name": "Conceptos de Evasión, Elusión, Contrabando y Ley de Transparencia (Ley 1712)",
+        "description": "Definiciones de evasión, elusión tributaria, contrabando y aplicación de la Ley de Transparencia.",
+        "weight_pct": "10.00",
+        "created_at": "2026-10-10 13:32:56.500998-05"
+    },
+    {
+        "id": 33,
+        "job_profile_id": 2,
+        "category": "funcional_basica",
+        "name": "Procedimiento Administrativo General (CPACA Ley 1437 de 2011)",
+        "description": "Disposiciones generales, derecho de petición, notificaciones y recursos en sede administrativa.",
+        "weight_pct": "10.00",
+        "created_at": "2026-10-10 13:32:56.502542-05"
+    },
+    {
+        "id": 34,
+        "job_profile_id": 2,
+        "category": "funcional_especifica",
+        "name": "Acciones de Control DIAN",
+        "description": "Procedimientos de control y fiscalización DIAN: visitas de verificación, actas de hechos y trámites operativos.",
+        "weight_pct": "10.00",
+        "created_at": "2026-10-10 13:32:56.504132-05"
+    },
+    {
+        "id": 35,
+        "job_profile_id": 2,
+        "category": "funcional_especifica",
+        "name": "Anti Lavado de Activos y Contra la Financiación del Terrorismo (ALA\/CFT)",
+        "description": "Detección, prevención y reporte de LA\/FT en la DIAN, UIAF y Reportes de Operaciones Sospechosas (ROS).",
+        "weight_pct": "15.00",
+        "created_at": "2026-10-10 13:32:56.505551-05"
+    },
+    {
+        "id": 36,
+        "job_profile_id": 1,
+        "category": "funcional_especifica",
+        "name": "Régimen de Cajas Menores y Procedimientos de Legalización",
+        "description": "Decreto 1068 de 2015, normatividad presupuestal y procedimientos internos de constitución, manejo, reembolso, arqueo, relevo y cierre definitivo de cajas menores en la DIAN.",
+        "weight_pct": "10.00",
+        "created_at": "2026-10-10 15:45:50.765011-05"
+    },
+    {
+        "id": 37,
+        "job_profile_id": 4,
+        "category": "funcional_especifica",
+        "name": "Fiscalidad Internacional y Cláusula del Propósito Principal (PPT)",
+        "description": "Instrumento Multilateral BEPS (Acción 6 MLI), Convenios para Evitar la Doble Imposición (CDI), regla de limitación de beneficios (LOB), cláusula del propósito principal (PPT) y medidas antiabuso internacional.",
+        "weight_pct": "10.00",
+        "created_at": "2026-10-10 15:45:50.780303-05"
+    },
+    {
+        "id": 38,
+        "job_profile_id": 1,
+        "category": "funcional_especifica",
+        "name": "Controles Aduaneros y Fases del Despacho (Decreto 1165 de 2019)",
+        "description": "Decreto 1165 de 2019, fases de control aduanero (previo, durante el despacho y posterior), gestión del riesgo, Operador Económico Autorizado (OEA) y asistencia mutua internacional (Decisión 778 CAN).",
+        "weight_pct": "10.00",
+        "created_at": "2026-10-10 15:45:50.783049-05"
+    },
+    {
+        "id": 39,
+        "job_profile_id": 4,
+        "category": "funcional_especifica",
+        "name": "Régimen de Zonas Francas (Decreto 2147 de 2016)",
+        "description": "Decreto 2147 de 2016, calificación y obligaciones de usuarios operadores, industriales y comerciales, compromisos de inversión y empleo, trámites de ampliación de área y régimen sancionatorio.",
+        "weight_pct": "10.00",
+        "created_at": "2026-10-10 15:45:50.787673-05"
+    },
+    {
+        "id": 40,
+        "job_profile_id": 4,
+        "category": "funcional_especifica",
+        "name": "Precios de Transferencia y Directrices OCDE",
+        "description": "Directrices de la OCDE en materia de precios de transferencia, operaciones con materias primas (commodities \/ CUP), servicios intragrupo de bajo valor añadido, reestructuraciones empresariales e intangibles de difícil valoración (HTVI).",
+        "weight_pct": "10.00",
+        "created_at": "2026-10-10 15:45:50.78993-05"
+    },
+    {
+        "id": 41,
+        "job_profile_id": 1,
+        "category": "funcional_especifica",
+        "name": "Entidades Autorizadas para Recaudar (EAR) y Procedimiento de Recaudo",
+        "description": "Estatuto Tributario y manuales operativos de recepción y recaudo de impuestos nacionales a través de entidades financieras autorizadas, control de autoadhesivos, oportunidad magnética (FTP\/FOM) y reserva tributaria.",
+        "weight_pct": "10.00",
+        "created_at": "2026-10-10 15:45:50.792021-05"
+    },
+    {
+        "id": 76,
+        "job_profile_id": 5,
+        "category": "funcional_especifica",
+        "name": "Cobro Coactivo y Procedimiento Administrativo de Cobro",
+        "description": "Mandamiento de pago, excepciones, prescripción de la acción de cobro y liquidación de créditos según el Estatuto Tributario.",
+        "weight_pct": "15.00",
+        "created_at": "2026-10-13 10:57:17.689914-05"
+    },
+    {
+        "id": 77,
+        "job_profile_id": 5,
+        "category": "funcional_especifica",
+        "name": "Medidas Cautelares y Garantías Tributarias",
+        "description": "Embargos de cuentas bancarias, bienes sujetos a registro, secuestros y constitución de pólizas de garantía.",
+        "weight_pct": "15.00",
+        "created_at": "2026-10-13 10:57:17.689914-05"
+    },
+    {
+        "id": 78,
+        "job_profile_id": 5,
+        "category": "funcional_especifica",
+        "name": "Devoluciones y Compensaciones de Tributos",
+        "description": "Trámite de solicitudes de devolución y compensación de saldos a favor en Renta e IVA, devoluciones automáticas e improcedentes.",
+        "weight_pct": "15.00",
+        "created_at": "2026-10-13 10:57:17.689914-05"
+    },
+    {
+        "id": 79,
+        "job_profile_id": 5,
+        "category": "funcional_especifica",
+        "name": "Cobro Persuasivo y Acuerdos de Pago",
+        "description": "Campañas de cobro preventivo, facilidades para el pago (Art. 814 E.T.) y normalización de obligaciones tributarias.",
+        "weight_pct": "15.00",
+        "created_at": "2026-10-13 10:57:17.689914-05"
+    },
+    {
+        "id": 80,
+        "job_profile_id": 5,
+        "category": "funcional_especifica",
+        "name": "Control Extensivo de Obligaciones y Normalización",
+        "description": "Depuración de estados de cuenta, corrección de inconsistencias en declaraciones y reproceso de saldos.",
+        "weight_pct": "15.00",
+        "created_at": "2026-10-13 10:57:17.689914-05"
+    },
+    {
+        "id": 81,
+        "job_profile_id": 5,
+        "category": "funcional_especifica",
+        "name": "Procesos Concursales y Reorganización Empresarial",
+        "description": "Representación de la DIAN en acuerdos de reorganización, liquidación judicial (Ley 1116 de 2006) y acreencias fiscales.",
+        "weight_pct": "15.00",
+        "created_at": "2026-10-13 10:57:17.689914-05"
+    },
+    {
+        "id": 82,
+        "job_profile_id": 5,
+        "category": "funcional_especifica",
+        "name": "Entidades Autorizadas para Recaudar (EAR)",
+        "description": "Auditoría, seguimiento, validación de consignaciones y sanciones a bancos y entidades recaudadoras autorizadas.",
+        "weight_pct": "10.00",
+        "created_at": "2026-10-13 10:57:17.689914-05"
+    }
+]

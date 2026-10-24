@@ -1,0 +1,433 @@
+{% extends "layouts/app.html" %}
+
+{% block title %}Historial de Simulacros y Diagnóstico de Evolución{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+
+    {# Banner Superior: Historial y Métricas de Rendimiento #}
+    <div class="relative overflow-hidden rounded-2xl sm:rounded-3xl bg-gradient-to-r from-slate-900 via-indigo-950/70 to-slate-900 border border-slate-800 p-5 sm:p-8 shadow-2xl">
+        <div class="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between gap-5 sm:gap-6">
+            <div class="space-y-2">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-400/20 text-blue-300 text-[11px] sm:text-xs font-bold uppercase tracking-wider">
+                    <i class="fa-solid fa-clock-rotate-left text-blue-400"></i>
+                    Trazabilidad Histórica &bull; Concurso DIAN 2676
+                </div>
+                <h1 class="text-xl sm:text-3xl font-black text-white tracking-tight">
+                    Historial de Simulacros y Diagnóstico Personal
+                </h1>
+                <p class="text-xs sm:text-sm text-slate-300 max-w-2xl leading-relaxed text-justify sm:text-left">
+                    Consulta el registro completo de todas tus evaluaciones presentadas, tu curva de evolución por puntajes y el desglose de fortalezas y debilidades temáticas para focalizar tu estudio hacia el umbral eliminatorio de <strong class="text-emerald-400">&ge; 70.00 puntos</strong>.
+                </p>
+            </div>
+
+            <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3 shrink-0">
+                <button type="button" onclick="openStartSimulacroModal()"
+                        class="px-5 py-3 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-xs uppercase tracking-wider shadow-lg shadow-amber-500/20 flex items-center justify-center gap-2 transition-all transform active:scale-95">
+                    <i class="fa-solid fa-play"></i>
+                    Nuevo Simulacro
+                </button>
+                <a href="/dashboard"
+                   class="px-4 py-3 rounded-2xl bg-slate-800/80 hover:bg-slate-700/80 text-slate-300 font-bold text-xs uppercase tracking-wider border border-slate-700 flex items-center justify-center gap-2 transition-all active:scale-95">
+                    <i class="fa-solid fa-house"></i>
+                    Ir a Inicio
+                </a>
+            </div>
+        </div>
+
+        <div class="absolute -right-10 -bottom-10 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
+    </div>
+
+    {# Métricas Globales de Rendimiento (4 Tarjetas) #}
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+        
+        <div class="bg-slate-900/70 border border-slate-800/80 rounded-xl sm:rounded-2xl p-4 sm:p-5 flex items-center justify-between">
+            <div>
+                <span class="text-[11px] sm:text-xs font-semibold text-slate-400 block leading-tight">Total Simulacros</span>
+                <span class="text-xl sm:text-3xl font-black text-white mt-1 block">{{ totalCount }}</span>
+                <span class="text-[10px] sm:text-[11px] text-slate-500 font-medium font-mono">
+                    {{ officialCount }} de 100P &bull; {{ expressCount }} de 50P
+                </span>
+            </div>
+            <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-blue-500/10 border border-blue-500/20 text-blue-400 flex items-center justify-center text-base sm:text-xl shrink-0">
+                <i class="fa-solid fa-list-check"></i>
+            </div>
+        </div>
+
+        <div class="bg-slate-900/70 border border-slate-800/80 rounded-xl sm:rounded-2xl p-4 sm:p-5 flex items-center justify-between">
+            <div>
+                <span class="text-[11px] sm:text-xs font-semibold text-slate-400 block leading-tight">Tasa de Éxito</span>
+                <span class="text-xl sm:text-3xl font-black {{ 'text-emerald-400' if passRate >= 70 else 'text-amber-400' }} mt-1 block">
+                    {{ passRate }}%
+                </span>
+                <span class="text-[10px] sm:text-[11px] text-slate-500 font-medium">
+                    {{ passedCount }} de {{ totalCount }} aprobados
+                </span>
+            </div>
+            <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center text-base sm:text-xl shrink-0">
+                <i class="fa-solid fa-trophy"></i>
+            </div>
+        </div>
+
+        <div class="bg-slate-900/70 border border-slate-800/80 rounded-xl sm:rounded-2xl p-4 sm:p-5 flex items-center justify-between">
+            <div>
+                <span class="text-[11px] sm:text-xs font-semibold text-slate-400 block leading-tight">Promedio General</span>
+                <span class="text-xl sm:text-3xl font-black text-white mt-1 block font-mono">
+                    {{ avgScore | number_format(2) }}
+                </span>
+                <span class="text-[10px] sm:text-[11px] text-slate-500 font-medium">
+                    Puntos sobre 100
+                </span>
+            </div>
+            <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-purple-500/10 border border-purple-500/20 text-purple-400 flex items-center justify-center text-base sm:text-xl shrink-0">
+                <i class="fa-solid fa-chart-line"></i>
+            </div>
+        </div>
+
+        <div class="bg-slate-900/70 border border-slate-800/80 rounded-xl sm:rounded-2xl p-4 sm:p-5 flex items-center justify-between">
+            <div>
+                <span class="text-[11px] sm:text-xs font-semibold text-slate-400 block leading-tight">Mejor Puntaje</span>
+                <span class="text-xl sm:text-3xl font-black text-amber-300 mt-1 block font-mono">
+                    {{ bestScore | number_format(2) }}
+                </span>
+                <span class="text-[10px] sm:text-[11px] text-slate-500 font-medium">
+                    Récord personal
+                </span>
+            </div>
+            <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center text-base sm:text-xl shrink-0">
+                <i class="fa-solid fa-medal"></i>
+            </div>
+        </div>
+
+    </div>
+
+    {# Diagnóstico Pedagógico Acumulado: Dónde Mejorar #}
+    {% if axisPerformance %}
+        <div class="bg-slate-900/70 border border-slate-800/80 rounded-2xl sm:rounded-3xl p-5 sm:p-8 space-y-5">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 pb-3 border-b border-slate-800">
+                <div>
+                    <h2 class="text-base sm:text-lg font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-compass-drafting text-blue-400"></i>
+                        Diagnóstico por Eje Temático: Identificación de Áreas a Mejorar
+                    </h2>
+                    <p class="text-xs text-slate-400 mt-0.5">
+                        Porcentaje de efectividad acumulada en todas las preguntas que has respondido
+                    </p>
+                </div>
+                {% if criticalAxes %}
+                    <span class="px-3 py-1 rounded-full bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs font-bold w-fit">
+                        {{ criticalAxes | length }} Eje(s) requieren refuerzo (&lt; 70%)
+                    </span>
+                {% else %}
+                    <span class="px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs font-bold w-fit">
+                        ¡Excelente! Todos los ejes superan el 70%
+                    </span>
+                {% endif %}
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
+                {% for axis in axisPerformance %}
+                    {% set pct = axis.percent %}
+                    {% set colorClass = 'text-emerald-400' if pct >= 70 else ('text-amber-400' if pct >= 50 else 'text-rose-400') %}
+                    {% set barClass = 'bg-emerald-500' if pct >= 70 else ('bg-amber-500' if pct >= 50 else 'bg-rose-500') %}
+                    {% set badgeClass = 'bg-emerald-500/10 text-emerald-300 border-emerald-500/30' if pct >= 70 else ('bg-amber-500/10 text-amber-300 border-amber-500/30' if pct >= 50 else 'bg-rose-500/10 text-rose-300 border-rose-500/30') %}
+                    <div class="p-4 rounded-2xl bg-slate-950/60 border border-slate-800 flex flex-col justify-between space-y-3">
+                        <div class="space-y-1.5">
+                            <div class="flex items-center justify-between gap-2">
+                                <span class="text-[10px] uppercase font-bold px-2 py-0.5 rounded-full border {{ badgeClass }}">
+                                    {{ 'Refuerzo Urgente' if axis.priority == 'CRÍTICA' else ('Por Mejorar' if axis.priority == 'MEDIA' else 'Dominado') }}
+                                </span>
+                                <span class="text-xs font-bold font-mono {{ colorClass }}">
+                                    {{ pct }}%
+                                </span>
+                            </div>
+                            <h4 class="text-xs font-bold text-white line-clamp-2">
+                                {{ axis.name }}
+                            </h4>
+                            <div class="flex items-center justify-between text-[11px] text-slate-400">
+                                <span>Aciertos: <strong class="text-emerald-400">{{ axis.correct }}</strong> / {{ axis.total }}</span>
+                                <span>Fallos: <strong class="text-rose-400">{{ axis.incorrect }}</strong></span>
+                            </div>
+                            <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden mt-1">
+                                <div class="{{ barClass }} h-full transition-all duration-300" style="width: {{ pct }}%"></div>
+                            </div>
+                        </div>
+
+                        {% if axis.axis_id %}
+                            <a href="/practica/eje/{{ axis.axis_id }}" 
+                               class="w-full py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-blue-300 font-semibold text-[11px] flex items-center justify-center gap-1.5 transition-colors border border-slate-700/60">
+                                <span>Practicar este Eje</span>
+                                <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                            </a>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+
+    {# Tabla / Listado de Todos los Simulacros #}
+    <div class="bg-slate-900/70 border border-slate-800/80 rounded-2xl sm:rounded-3xl p-5 sm:p-8 space-y-4">
+        <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+            <div>
+                <h2 class="text-base sm:text-lg font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-table-list text-amber-400"></i>
+                    Historial Completo de Evaluaciones
+                </h2>
+                <p class="text-xs text-slate-400 mt-0.5">
+                    Registro de cada simulacro finalizado con sus respuestas y calificaciones
+                </p>
+            </div>
+            <span class="text-xs font-mono text-slate-400">
+                Página {{ sessions.current_page }} de {{ sessions.last_page }}
+            </span>
+        </div>
+
+        {% if sessions.is_empty() %}
+            <div class="py-12 text-center space-y-3">
+                <div class="w-14 h-14 rounded-2xl bg-slate-800 text-slate-400 mx-auto flex items-center justify-center text-2xl">
+                    <i class="fa-regular fa-folder-open"></i>
+                </div>
+                <h3 class="text-base font-bold text-white">Aún no has completado simulacros</h3>
+                <p class="text-xs text-slate-400 max-w-sm mx-auto">
+                    Inicia tu primer simulacro para comenzar a registrar tu historial, medir tus tiempos y analizar tus áreas de oportunidad.
+                </p>
+                <button type="button" onclick="openStartSimulacroModal()" 
+                        class="px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs uppercase tracking-wider inline-flex items-center gap-2 shadow-lg shadow-amber-500/20">
+                    <i class="fa-solid fa-play"></i> Iniciar Primer Simulacro
+                </button>
+            </div>
+        {% else %}
+            {# Versión Móvil #}
+            <div class="space-y-3 sm:hidden">
+                {% for s in sessions %}
+                    <div class="p-4 rounded-2xl bg-slate-950/70 border border-slate-800 space-y-3 shadow-inner">
+                        <div class="flex items-start justify-between gap-2">
+                            <div>
+                                <span class="font-bold text-xs text-white block">
+                                    {% if s.mode == 'simulacro_express' %}
+                                        <span class="text-amber-300 font-extrabold"><i class="fa-solid fa-bolt mr-1"></i> Simulacro Express (50P)</span>
+                                    {% elif s.mode == 'simulacro_oficial' %}
+                                        <span class="text-amber-400 font-extrabold"><i class="fa-solid fa-trophy mr-1"></i> Simulacro Oficial (100P)</span>
+                                    {% elif s.mode == 'practica_eje' %}
+                                        <span class="text-blue-400 font-bold"><i class="fa-solid fa-bullseye mr-1"></i> {{ s.thematic_axis.name if s.thematic_axis else 'Práctica' }}</span>
+                                    {% else %}
+                                        <span class="text-rose-400 font-bold"><i class="fa-solid fa-rotate-left mr-1"></i> Repaso de Fallos</span>
+                                    {% endif %}
+                                </span>
+                                <span class="text-[10px] text-slate-400 font-mono">
+                                    {{ (s.completed_at or s.created_at) | format_date('d/m/Y H:i') }}
+                                    &bull; Tiempo: {{ (s.time_spent_seconds or 0) | gmdate }}
+                                </span>
+                            </div>
+                            {% if s.is_passed %}
+                                <span class="px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 font-black text-[10px] uppercase">
+                                    Aprobado
+                                </span>
+                            {% else %}
+                                <span class="px-2.5 py-1 rounded-full bg-rose-500/10 border border-rose-500/30 text-rose-300 font-black text-[10px] uppercase">
+                                    No Aprobado
+                                </span>
+                            {% endif %}
+                        </div>
+
+                        <div class="grid grid-cols-4 gap-2 text-center p-2.5 rounded-xl bg-slate-900 border border-slate-800/80 text-xs">
+                            <div>
+                                <span class="text-[9px] text-slate-500 block uppercase">Puntaje</span>
+                                <strong class="text-sm font-black text-white font-mono">{{ s.score | number_format(2) }}</strong>
+                            </div>
+                            <div>
+                                <span class="text-[9px] text-emerald-500 block uppercase">Correctas</span>
+                                <strong class="text-sm font-black text-emerald-400">{{ s.correct_answers }}</strong>
+                            </div>
+                            <div>
+                                <span class="text-[9px] text-rose-500 block uppercase">Incorrectas</span>
+                                <strong class="text-sm font-black text-rose-400">{{ s.incorrect_answers }}</strong>
+                            </div>
+                            <div>
+                                <span class="text-[9px] text-slate-400 block uppercase">Omitidas</span>
+                                <strong class="text-sm font-black text-slate-400">{{ s.omitted_answers }}</strong>
+                            </div>
+                        </div>
+
+                        <a href="/simulacro/{{ s.id }}/resultado"
+                           class="w-full py-2.5 rounded-xl bg-blue-600/20 hover:bg-blue-600/30 text-blue-300 font-bold text-xs flex items-center justify-center gap-1.5 transition-colors border border-blue-500/30 active:scale-95">
+                            <span>Ver Resultados y Diagnóstico</span>
+                            <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+
+            {# Versión Tablet & Desktop #}
+            <div class="hidden sm:block overflow-x-auto">
+                <table class="w-full text-left text-xs">
+                    <thead>
+                        <tr class="border-b border-slate-800 text-slate-400 uppercase tracking-wider text-[10px]">
+                            <th class="py-3 px-3">Fecha y Hora</th>
+                            <th class="py-3 px-3">Modalidad</th>
+                            <th class="py-3 px-3">Cargo Evaluado</th>
+                            <th class="py-3 px-3 text-center">Tiempo Usado</th>
+                            <th class="py-3 px-3 text-center">Correctas</th>
+                            <th class="py-3 px-3 text-center">Incorrectas</th>
+                            <th class="py-3 px-3 text-center">Puntaje (0-100)</th>
+                            <th class="py-3 px-3 text-center">Estado Oficial</th>
+                            <th class="py-3 px-3 text-right">Auditoría</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-800/60 text-slate-300">
+                        {% for s in sessions %}
+                            <tr class="hover:bg-slate-800/30 transition-colors">
+                                <td class="py-3.5 px-3 whitespace-nowrap text-slate-400 font-mono">
+                                    {{ (s.completed_at or s.created_at) | format_date('d/m/Y H:i') }}
+                                </td>
+                                <td class="py-3.5 px-3 font-semibold text-white whitespace-nowrap">
+                                    {% if s.mode == 'simulacro_express' %}
+                                        <span class="text-amber-300 font-extrabold flex items-center gap-1.5">
+                                            <i class="fa-solid fa-bolt text-xs"></i> Simulacro Express (50P)
+                                        </span>
+                                    {% elif s.mode == 'simulacro_oficial' %}
+                                        <span class="text-amber-400 font-extrabold flex items-center gap-1.5">
+                                            <i class="fa-solid fa-trophy text-xs"></i> Simulacro Oficial (100P)
+                                        </span>
+                                    {% elif s.mode == 'practica_eje' %}
+                                        <span class="text-blue-400 flex items-center gap-1.5">
+                                            <i class="fa-solid fa-bullseye text-xs"></i> {{ s.thematic_axis.name if s.thematic_axis else 'Práctica' }}
+                                        </span>
+                                    {% else %}
+                                        <span class="text-rose-400 flex items-center gap-1.5">
+                                            <i class="fa-solid fa-rotate-left text-xs"></i> Repaso de Fallos
+                                        </span>
+                                    {% endif %}
+                                </td>
+                                <td class="py-3.5 px-3 text-slate-300 max-w-[150px] truncate">
+                                    {{ s.job_profile.name if s.job_profile else 'Analista III' }}
+                                </td>
+                                <td class="py-3.5 px-3 text-center text-slate-400 font-mono">
+                                    {{ (s.time_spent_seconds or 0) | gmdate }}
+                                </td>
+                                <td class="py-3.5 px-3 text-center font-bold text-emerald-400">
+                                    {{ s.correct_answers }}
+                                </td>
+                                <td class="py-3.5 px-3 text-center font-bold text-rose-400">
+                                    {{ s.incorrect_answers }}
+                                </td>
+                                <td class="py-3.5 px-3 text-center font-black text-sm text-white font-mono">
+                                    {{ s.score | number_format(2) }}
+                                </td>
+                                <td class="py-3.5 px-3 text-center">
+                                    {% if s.is_passed %}
+                                        <span class="px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 font-black text-[10px]">
+                                            APROBADO
+                                        </span>
+                                    {% else %}
+                                        <span class="px-2.5 py-1 rounded-full bg-rose-500/10 border border-rose-500/30 text-rose-300 font-black text-[10px]">
+                                            NO APROBADO
+                                        </span>
+                                    {% endif %}
+                                </td>
+                                <td class="py-3.5 px-3 text-right">
+                                    <a href="/simulacro/{{ s.id }}/resultado"
+                                       class="px-3 py-1.5 rounded-xl bg-blue-600/20 hover:bg-blue-600/40 text-blue-300 font-semibold transition-colors text-xs inline-flex items-center gap-1">
+                                        <span>Resultados</span>
+                                        <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            {# Paginación #}
+            <div class="pt-4 border-t border-slate-800">
+                {{ sessions.links() }}
+            </div>
+        {% endif %}
+    </div>
+
+</div>
+
+{# Modal para Iniciar Nuevo Simulacro #}
+<div id="modal-start-simulacro" class="hidden fixed inset-0 z-50 overflow-y-auto bg-black/85 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl relative space-y-5">
+        
+        <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+            <div class="flex items-center gap-2.5">
+                <div class="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/30 flex items-center justify-center text-lg">
+                    <i class="fa-solid fa-stopwatch"></i>
+                </div>
+                <div>
+                    <h3 class="text-base sm:text-lg font-black text-white">Selecciona Modalidad de Simulacro</h3>
+                    <p class="text-xs text-slate-400">Elige la duración según tu disponibilidad de tiempo</p>
+                </div>
+            </div>
+            <button type="button" onclick="closeStartSimulacroModal()" class="text-slate-400 hover:text-white p-2">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+        </div>
+
+        <div class="space-y-3.5">
+            <form method="POST" action="/simulacro/iniciar">
+                <input type="hidden" name="question_count" value="100">
+                <button type="submit" 
+                        class="w-full text-left p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-slate-950 to-indigo-950/30 border border-amber-500/30 hover:border-amber-400 transition-all group flex items-start gap-4 shadow-lg hover:shadow-amber-500/10">
+                    <div class="w-12 h-12 rounded-2xl bg-amber-500 text-slate-950 flex items-center justify-center text-xl font-black shrink-0 group-hover:scale-105 transition-transform shadow-md">
+                        <i class="fa-solid fa-trophy"></i>
+                    </div>
+                    <div class="flex-1 space-y-1">
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm sm:text-base font-extrabold text-white group-hover:text-amber-300 transition-colors">
+                                Simulacro Oficial Completo
+                            </span>
+                            <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                                5 Horas
+                            </span>
+                        </div>
+                        <p class="text-xs text-slate-300 leading-relaxed text-justify sm:text-left">
+                            <strong>100 preguntas situacionales</strong> oficiales. Réplica exacta de la prueba escrita DIAN 2676. Tiempo pausable si sales de la plataforma.
+                        </p>
+                    </div>
+                </button>
+            </form>
+
+            <form method="POST" action="/simulacro/iniciar">
+                <input type="hidden" name="question_count" value="50">
+                <button type="submit" 
+                        class="w-full text-left p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-slate-950 to-blue-950/30 border border-blue-500/30 hover:border-blue-400 transition-all group flex items-start gap-4 shadow-lg hover:shadow-blue-500/10">
+                    <div class="w-12 h-12 rounded-2xl bg-blue-600 text-white flex items-center justify-center text-xl font-black shrink-0 group-hover:scale-105 transition-transform shadow-md">
+                        <i class="fa-solid fa-bolt"></i>
+                    </div>
+                    <div class="flex-1 space-y-1">
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm sm:text-base font-extrabold text-white group-hover:text-blue-300 transition-colors">
+                                Simulacro Rápido Express
+                            </span>
+                            <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 border border-blue-500/30">
+                                2h 30m
+                            </span>
+                        </div>
+                        <p class="text-xs text-slate-300 leading-relaxed text-justify sm:text-left">
+                            <strong>50 preguntas situacionales</strong> representativas. Ideal para quienes disponen de menos tiempo. Tiempo pausable en cualquier momento.
+                        </p>
+                    </div>
+                </button>
+            </form>
+        </div>
+
+        <p class="text-[11px] text-slate-400 text-center pt-2">
+            Ambas modalidades se guardan en tu historial permanente y alimentan tus métricas pedagógicas.
+        </p>
+
+    </div>
+</div>
+
+<script>
+    function openStartSimulacroModal() {
+        document.getElementById('modal-start-simulacro').classList.remove('hidden');
+    }
+    function closeStartSimulacroModal() {
+        document.getElementById('modal-start-simulacro').classList.add('hidden');
+    }
+</script>
+{% endblock %}

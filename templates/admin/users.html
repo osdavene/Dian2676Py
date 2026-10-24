@@ -1,0 +1,353 @@
+{% extends "layouts/app.html" %}
+
+{% block title %}Gestión de Aspirantes — Control Central{% endblock %}
+
+{% block content %}
+<div class="space-y-6" x-data="{ showCreateModal: false, autoPassword: 'dian' + Math.floor(1000 + Math.random() * 9000) }">
+
+    {# Encabezado y Acción de Crear Usuario #}
+    <div class="bg-gradient-to-r from-blue-950/60 via-slate-900 to-slate-900 border border-slate-800 rounded-2xl sm:rounded-3xl p-4 sm:p-8 shadow-xl flex flex-wrap items-center justify-between gap-4">
+        <div>
+            <div class="flex items-center gap-2">
+                <span class="px-2.5 py-0.5 rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/30 text-xs font-bold uppercase tracking-wider">
+                    Control Central
+                </span>
+                <a href="/admin" class="text-xs text-slate-400 hover:text-white flex items-center gap-1">
+                    <i class="fa-solid fa-arrow-left text-[10px]"></i> Volver al panel
+                </a>
+            </div>
+            <h1 class="text-xl sm:text-2xl font-black text-white mt-1">
+                Gestión y Control de Aspirantes
+            </h1>
+            <p class="text-xs text-slate-400">
+                Registra nuevos aspirantes, asigna credenciales y supervisa su rendimiento en el simulador.
+            </p>
+        </div>
+
+        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
+            <button type="button" @click="showCreateModal = true"
+                    class="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-xs uppercase tracking-wider shadow-lg shadow-blue-600/30 transition-all flex items-center justify-center gap-2">
+                <i class="fa-solid fa-user-plus"></i>
+                Registrar Nuevo Aspirante
+            </button>
+            <div class="text-xs text-slate-400 border-t sm:border-t-0 sm:border-l border-slate-800 pt-2 sm:pt-0 sm:pl-3 text-center sm:text-left">
+                Total: <strong class="text-white text-sm">{{ users.total() }}</strong>
+            </div>
+        </div>
+    </div>
+
+    {# Barra de Filtros y Búsqueda #}
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl">
+        <form method="GET" action="/admin/usuarios" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 items-end">
+            <div>
+                <label for="search" class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">
+                    Buscar por nombre o correo
+                </label>
+                <input type="text" name="search" id="search" value="{{ search or '' }}" placeholder="Ej: Maria, juan@..."
+                       class="w-full bg-slate-950 border border-slate-700/80 rounded-xl px-3.5 py-2 text-xs text-white placeholder-slate-500 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+            </div>
+
+            <div>
+                <label for="job_id" class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">
+                    Filtrar por Cargo
+                </label>
+                <select name="job_id" id="job_id" onchange="this.form.submit()"
+                        class="w-full bg-slate-950 border border-slate-700/80 rounded-xl px-3 py-2 text-xs text-white focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                    <option value="">Todos los cargos</option>
+                    {% for j in jobs %}
+                        <option value="{{ j.id }}" {{ 'selected' if (jobId | string) == (j.id | string) else '' }}>
+                            {{ j.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div>
+                <label for="role" class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">
+                    Filtrar por Rol
+                </label>
+                <select name="role" id="role" onchange="this.form.submit()"
+                        class="w-full bg-slate-950 border border-slate-700/80 rounded-xl px-3 py-2 text-xs text-white focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                    <option value="">Todos los roles</option>
+                    <option value="aspirante" {{ 'selected' if role == 'aspirante' else '' }}>Aspirante</option>
+                    <option value="admin" {{ 'selected' if role == 'admin' else '' }}>Administrador</option>
+                    <option value="superadmin" {{ 'selected' if role == 'superadmin' else '' }}>Super Administrador</option>
+                </select>
+            </div>
+
+            <div class="flex items-center gap-2">
+                <button type="submit" 
+                        class="flex-1 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs shadow-md shadow-blue-600/30 transition-colors flex items-center justify-center gap-1.5">
+                    <i class="fa-solid fa-filter"></i> Filtrar
+                </button>
+                {% if search or jobId or role %}
+                    <a href="/admin/usuarios" 
+                       class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold transition-colors">
+                        <i class="fa-solid fa-xmark"></i>
+                    </a>
+                {% endif %}
+            </div>
+        </form>
+    </div>
+
+    {# Tabla de Usuarios #}
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl sm:rounded-3xl p-4 sm:p-6 shadow-xl">
+        
+        {# Vista de Tarjetas para Celulares (< sm) #}
+        <div class="grid grid-cols-1 gap-3 sm:hidden">
+            {% for u in users %}
+                <div class="p-4 rounded-xl bg-slate-950/70 border border-slate-800/80 space-y-3">
+                    <div class="flex items-start justify-between gap-2">
+                        <div>
+                            <div class="font-bold text-white text-sm">{{ u.name }}</div>
+                            <div class="text-[11px] text-slate-400 font-mono">{{ u.email }}</div>
+                        </div>
+                        <div>
+                            {% if u.role == 'superadmin' %}
+                                <span class="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 text-[10px] font-bold uppercase">
+                                    Super Admin
+                                </span>
+                            {% elif u.role == 'admin' %}
+                                <span class="px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 text-[10px] font-bold uppercase">
+                                    Admin
+                                </span>
+                            {% else %}
+                                <span class="px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700/60 text-[10px] font-bold uppercase">
+                                    Aspirante
+                                </span>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-2">
+                        <span class="px-2.5 py-1 rounded-lg bg-blue-600/10 text-blue-300 font-semibold border border-blue-500/20 text-[11px]">
+                            {{ u.job_profile.name if u.job_profile else u.target_cargo }}
+                        </span>
+                        <span class="text-[11px] text-slate-500 font-mono ml-auto">
+                            Alta: {{ u.created_at | format_date('%d/%m/%Y') if u.created_at else 'N/A' }}
+                        </span>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2 text-xs py-2 border-y border-slate-800/60 text-slate-300">
+                        <div class="flex items-center justify-between px-2 py-1 bg-slate-900 rounded-lg">
+                            <span class="text-slate-400 text-[11px]">Simulacros:</span>
+                            <strong class="text-white">{{ u.exams_count }}</strong>
+                        </div>
+                        <div class="flex items-center justify-between px-2 py-1 bg-slate-900 rounded-lg">
+                            <span class="text-slate-400 text-[11px]">Aprobados:</span>
+                            <strong class="{{ 'text-emerald-400' if u.passed_exams_count > 0 else 'text-slate-500' }}">{{ u.passed_exams_count }}</strong>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-end gap-2 pt-1">
+                        <a href="/admin/usuarios/{{ u.id }}" 
+                           class="flex-1 py-2 rounded-lg bg-blue-600/20 hover:bg-blue-600/40 text-blue-300 font-bold transition-colors text-xs flex items-center justify-center gap-1.5">
+                            <i class="fa-solid fa-user-pen text-[11px]"></i> Ficha & Editar
+                        </a>
+
+                        {% if current_user.id != u.id %}
+                            <form method="POST" action="/admin/usuarios/{{ u.id }}/eliminar" onsubmit="return confirm('¿Confirmas que deseas eliminar al usuario {{ u.name }}? Se eliminarán también sus historiales.')" class="inline">
+                                <input type="hidden" name="_token" value="{{ csrf_token }}">
+                                <button type="submit" 
+                                        class="px-3 py-2 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20 transition-colors text-xs"
+                                        title="Eliminar usuario">
+                                    <i class="fa-solid fa-trash-can"></i>
+                                </button>
+                            </form>
+                        {% endif %}
+                    </div>
+                </div>
+            {% else %}
+                <div class="py-8 text-center text-slate-500 text-xs">
+                    No se encontraron aspirantes con los filtros seleccionados.
+                </div>
+            {% endfor %}
+        </div>
+
+        {# Vista de Tabla para Pantallas Medianas y Grandes (>= sm) #}
+        <div class="hidden sm:block overflow-x-auto">
+            <table class="w-full text-left text-xs">
+                <thead>
+                    <tr class="border-b border-slate-800 text-slate-400 uppercase tracking-wider text-[10px]">
+                        <th class="py-3 px-3">Aspirante</th>
+                        <th class="py-3 px-3">Cargo Concurso</th>
+                        <th class="py-3 px-3 text-center">Rol</th>
+                        <th class="py-3 px-3 text-center">Simulacros</th>
+                        <th class="py-3 px-3 text-center">Aprobados</th>
+                        <th class="py-3 px-3">Fecha Alta</th>
+                        <th class="py-3 px-3 text-right">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-800/60 text-slate-300">
+                    {% for u in users %}
+                        <tr class="hover:bg-slate-800/30 transition-colors">
+                            <td class="py-3.5 px-3">
+                                <div class="font-bold text-white text-sm">{{ u.name }}</div>
+                                <div class="text-[11px] text-slate-400 font-mono">{{ u.email }}</div>
+                            </td>
+                            <td class="py-3.5 px-3">
+                                <span class="px-2.5 py-1 rounded-lg bg-blue-600/10 text-blue-300 font-semibold border border-blue-500/20 text-[11px]">
+                                    {{ u.job_profile.name if u.job_profile else u.target_cargo }}
+                                </span>
+                            </td>
+                            <td class="py-3.5 px-3 text-center">
+                                {% if u.role == 'superadmin' %}
+                                    <span class="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 text-[10px] font-bold uppercase">
+                                        Super Admin
+                                    </span>
+                                {% elif u.role == 'admin' %}
+                                    <span class="px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 text-[10px] font-bold uppercase">
+                                        Admin
+                                    </span>
+                                {% else %}
+                                    <span class="px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700/60 text-[10px] font-bold uppercase">
+                                        Aspirante
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td class="py-3.5 px-3 text-center font-bold text-white">
+                                {{ u.exams_count }}
+                            </td>
+                            <td class="py-3.5 px-3 text-center font-bold {{ 'text-emerald-400' if u.passed_exams_count > 0 else 'text-slate-500' }}">
+                                {{ u.passed_exams_count }}
+                            </td>
+                            <td class="py-3.5 px-3 text-slate-400 text-[11px] font-mono">
+                                {{ u.created_at | format_date('%d/%m/%Y') if u.created_at else 'N/A' }}
+                            </td>
+                            <td class="py-3.5 px-3 text-right">
+                                <div class="inline-flex items-center gap-1.5">
+                                    <a href="/admin/usuarios/{{ u.id }}" 
+                                       class="px-2.5 py-1 rounded-lg bg-blue-600/20 hover:bg-blue-600/40 text-blue-300 font-bold transition-colors text-[11px] inline-flex items-center gap-1">
+                                        <i class="fa-solid fa-user-pen"></i> Ficha & Editar
+                                    </a>
+
+                                    {% if current_user.id != u.id %}
+                                        <form method="POST" action="/admin/usuarios/{{ u.id }}/eliminar" onsubmit="return confirm('¿Confirmas que deseas eliminar al usuario {{ u.name }}? Se eliminarán también sus historiales.')" class="inline">
+                                            <input type="hidden" name="_token" value="{{ csrf_token }}">
+                                            <button type="submit" 
+                                                    class="px-2 py-1 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20 transition-colors text-[11px]"
+                                                    title="Eliminar usuario">
+                                                <i class="fa-solid fa-trash-can"></i>
+                                            </button>
+                                        </form>
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="7" class="py-8 text-center text-slate-500">
+                                No se encontraron aspirantes con los filtros seleccionados.
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="pt-4 flex justify-center">
+            {{ users.links() | safe }}
+        </div>
+    </div>
+
+    {# Modal para Crear Nuevo Aspirante / Usuario #}
+    <div x-show="showCreateModal" 
+         x-cloak
+         class="fixed inset-0 z-50 overflow-y-auto bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+        
+        <div @click.away="showCreateModal = false"
+             class="bg-slate-900 border border-slate-800 rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl relative space-y-5">
+            
+            <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-10 h-10 rounded-xl bg-blue-600/20 text-blue-400 flex items-center justify-center text-lg">
+                        <i class="fa-solid fa-user-plus"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-base font-extrabold text-white">Registrar Nuevo Aspirante</h3>
+                        <p class="text-[11px] text-slate-400">Crea el usuario para habilitar su acceso al simulador DIAN</p>
+                    </div>
+                </div>
+                <button type="button" @click="showCreateModal = false" class="text-slate-400 hover:text-white text-lg">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <form method="POST" action="/admin/usuarios" class="space-y-4">
+                <input type="hidden" name="_token" value="{{ csrf_token }}">
+
+                <div>
+                    <label for="create_name" class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">
+                        Nombre Completo del Aspirante <span class="text-rose-400">*</span>
+                    </label>
+                    <input type="text" name="name" id="create_name" required placeholder="Ej: Dr. Carlos Rodríguez"
+                           class="w-full bg-slate-950 border border-slate-700/80 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                </div>
+
+                <div>
+                    <label for="create_email" class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">
+                        Correo Electrónico (Usuario de Ingreso) <span class="text-rose-400">*</span>
+                    </label>
+                    <input type="email" name="email" id="create_email" required placeholder="carlos.rodriguez@ejemplo.com"
+                           class="w-full bg-slate-950 border border-slate-700/80 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                </div>
+
+                <div>
+                    <div class="flex items-center justify-between mb-1.5">
+                        <label for="create_password" class="block text-xs font-bold text-slate-300 uppercase tracking-wider">
+                            Contraseña Inicial <span class="text-rose-400">*</span>
+                        </label>
+                        <button type="button" @click="autoPassword = 'dian' + Math.floor(1000 + Math.random() * 9000); document.getElementById('create_password').value = autoPassword;"
+                                class="text-[11px] text-blue-400 hover:text-blue-300 font-semibold flex items-center gap-1">
+                            <i class="fa-solid fa-wand-magic-sparkles text-[10px]"></i> Generar Clave
+                        </button>
+                    </div>
+                    <input type="text" name="password" id="create_password" required x-bind:value="autoPassword"
+                           class="w-full bg-slate-950 border border-slate-700/80 rounded-xl px-3.5 py-2.5 text-xs text-white font-mono placeholder-slate-500 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                    <span class="text-[10px] text-slate-500 block mt-1">Puedes dejar la clave generada o escribir una clave personalizada (mínimo 6 caracteres).</span>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                    <div>
+                        <label for="create_job_id" class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">
+                            Cargo a Concursar <span class="text-rose-400">*</span>
+                        </label>
+                        <select name="job_profile_id" id="create_job_id" required
+                                class="w-full bg-slate-950 border border-slate-700/80 rounded-xl px-3 py-2.5 text-xs text-white focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                            {% for j in jobs %}
+                                <option value="{{ j.id }}">{{ j.name }} ({{ j.level }})</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="create_role" class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">
+                            Rol en la Plataforma <span class="text-rose-400">*</span>
+                        </label>
+                        <select name="role" id="create_role" required
+                                class="w-full bg-slate-950 border border-slate-700/80 rounded-xl px-3 py-2.5 text-xs text-white focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                            <option value="aspirante" selected>Aspirante</option>
+                            <option value="admin">Administrador</option>
+                            <option value="superadmin">Super Administrador</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-3 pt-3 border-t border-slate-800">
+                    <button type="button" @click="showCreateModal = false"
+                            class="flex-1 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs transition-colors">
+                        Cancelar
+                    </button>
+                    <button type="submit"
+                            class="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-xs shadow-lg shadow-blue-600/30 transition-all flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-check"></i>
+                        Crear y Habilitar
+                    </button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+
+</div>
+{% endblock %}
