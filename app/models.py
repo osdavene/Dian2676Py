@@ -1,3 +1,4 @@
+import json
 from datetime import datetime
 from typing import Dict, List, Optional, Any
 from sqlalchemy import (
@@ -10,24 +11,63 @@ from sqlalchemy import (
     Numeric,
     DateTime,
     ForeignKey,
+    TypeDecorator,
     or_,
     and_,
 )
-from sqlalchemy.dialects.postgresql import JSONB, JSON
+from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import relationship, Session
 from app.database import Base
+
+
+class FlexibleJSON(TypeDecorator):
+    """Cross-database JSON type compatible with PostgreSQL JSONB/JSON and MySQL/MariaDB LONGTEXT/JSON."""
+
+    impl = Text
+    cache_ok = True
+
+    def load_dialect_impl(self, dialect):
+        if dialect.name == "postgresql":
+            return dialect.type_descriptor(JSONB())
+        return dialect.type_descriptor(Text())
+
+    def process_bind_param(self, value, dialect):
+        if value is None:
+            return None
+        if dialect.name == "postgresql":
+            if isinstance(value, str):
+                try:
+                    return json.loads(value)
+                except Exception:
+                    return value
+            return value
+        if isinstance(value, str):
+            return value
+        return json.dumps(value, ensure_ascii=False)
+
+    def process_result_value(self, value, dialect):
+        if value is None:
+            return None
+        if isinstance(value, (dict, list)):
+            return value
+        if isinstance(value, (str, bytes)):
+            try:
+                return json.loads(value)
+            except Exception:
+                return None
+        return value
 
 
 class JobProfile(Base):
     __tablename__ = "job_profiles"
 
     id = Column(Integer, primary_key=True, index=True)
-    code = Column(String(20), nullable=False)
-    name = Column(String(150), nullable=False)
-    level = Column(String(50), nullable=False)
-    grade = Column(String(10), nullable=False)
-    process = Column(String(150), nullable=True)
-    subprocess = Column(String(150), nullable=True)
+    code = Column(String(50), nullable=False)
+    name = Column(String(255), nullable=False)
+    level = Column(String(100), nullable=False)
+    grade = Column(String(50), nullable=False)
+    process = Column(String(255), nullable=True)
+    subprocess = Column(String(255), nullable=True)
     purpose = Column(Text, nullable=True)
     is_active = Column(Boolean, default=True)
     created_at = Column(DateTime, default=datetime.now)
@@ -47,7 +87,7 @@ class ThematicAxis(Base):
     id = Column(Integer, primary_key=True, index=True)
     job_profile_id = Column(Integer, ForeignKey("job_profiles.id"), nullable=True)
     category = Column(String(50), nullable=False)
-    name = Column(String(150), nullable=False)
+    name = Column(String(255), nullable=False)
     description = Column(Text, nullable=True)
     weight_pct = Column(Numeric(5, 2), default=0)
     created_at = Column(DateTime, default=datetime.now)
@@ -117,7 +157,7 @@ class Question(Base):
     difficulty = Column(String(20), default="medio")
     case_text = Column(Text, nullable=True)
     stem = Column(Text, nullable=False)
-    options = Column(JSONB, nullable=False)
+    options = Column(FlexibleJSON, nullable=False)
     correct_option = Column(String(10), nullable=False)
     legal_basis = Column(Text, nullable=True)
     explanation_summary = Column(Text, nullable=True)
@@ -169,6 +209,11 @@ class Question(Base):
     @property
     def options_map(self) -> Dict[str, str]:
         raw = self.options
+        if isinstance(raw, str):
+            try:
+                raw = json.loads(raw)
+            except Exception:
+                raw = []
         if not isinstance(raw, list):
             return {"A": "", "B": "", "C": "", "D": ""}
         mapped: Dict[str, str] = {}
@@ -234,8 +279,8 @@ class ExamSession(Base):
     created_at = Column(DateTime, default=datetime.now)
     user_id = Column(BigInteger, ForeignKey("users.id"), nullable=True)
     updated_at = Column(DateTime, default=datetime.now, onupdate=datetime.now)
-    question_ids = Column(JSONB, nullable=True)
-    options_order = Column(JSON, nullable=True)
+    question_ids = Column(FlexibleJSON, nullable=True)
+    options_order = Column(FlexibleJSON, nullable=True)
 
     user = relationship("User", back_populates="exam_sessions")
     job_profile = relationship("JobProfile")
@@ -259,10 +304,16 @@ class ExamSession(Base):
         return self.session_answers
 
     def _get_order_for_q(self, q_or_id: Any) -> Optional[Dict[str, str]]:
-        if not self.options_order or not isinstance(self.options_order, dict):
+        ord_map = self.options_order
+        if isinstance(ord_map, str):
+            try:
+                ord_map = json.loads(ord_map)
+            except Exception:
+                ord_map = None
+        if not ord_map or not isinstance(ord_map, dict):
             return None
         q_id = q_or_id.id if hasattr(q_or_id, "id") else q_or_id
-        return self.options_order.get(str(q_id)) or self.options_order.get(q_id)
+        return ord_map.get(str(q_id)) or ord_map.get(q_id)
 
     def get_display_options_for(self, question: Question) -> Dict[str, str]:
         orig_map = question.options_map
@@ -307,12 +358,9 @@ class SessionAnswer(Base):
     __tablename__ = "session_answers"
 
     id = Column(Integer, primary_key=True, index=True)
-    session_id = Column(Integer, nullable=True)
     question_id = Column(Integer, ForeignKey("questions.id"), nullable=False)
     selected_option = Column(String(10), nullable=True)
     is_correct = Column(Boolean, default=False)
-    time_spent_seconds = Column(Integer, default=0)
-    answered_at = Column(DateTime, default=datetime.now)
     exam_session_id = Column(BigInteger, ForeignKey("exam_sessions.id"), nullable=True)
     is_omitted = Column(Boolean, default=False)
     created_at = Column(DateTime, default=datetime.now)

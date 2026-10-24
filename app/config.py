@@ -1,9 +1,11 @@
 import os
 from pathlib import Path
+from urllib.parse import quote_plus
 from dotenv import load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv(BASE_DIR / ".env")
+
 
 class Settings:
     APP_NAME: str = os.getenv("APP_NAME", "Simulador DIAN 2676")
@@ -14,7 +16,7 @@ class Settings:
     APP_URL: str = os.getenv("APP_URL", "http://127.0.0.1:8000")
     APP_TIMEZONE: str = os.getenv("APP_TIMEZONE", "America/Bogota")
 
-    DB_CONNECTION: str = os.getenv("DB_CONNECTION", "pgsql")
+    DB_CONNECTION: str = os.getenv("DB_CONNECTION", "pgsql").lower()
     DB_HOST: str = os.getenv("DB_HOST", "127.0.0.1")
     DB_PORT: str = os.getenv("DB_PORT", "5432")
     DB_DATABASE: str = os.getenv("DB_DATABASE", "dian2676_db")
@@ -23,7 +25,9 @@ class Settings:
 
     GOOGLE_CLIENT_ID: str = os.getenv("GOOGLE_CLIENT_ID", "")
     GOOGLE_CLIENT_SECRET: str = os.getenv("GOOGLE_CLIENT_SECRET", "")
-    GOOGLE_REDIRECT_URI: str = os.getenv("GOOGLE_REDIRECT_URI", "http://127.0.0.1:8000/auth/google/callback")
+    GOOGLE_REDIRECT_URI: str = os.getenv(
+        "GOOGLE_REDIRECT_URI", "http://127.0.0.1:8000/auth/google/callback"
+    )
 
     BREVO_API_KEY: str = os.getenv("BREVO_API_KEY", "")
     MAIL_FROM_ADDRESS: str = os.getenv("MAIL_FROM_ADDRESS", "no-reply@dian2676.com")
@@ -33,9 +37,16 @@ class Settings:
 
     @property
     def DATABASE_URL(self) -> str:
+        password_encoded = quote_plus(self.DB_PASSWORD)
+        if self.DB_CONNECTION in ("mysql", "mariadb"):
+            return (
+                f"mysql+pymysql://{self.DB_USERNAME}:{password_encoded}"
+                f"@{self.DB_HOST}:{self.DB_PORT}/{self.DB_DATABASE}?charset=utf8mb4"
+            )
         return (
-            f"postgresql+psycopg2://{self.DB_USERNAME}:{self.DB_PASSWORD}"
+            f"postgresql+psycopg2://{self.DB_USERNAME}:{password_encoded}"
             f"@{self.DB_HOST}:{self.DB_PORT}/{self.DB_DATABASE}"
         )
+
 
 settings = Settings()

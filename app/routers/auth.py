@@ -285,7 +285,11 @@ def send_reset_link(
         )
     db.commit()
 
-    base = str(request.base_url).rstrip("/")
+    base = (
+        settings.APP_URL.rstrip("/")
+        if settings.APP_URL and "127.0.0.1" not in settings.APP_URL
+        else str(request.base_url).rstrip("/")
+    )
     reset_url = f"{base}/reset-password/{raw_token}?{urlencode({'email': email_clean})}"
     send_password_reset_email(user, reset_url)
 

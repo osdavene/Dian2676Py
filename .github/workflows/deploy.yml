@@ -1,0 +1,45 @@
+name: 🚀 Despliegue Automático a AWS (DIAN 2676 Python)
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Desplegar Simulador DIAN 2676 Python en Servidor AWS
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Clonar repositorio
+        uses: actions/checkout@v4
+
+      - name: 🔐 Ejecutar Despliegue en AWS vía SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.AWS_HOST }}
+          username: ${{ secrets.AWS_USER }}
+          key: ${{ secrets.AWS_SSH_KEY }}
+          port: ${{ secrets.AWS_PORT || 22 }}
+          script_stop: true
+          script: |
+            echo "🚀 Iniciando despliegue de Simulador DIAN 2676 (Python FastAPI) en AWS..."
+            SITE_DIR="/home/dian2676/htdocs/dian2676.duckdns.org"
+            SITE_USER="dian2676"
+
+            sudo git config --global --add safe.directory "$SITE_DIR"
+
+            sudo -u "$SITE_USER" bash << 'EOF'
+            set -e
+            cd "/home/dian2676/htdocs/dian2676.duckdns.org"
+            git fetch origin main
+            git reset --hard origin/main
+            if [ ! -d ".venv" ]; then
+              python3 -m venv .venv
+            fi
+            .venv/bin/pip install --upgrade pip
+            .venv/bin/pip install -r requirements.txt
+            EOF
+
+            sudo systemctl restart dian2676.service
+            echo "✅ ¡Despliegue de Simulador DIAN 2676 Python completado con éxito en AWS!"

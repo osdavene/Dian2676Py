@@ -80,29 +80,34 @@ def get_email_verification_hash(email: str) -> str:
 
 def generate_verification_url(request: Request, user: User) -> str:
     h = get_email_verification_hash(user.email)
-    base = str(request.base_url).rstrip("/")
+    base = (
+        settings.APP_URL.rstrip("/")
+        if settings.APP_URL and "127.0.0.1" not in settings.APP_URL
+        else str(request.base_url).rstrip("/")
+    )
     return f"{base}/email/verify/{user.id}/{h}"
 
 
 def ensure_default_users(db: Session) -> None:
     """Ensures default users from DianSeeder exist, have verified emails, and syncs sequences."""
-    try:
-        for tbl in (
-            "users",
-            "job_profiles",
-            "thematic_axes",
-            "questions",
-            "exam_sessions",
-            "session_answers",
-        ):
-            db.execute(
-                text(
-                    f"SELECT setval(pg_get_serial_sequence('{tbl}', 'id'), COALESCE((SELECT MAX(id) FROM {tbl}), 1), true)"
+    if settings.DB_CONNECTION in ("pgsql", "postgresql"):
+        try:
+            for tbl in (
+                "users",
+                "job_profiles",
+                "thematic_axes",
+                "questions",
+                "exam_sessions",
+                "session_answers",
+            ):
+                db.execute(
+                    text(
+                        f"SELECT setval(pg_get_serial_sequence('{tbl}', 'id'), COALESCE((SELECT MAX(id) FROM {tbl}), 1), true)"
+                    )
                 )
-            )
-        db.commit()
-    except Exception:
-        db.rollback()
+            db.commit()
+        except Exception:
+            db.rollback()
 
     try:
         job = db.query(JobProfile).filter(JobProfile.code == "202059").first()
