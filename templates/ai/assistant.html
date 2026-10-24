@@ -41,7 +41,7 @@
                              :style="'width: ' + Math.min(100, Math.round((usedQuota / {{ usage.limit }}) * 100)) + '%'"></div>
                     </div>
                 {% endif %}
-                {% if user and user.is_super_admin() %}
+                {% if user and user.is_admin() %}
                     <a href="/admin/ia" class="mt-3 inline-flex items-center gap-1.5 text-xs font-bold text-amber-400 hover:text-amber-300">
                         <i class="fa-solid fa-sliders"></i> Configurar API Key y Límites en Admin
                     </a>

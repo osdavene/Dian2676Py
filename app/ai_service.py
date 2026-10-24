@@ -95,7 +95,7 @@ def get_user_daily_usage(user: User) -> Dict[str, Any]:
     limit = int(cfg.get("daily_limit_per_user") or 15)
     usage_today = cfg.get("usage", {}).get(today_str, {})
     used = int(usage_today.get(str(user.id), 0))
-    unlimited = user.is_super_admin()
+    unlimited = user.is_admin()
     remaining = 999 if unlimited else max(0, limit - used)
     return {
         "used": used,
@@ -110,7 +110,7 @@ def get_user_daily_usage(user: User) -> Dict[str, Any]:
 
 def check_and_increment_quota(user: User) -> Tuple[bool, str]:
     cfg = get_ai_config()
-    if not cfg.get("ai_enabled", True) and not user.is_super_admin():
+    if not cfg.get("ai_enabled", True) and not user.is_admin():
         return (
             False,
             "Las funciones de Inteligencia Artificial se encuentran temporalmente desactivadas por el administrador.",
@@ -126,7 +126,7 @@ def check_and_increment_quota(user: User) -> Tuple[bool, str]:
         day_map = {}
 
     used = int(day_map.get(str(user.id), 0))
-    if not user.is_super_admin() and used >= limit:
+    if not user.is_admin() and used >= limit:
         return (
             False,
             f"Has alcanzado tu límite diario de {limit} consultas de IA por hoy. Mañana se renovará tu cupo automáticamente.",

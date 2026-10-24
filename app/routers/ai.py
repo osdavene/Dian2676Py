@@ -280,7 +280,7 @@ def start_adaptive_ai_practice(request: Request, db: Session = Depends(get_db)):
 @router.get("/admin/ia")
 def admin_ai_hub(request: Request, db: Session = Depends(get_db)):
     user = get_current_user(request, db)
-    if not user or not user.is_super_admin():
+    if not user or not user.is_admin():
         return RedirectResponse(url="/dashboard", status_code=302)
 
     cfg = get_ai_config()
@@ -353,7 +353,7 @@ async def save_admin_ai_config(
     db: Session = Depends(get_db),
 ):
     user = get_current_user(request, db)
-    if not user or not user.is_super_admin():
+    if not user or not user.is_admin():
         return RedirectResponse(url="/dashboard", status_code=302)
 
     current_cfg = get_ai_config()
@@ -406,7 +406,7 @@ async def admin_generate_questions(
     db: Session = Depends(get_db),
 ):
     user = get_current_user(request, db)
-    if not user or not user.is_super_admin():
+    if not user or not user.is_admin():
         return JSONResponse({"success": False, "message": "No autorizado."}, status_code=403)
 
     extracted_text = source_text.strip()
@@ -456,7 +456,7 @@ async def admin_save_generated_questions(
     db: Session = Depends(get_db),
 ):
     user = get_current_user(request, db)
-    if not user or not user.is_super_admin():
+    if not user or not user.is_admin():
         return JSONResponse({"success": False, "message": "No autorizado."}, status_code=403)
 
     data = await _parse_json_or_form(request)
@@ -512,7 +512,7 @@ async def admin_upload_rag_doc(
     db: Session = Depends(get_db),
 ):
     user = get_current_user(request, db)
-    if not user or not user.is_super_admin():
+    if not user or not user.is_admin():
         return RedirectResponse(url="/dashboard", status_code=302)
 
     raw_bytes = await file.read()
@@ -543,7 +543,7 @@ async def admin_audit_question(
     db: Session = Depends(get_db),
 ):
     user = get_current_user(request, db)
-    if not user or not user.is_super_admin():
+    if not user or not user.is_admin():
         return JSONResponse({"success": False, "message": "No autorizado."}, status_code=403)
 
     question = (
