@@ -346,7 +346,7 @@ def admin_ai_hub(request: Request, db: Session = Depends(get_db)):
 async def save_admin_ai_config(
     request: Request,
     gemini_api_key: str = Form(""),
-    gemini_model: str = Form("gemini-2.5-flash"),
+    gemini_model: str = Form("gemini-flash-lite-latest"),
     daily_limit_per_user: int = Form(15),
     ai_enabled: Optional[str] = Form(None),
     test_connection: Optional[str] = Form(None),
@@ -358,7 +358,7 @@ async def save_admin_ai_config(
 
     current_cfg = get_ai_config()
     updates: Dict[str, Any] = {
-        "gemini_model": gemini_model.strip() or "gemini-2.5-flash",
+        "gemini_model": gemini_model.strip() or "gemini-flash-lite-latest",
         "daily_limit_per_user": max(1, min(int(daily_limit_per_user or 15), 500)),
         "ai_enabled": str(ai_enabled or "").lower() in ("1", "true", "on", "yes"),
     }

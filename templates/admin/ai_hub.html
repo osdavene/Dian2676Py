@@ -113,9 +113,9 @@
                             Modelo Gemini Preferido:
                         </label>
                         <select name="gemini_model" class="w-full p-3 rounded-xl bg-slate-950 border border-slate-800 text-white text-xs font-semibold focus:outline-none focus:border-blue-500">
-                            <option value="gemini-2.5-flash" {% if ai_config.gemini_model == 'gemini-2.5-flash' %}selected{% endif %}>gemini-2.5-flash (Recomendado — Rápido y Preciso)</option>
-                            <option value="gemini-2.0-flash" {% if ai_config.gemini_model == 'gemini-2.0-flash' %}selected{% endif %}>gemini-2.0-flash (Alta velocidad)</option>
-                            <option value="gemini-1.5-flash" {% if ai_config.gemini_model == 'gemini-1.5-flash' %}selected{% endif %}>gemini-1.5-flash (Estándar)</option>
+                            <option value="gemini-flash-lite-latest" {% if ai_config.gemini_model == 'gemini-flash-lite-latest' %}selected{% endif %}>gemini-flash-lite-latest (Recomendado — Ultra Rápido y Estable)</option>
+                            <option value="gemini-3.5-flash-lite" {% if ai_config.gemini_model == 'gemini-3.5-flash-lite' %}selected{% endif %}>gemini-3.5-flash-lite (Alta Velocidad)</option>
+                            <option value="gemini-3.1-flash-lite" {% if ai_config.gemini_model == 'gemini-3.1-flash-lite' %}selected{% endif %}>gemini-3.1-flash-lite (Estándar)</option>
                         </select>
                     </div>
 

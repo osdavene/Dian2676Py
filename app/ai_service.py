@@ -52,7 +52,7 @@ def get_ai_config() -> Dict[str, Any]:
     AI_CONFIG_PATH.parent.mkdir(parents=True, exist_ok=True)
     default_cfg = {
         "gemini_api_key": os.getenv("GEMINI_API_KEY", ""),
-        "gemini_model": os.getenv("GEMINI_MODEL", "gemini-2.5-flash"),
+        "gemini_model": os.getenv("GEMINI_MODEL", "gemini-flash-lite-latest"),
         "ai_enabled": True,
         "daily_limit_per_user": 15,
         "usage": {},
@@ -153,9 +153,15 @@ def call_gemini(
     if not api_key:
         return None, "NO_API_KEY"
 
-    preferred_model = str(cfg.get("gemini_model") or "gemini-2.5-flash").strip()
+    preferred_model = str(cfg.get("gemini_model") or "gemini-flash-lite-latest").strip()
+    if preferred_model in ("gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-flash"):
+        preferred_model = "gemini-flash-lite-latest"
     models_to_try = [preferred_model]
-    for fallback in ("gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-flash"):
+    for fallback in (
+        "gemini-flash-lite-latest",
+        "gemini-3.5-flash-lite",
+        "gemini-3.1-flash-lite",
+    ):
         if fallback not in models_to_try:
             models_to_try.append(fallback)
 
