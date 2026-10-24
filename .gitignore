@@ -29,3 +29,5 @@ Thumbs.db
 
 # Backups runtime folder (keep gitkeep if needed, ignore generated json backups)
 /storage/app/backups/*.json
+/storage/app/ai_config.json
+/storage/app/ai_custom_docs.json

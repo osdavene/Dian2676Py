@@ -22,6 +22,12 @@
             </div>
 
             <div class="flex flex-wrap items-center gap-2.5 sm:gap-3">
+                <a href="/admin/ia" 
+                   class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-black text-xs uppercase tracking-wider shadow-lg shadow-purple-600/30 transition-all flex items-center gap-2">
+                    <i class="fa-solid fa-wand-magic-sparkles text-amber-300"></i>
+                    Generar desde PDF con IA
+                </a>
+
                 <button type="button" onclick="openCreateQuestionModal()" 
                         class="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xs uppercase tracking-wider shadow-lg shadow-emerald-600/30 transition-all flex items-center gap-2">
                     <i class="fa-solid fa-plus"></i>
@@ -402,15 +408,23 @@
             </div>
 
             {# Botones de Acción #}
-            <div class="pt-3 border-t border-slate-800 flex items-center justify-end gap-3 shrink-0">
-                <button type="button" onclick="closeEditQuestionModal()"
-                        class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs transition-colors">
-                    Cancelar
+            <div id="ai-audit-banner" class="hidden p-3 rounded-xl bg-indigo-950/60 border border-indigo-500/40 text-xs text-indigo-200"></div>
+            <div class="pt-3 border-t border-slate-800 flex flex-wrap items-center justify-between gap-3 shrink-0">
+                <button type="button" id="btn-audit-ai" onclick="auditCurrentQuestionWithAI()"
+                        class="px-4 py-2.5 rounded-xl bg-indigo-600/30 hover:bg-indigo-600 border border-indigo-500/50 text-indigo-200 hover:text-white font-bold text-xs transition-all flex items-center gap-2">
+                    <i class="fa-solid fa-wand-magic-sparkles text-amber-400"></i>
+                    <span>Auditar y Mejorar Reactivo con IA</span>
                 </button>
-                <button type="submit"
-                        class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs uppercase tracking-wider shadow-lg shadow-emerald-600/30 transition-all flex items-center gap-2">
-                    <i class="fa-solid fa-floppy-disk"></i> Guardar Corrección
-                </button>
+                <div class="flex items-center gap-3">
+                    <button type="button" onclick="closeEditQuestionModal()"
+                            class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs transition-colors">
+                        Cancelar
+                    </button>
+                    <button type="submit"
+                            class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs uppercase tracking-wider shadow-lg shadow-emerald-600/30 transition-all flex items-center gap-2">
+                        <i class="fa-solid fa-floppy-disk"></i> Guardar Corrección
+                    </button>
+                </div>
             </div>
         </form>
 
@@ -742,6 +756,45 @@
 
     function closeEditQuestionModal() {
         document.getElementById('modal-edit-question').classList.add('hidden');
+        const banner = document.getElementById('ai-audit-banner');
+        if (banner) banner.classList.add('hidden');
+    }
+
+    async function auditCurrentQuestionWithAI() {
+        const qId = document.getElementById('modal-q-id-title').textContent;
+        const btn = document.getElementById('btn-audit-ai');
+        const banner = document.getElementById('ai-audit-banner');
+        if (!qId) return;
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-amber-400"></i> <span>Auditando reactivo con IA...</span>';
+        try {
+            const resp = await fetch(`/admin/ia/auditar-pregunta/${qId}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({})
+            });
+            const data = await resp.json();
+            if (resp.ok && data.success && data.audit) {
+                const a = data.audit;
+                if (a.case_text) document.getElementById('input-case-text').value = a.case_text;
+                if (a.stem) document.getElementById('input-stem').value = a.stem;
+                if (a.option_a) document.getElementById('input-opt-a').value = a.option_a;
+                if (a.option_b) document.getElementById('input-opt-b').value = a.option_b;
+                if (a.option_c) document.getElementById('input-opt-c').value = a.option_c;
+                if (a.option_d !== undefined) document.getElementById('input-opt-d').value = a.option_d;
+                if (a.legal_basis) document.getElementById('input-legal-basis').value = a.legal_basis;
+                if (a.explanation_summary) document.getElementById('input-explanation').value = a.explanation_summary;
+                banner.classList.remove('hidden');
+                banner.innerHTML = `<strong class="text-amber-300">Diagnóstico IA (Calidad ${a.quality_score || 90}/100):</strong> ${a.audit_diagnosis || 'Campos optimizados. Revisa los cambios y haz clic en Guardar Corrección.'}`;
+            } else {
+                alert(data.message || 'No fue posible auditar la pregunta con IA.');
+            }
+        } catch (err) {
+            alert('Error de red al auditar la pregunta con IA.');
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles text-amber-400"></i> <span>Auditar y Mejorar Reactivo con IA</span>';
+        }
     }
 </script>
 {% endblock %}

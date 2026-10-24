@@ -25,6 +25,29 @@
         </div>
     </div>
 
+    {# Banner Destacado: Modo Entrenamiento Adaptativo IA #}
+    <div class="bg-gradient-to-r from-indigo-950/90 via-purple-950/70 to-slate-900 border border-indigo-500/40 rounded-2xl p-5 sm:p-6 shadow-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div class="space-y-1">
+            <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-500/20 border border-amber-400/30 text-amber-300 text-[10px] font-black uppercase tracking-wider">
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                Repetición Espaciada Inteligente
+            </div>
+            <h2 class="text-base sm:text-lg font-extrabold text-white">
+                Entrenamiento Adaptativo IA (15 Preguntas Personalizadas)
+            </h2>
+            <p class="text-xs text-slate-300 max-w-2xl">
+                El algoritmo selecciona dinámicamente preguntas que has fallado antes, reactivos de tus ejes por debajo del 70% y casos complejos de tu cargo OPEC.
+            </p>
+        </div>
+        <form action="/practica/adaptativa-ia" method="POST" class="shrink-0 w-full sm:w-auto">
+            <button type="submit"
+                    class="w-full sm:w-auto px-5 py-3 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-extrabold text-xs uppercase tracking-wider shadow-lg shadow-indigo-600/30 transition flex items-center justify-center gap-2">
+                <i class="fa-solid fa-bolt text-amber-300"></i>
+                <span>Iniciar Práctica Adaptativa IA</span>
+            </button>
+        </form>
+    </div>
+
     {# Grilla de Ejes Temáticos Disponibles #}
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-5">
         {% for axis in axes %}

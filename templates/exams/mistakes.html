@@ -99,6 +99,15 @@
                             Base Legal: <span>{{ q.legal_basis }}</span>
                         </div>
                     {% endif %}
+                    <div class="pt-2 border-t border-blue-500/20 flex items-center justify-between flex-wrap gap-2">
+                        <span class="text-[11px] text-indigo-300">Analiza la trampa conceptual y el sustento normativo con IA:</span>
+                        <button type="button"
+                                onclick="window.openAiTutorModal({{ q.id }}, '', null)"
+                                class="px-3 py-1.5 rounded-xl bg-indigo-600/30 hover:bg-indigo-600 border border-indigo-500/50 text-indigo-200 hover:text-white font-bold text-xs transition flex items-center gap-1.5">
+                            <i class="fa-solid fa-wand-magic-sparkles text-amber-400"></i>
+                            <span>Explicar Fallo con Tutor IA</span>
+                        </button>
+                    </div>
                 </div>
 
             </div>

@@ -308,6 +308,32 @@
                 </div>
             </div>
         {% endif %}
+
+        {# Generador de Plan de Estudio Personalizado de 7 Días con IA #}
+        <div class="pt-4 border-t border-slate-800/80" x-data="{ loadingPlan: false, aiPlanText: '', aiPlanErr: '' }">
+            <div class="flex flex-wrap items-center justify-between gap-4 bg-indigo-950/40 border border-indigo-500/30 rounded-2xl p-4 sm:p-5">
+                <div class="flex items-start gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-indigo-600/30 border border-indigo-500/40 text-amber-400 flex items-center justify-center text-lg shrink-0">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    </div>
+                    <div>
+                        <h4 class="text-sm font-extrabold text-white">Ruta de Estudio Personalizada de 7 Días con IA</h4>
+                        <p class="text-xs text-slate-300 mt-0.5">
+                            Genera un plan táctico día por día basado exactamente en los resultados y normas evaluadas en este simulacro.
+                        </p>
+                    </div>
+                </div>
+                <button type="button"
+                        @click="loadingPlan = true; aiPlanErr = ''; fetch('/ia/plan-estudio', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ session_id: {{ session.id }} }) }).then(r => r.json()).then(d => { if(d.success){ aiPlanText = d.plan; } else { aiPlanErr = d.message || 'Error'; } }).catch(() => { aiPlanErr = 'Error de conexión'; }).finally(() => { loadingPlan = false; })"
+                        :disabled="loadingPlan"
+                        class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-500 hover:to-blue-500 disabled:opacity-50 text-white font-extrabold text-xs shadow-lg transition flex items-center gap-2">
+                    <i class="fa-solid" :class="loadingPlan ? 'fa-spinner fa-spin' : 'fa-robot text-amber-300'"></i>
+                    <span x-text="loadingPlan ? 'Analizando resultados con IA...' : 'Generar Plan de 7 Días con IA'"></span>
+                </button>
+            </div>
+            <div x-show="aiPlanErr" x-cloak class="mt-3 p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs font-bold" x-text="aiPlanErr"></div>
+            <div x-show="aiPlanText" x-cloak class="mt-4 p-5 rounded-2xl bg-slate-950/90 border border-indigo-500/40 text-xs sm:text-sm text-slate-200 leading-relaxed" x-html="window.formatAiTutorMd ? window.formatAiTutorMd(aiPlanText) : aiPlanText"></div>
+        </div>
     </div>
 
     {# Revisión Detallada Pregunta por Pregunta #}
@@ -421,6 +447,15 @@
                                 Base Legal: <span>{{ q.legal_basis }}</span>
                             </div>
                         {% endif %}
+                        <div class="pt-2 border-t border-blue-500/20 flex items-center justify-between flex-wrap gap-2">
+                            <span class="text-[11px] text-indigo-300">¿Quieres profundizar por qué se descartan los distractores?</span>
+                            <button type="button"
+                                    onclick="window.openAiTutorModal({{ q.id }}, '{{ ans.selected_option or '' }}', {{ session.id }})"
+                                    class="px-3 py-1.5 rounded-xl bg-indigo-600/30 hover:bg-indigo-600 border border-indigo-500/50 text-indigo-200 hover:text-white font-bold text-xs transition flex items-center gap-1.5">
+                                <i class="fa-solid fa-wand-magic-sparkles text-amber-400"></i>
+                                <span>Consultar al Tutor Jurídico IA</span>
+                            </button>
+                        </div>
                     </div>
 
                 </div>

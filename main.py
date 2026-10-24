@@ -8,7 +8,7 @@ import uvicorn
 from app.config import BASE_DIR, settings
 from app.database import SessionLocal
 from app.security import ensure_default_users
-from app.routers import auth, dashboard, exams, admin
+from app.routers import auth, dashboard, exams, admin, ai
 
 
 @asynccontextmanager
@@ -72,6 +72,7 @@ app.include_router(auth.router)
 app.include_router(dashboard.router)
 app.include_router(exams.router)
 app.include_router(admin.router)
+app.include_router(ai.router)
 
 
 if __name__ == "__main__":
