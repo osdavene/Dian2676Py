@@ -38,19 +38,9 @@ def build_speech_text(question: Question, part: str) -> str:
 
     elif part_clean == "pregunta":
         stem_txt = clean_text_for_speech(question.stem or "")
-        opts = getattr(question, "display_options", None) or question.options_map or {}
-        parts = []
-        if stem_txt:
-            parts.append(f"Enunciado de la pregunta. {stem_txt}")
-
-        if opts:
-            parts.append("Opciones de respuesta:")
-            for letter in ["A", "B", "C", "D"]:
-                val = opts.get(letter)
-                if val:
-                    parts.append(f"Opción {letter}. {clean_text_for_speech(str(val))}")
-
-        return " ".join(parts)
+        if not stem_txt:
+            return ""
+        return stem_txt
 
     return ""
 
