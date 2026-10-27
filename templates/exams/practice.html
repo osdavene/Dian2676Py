@@ -51,9 +51,19 @@
                 
                 {# Encabezado de Pregunta #}
                 <div class="flex items-center justify-between pb-3 border-b border-slate-800">
-                    <span class="px-2.5 sm:px-3 py-1 rounded-xl bg-blue-600 text-white text-xs font-black">
-                        Pregunta {{ idx + 1 }} de {{ questions | length }}
-                    </span>
+                    <div class="flex items-center gap-2">
+                        <span class="px-2.5 sm:px-3 py-1 rounded-xl bg-blue-600 text-white text-xs font-black">
+                            Pregunta {{ idx + 1 }} de {{ questions | length }}
+                        </span>
+                        <button type="button" onclick="toggleSpeakPractice({{ idx + 1 }})"
+                                id="p-btn-speak-{{ idx + 1 }}"
+                                class="text-xs px-2.5 sm:px-3 py-1 rounded-xl bg-slate-800/80 hover:bg-blue-600/20 text-slate-300 hover:text-blue-300 border border-slate-700/60 transition-colors flex items-center gap-1.5 font-semibold"
+                                title="Escuchar pregunta y opciones con voz">
+                            <i id="p-icon-speak-{{ idx + 1 }}" class="fa-solid fa-volume-high text-blue-400"></i>
+                            <span id="p-text-speak-{{ idx + 1 }}" class="hidden sm:inline">Escuchar</span>
+                            <span class="sm:hidden">Voz</span>
+                        </button>
+                    </div>
                     <span class="text-[11px] sm:text-xs text-slate-400">
                         Dificultad: <strong class="text-slate-200 capitalize">{{ q.difficulty or 'Media' }}</strong>
                     </span>
@@ -66,12 +76,12 @@
                             <i class="fa-solid fa-file-lines"></i>
                             Situación de Hecho / Caso
                         </div>
-                        <p class="mb-2.5 last:mb-0" style="text-align: justify; text-justify: inter-word; text-align-last: left; word-break: break-word;">{{ q.case_text | nl2br }}</p>
+                        <p class="practice-case-content mb-2.5 last:mb-0" style="text-align: justify; text-justify: inter-word; text-align-last: left; word-break: break-word;">{{ q.case_text | nl2br }}</p>
                     </div>
                 {% endif %}
 
                 {# Enunciado #}
-                <div class="text-sm sm:text-base font-semibold text-white leading-relaxed" style="text-align: justify; text-justify: inter-word; text-align-last: left; word-break: break-word;">
+                <div class="practice-stem-content text-sm sm:text-base font-semibold text-white leading-relaxed" style="text-align: justify; text-justify: inter-word; text-align-last: left; word-break: break-word;">
                     {{ q.stem }}
                 </div>
 
@@ -163,6 +173,10 @@
     function goPractice(target) {
         if (target < 1 || target > totalPracticeQuestions) return;
 
+        if (window.DianSpeechReader) {
+            window.DianSpeechReader.stop();
+        }
+
         const cur = document.getElementById(`p-card-${currentPractice}`);
         if (cur) cur.classList.add('hidden');
 
@@ -171,6 +185,46 @@
         if (nxt) nxt.classList.remove('hidden');
 
         window.scrollTo({ top: 80, behavior: 'smooth' });
+    }
+
+    function toggleSpeakPractice(idx) {
+        if (!window.DianSpeechReader) return;
+
+        const card = document.getElementById(`p-card-${idx}`);
+        if (!card) return;
+
+        const parts = [];
+        parts.push(`Pregunta número ${idx}.`);
+
+        const caseEl = card.querySelector('.practice-case-content');
+        if (caseEl) {
+            const caseText = caseEl.innerText.trim();
+            if (caseText) parts.push("Caso situacional: " + caseText);
+        }
+
+        const stemEl = card.querySelector('.practice-stem-content');
+        if (stemEl) {
+            const stemText = stemEl.innerText.trim();
+            if (stemText) parts.push("Enunciado: " + stemText);
+        }
+
+        const optionBtns = card.querySelectorAll('[id^="btn-opt-"]');
+        if (optionBtns.length > 0) {
+            parts.push("Opciones de respuesta:");
+            optionBtns.forEach(btn => {
+                const letter = btn.querySelector('.badge-letter')?.innerText.trim() || '';
+                const text = btn.querySelector('div')?.innerText.trim() || '';
+                if (letter && text) {
+                    parts.push(`Opción ${letter}: ${text}`);
+                }
+            });
+        }
+
+        const buttonConfigs = [
+            { btnId: `p-btn-speak-${idx}`, iconId: `p-icon-speak-${idx}`, textId: `p-text-speak-${idx}` }
+        ];
+
+        window.DianSpeechReader.toggle(`prac_${idx}`, parts, buttonConfigs);
     }
 
     function checkPracticeAnswer(qIndex, selectedLetter, correctLetter) {

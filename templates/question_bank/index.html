@@ -112,7 +112,7 @@
     {# Lista de Preguntas #}
     <div class="space-y-5">
         {% for q in questions %}
-            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-6 shadow-xl space-y-4" x-data="{ showAnswer: false }">
+            <div id="bank-card-{{ q.id }}" class="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-6 shadow-xl space-y-4" x-data="{ showAnswer: false }">
                 
                 {# Encabezado de Pregunta #}
                 <div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-800">
@@ -139,6 +139,13 @@
                             <i :class="showAnswer ? 'fa-solid fa-eye-slash text-rose-400' : 'fa-solid fa-eye text-emerald-400'"></i>
                             <span x-text="showAnswer ? 'Ocultar Solución' : 'Ver Solución'"></span>
                         </button>
+                        <button type="button" onclick="toggleSpeakBank({{ q.id }})"
+                                id="bank-btn-speak-{{ q.id }}"
+                                class="text-xs px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-blue-600/20 text-slate-300 hover:text-blue-300 border border-slate-700/60 font-bold transition-colors flex items-center gap-1.5"
+                                title="Escuchar caso, pregunta y opciones con voz">
+                            <i id="bank-icon-speak-{{ q.id }}" class="fa-solid fa-volume-high text-blue-400"></i>
+                            <span id="bank-text-speak-{{ q.id }}">Escuchar</span>
+                        </button>
                         <button type="button" onclick="window.openAiTutorModal({{ q.id }}, '', null)"
                                 class="text-xs px-3 py-1.5 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold shadow-md shadow-indigo-600/20 transition-all flex items-center gap-1.5">
                             <i class="fa-solid fa-wand-magic-sparkles text-amber-300"></i>
@@ -149,7 +156,7 @@
 
                 {# Caso Situacional #}
                 {% if q.case_text %}
-                    <div class="p-4 rounded-xl bg-slate-950/60 border border-slate-800 text-slate-300 text-xs sm:text-sm whitespace-pre-line leading-relaxed text-justify [text-justify:inter-word]">
+                    <div class="bank-case-content p-4 rounded-xl bg-slate-950/60 border border-slate-800 text-slate-300 text-xs sm:text-sm whitespace-pre-line leading-relaxed text-justify [text-justify:inter-word]">
                         <div class="text-blue-400 font-bold text-xs uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
                             <i class="fa-solid fa-file-invoice"></i>
                             Situación de Análisis
@@ -159,7 +166,7 @@
                 {% endif %}
 
                 {# Enunciado #}
-                <p class="text-sm font-semibold text-white leading-relaxed text-justify [text-justify:inter-word]">
+                <p class="bank-stem-content text-sm font-semibold text-white leading-relaxed text-justify [text-justify:inter-word]">
                     {{ q.stem }}
                 </p>
 
@@ -167,13 +174,13 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
                     {% for let, txt in q.options_map.items() %}
                         {% if txt %}
-                            <div class="p-3 rounded-xl border border-slate-800/80 bg-slate-950/40 flex items-start gap-2.5"
+                            <div class="bank-option-item p-3 rounded-xl border border-slate-800/80 bg-slate-950/40 flex items-start gap-2.5"
                                  :class="showAnswer && '{{ let }}' === '{{ q.correct_option }}' ? 'bg-emerald-950/40 border-emerald-500/60 text-emerald-100 font-semibold' : 'text-slate-300'">
-                                <span class="w-5 h-5 rounded-md text-xs font-bold flex items-center justify-center shrink-0"
+                                <span class="bank-option-letter w-5 h-5 rounded-md text-xs font-bold flex items-center justify-center shrink-0"
                                       :class="showAnswer && '{{ let }}' === '{{ q.correct_option }}' ? 'bg-emerald-600 text-white' : 'bg-slate-800 text-slate-400'">
                                     {{ let }}
                                 </span>
-                                <span class="leading-relaxed text-justify [text-justify:inter-word]">{{ txt }}</span>
+                                <span class="bank-option-text leading-relaxed text-justify [text-justify:inter-word]">{{ txt }}</span>
                             </div>
                         {% endif %}
                     {% endfor %}
@@ -214,4 +221,48 @@
     </div>
 
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function toggleSpeakBank(qid) {
+    if (!window.DianSpeechReader) return;
+
+    const card = document.getElementById(`bank-card-${qid}`);
+    if (!card) return;
+
+    const parts = [];
+    parts.push(`Pregunta.`);
+
+    const caseEl = card.querySelector('.bank-case-content');
+    if (caseEl) {
+        const caseText = caseEl.innerText.trim();
+        if (caseText) parts.push("Situación de análisis: " + caseText);
+    }
+
+    const stemEl = card.querySelector('.bank-stem-content');
+    if (stemEl) {
+        const stemText = stemEl.innerText.trim();
+        if (stemText) parts.push("Enunciado: " + stemText);
+    }
+
+    const optEls = card.querySelectorAll('.bank-option-item');
+    if (optEls.length > 0) {
+        parts.push("Opciones de respuesta:");
+        optEls.forEach(el => {
+            const letter = el.querySelector('.bank-option-letter')?.innerText.trim() || '';
+            const text = el.querySelector('.bank-option-text')?.innerText.trim() || '';
+            if (letter && text) {
+                parts.push(`Opción ${letter}: ${text}`);
+            }
+        });
+    }
+
+    const buttonConfigs = [
+        { btnId: `bank-btn-speak-${qid}`, iconId: `bank-icon-speak-${qid}`, textId: `bank-text-speak-${qid}` }
+    ];
+
+    window.DianSpeechReader.toggle(`bank_${qid}`, parts, buttonConfigs);
+}
+</script>
 {% endblock %}

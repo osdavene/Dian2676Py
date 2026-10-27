@@ -159,14 +159,26 @@
                                 </span>
                             </div>
 
-                            {# Botón Marcar para Revisar #}
-                            <button type="button" onclick="toggleReviewMark({{ index + 1 }})" 
-                                    id="btn-mark-{{ index + 1 }}"
-                                    class="text-xs px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-800/80 hover:bg-amber-500/20 text-slate-300 hover:text-amber-300 border border-slate-700/60 transition-colors flex items-center gap-1.5 font-semibold">
-                                <i id="icon-mark-{{ index + 1 }}" class="fa-solid fa-flag text-amber-400"></i>
-                                <span id="text-mark-{{ index + 1 }}" class="hidden sm:inline">Marcar para revisar</span>
-                                <span class="sm:hidden">Revisar</span>
-                            </button>
+                            <div class="flex items-center gap-1.5 sm:gap-2">
+                                {# Botón Escuchar Pregunta por Voz #}
+                                <button type="button" onclick="toggleSpeakSimulator({{ index + 1 }})" 
+                                        id="btn-speak-{{ index + 1 }}"
+                                        class="text-xs px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-800/80 hover:bg-blue-600/20 text-slate-300 hover:text-blue-300 border border-slate-700/60 transition-colors flex items-center gap-1.5 font-semibold"
+                                        title="Escuchar caso, pregunta y opciones con voz">
+                                    <i id="icon-speak-{{ index + 1 }}" class="fa-solid fa-volume-high text-blue-400"></i>
+                                    <span id="text-speak-{{ index + 1 }}" class="hidden sm:inline">Escuchar</span>
+                                    <span class="sm:hidden">Voz</span>
+                                </button>
+
+                                {# Botón Marcar para Revisar #}
+                                <button type="button" onclick="toggleReviewMark({{ index + 1 }})" 
+                                        id="btn-mark-{{ index + 1 }}"
+                                        class="text-xs px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-800/80 hover:bg-amber-500/20 text-slate-300 hover:text-amber-300 border border-slate-700/60 transition-colors flex items-center gap-1.5 font-semibold">
+                                    <i id="icon-mark-{{ index + 1 }}" class="fa-solid fa-flag text-amber-400"></i>
+                                    <span id="text-mark-{{ index + 1 }}" class="hidden sm:inline">Marcar para revisar</span>
+                                    <span class="sm:hidden">Revisar</span>
+                                </button>
+                            </div>
                         </div>
 
                         {# Caso / Situación de Análisis (Diseño Formal y Ergonómico) #}
@@ -187,9 +199,9 @@
                                             <i id="case-toggle-icon-{{ index + 1 }}" class="fa-solid fa-chevron-down text-[10px] transition-transform"></i>
                                         </button>
                                     </div>
-                                    <div id="case-body-{{ index + 1 }}" class="hidden mt-3 pt-3 border-t border-slate-800 text-xs sm:text-sm leading-relaxed text-slate-300">
+                                    <div id="case-body-{{ index + 1 }}" class="case-text-content hidden mt-3 pt-3 border-t border-slate-800 text-xs sm:text-sm leading-relaxed text-slate-300">
                                         {% for cp in q.case_text.strip().replace('\r\n', '\n').split('\n\n') %}
-                                            <p class="mb-2.5 last:mb-0" style="text-align: justify; text-justify: inter-word; text-align-last: left; word-break: break-word;">{{ cp.strip() | nl2br | safe }}</p>
+                                             <p class="mb-2.5 last:mb-0" style="text-align: justify; text-justify: inter-word; text-align-last: left; word-break: break-word;">{{ cp.strip() | nl2br | safe }}</p>
                                         {% endfor %}
                                     </div>
                                 </div>
@@ -199,7 +211,7 @@
                                         <i class="fa-solid fa-file-lines text-sm sm:text-base"></i>
                                         Caso de Estudio Situacional &bull; Concurso DIAN
                                     </div>
-                                    <div class="text-sm sm:text-base leading-relaxed sm:leading-loose text-slate-200 font-normal">
+                                    <div class="case-text-content text-sm sm:text-base leading-relaxed sm:leading-loose text-slate-200 font-normal">
                                         {% for cp in q.case_text.strip().replace('\r\n', '\n').split('\n\n') %}
                                             <p class="mb-3.5 last:mb-0" style="text-align: justify; text-justify: inter-word; text-align-last: left; word-break: break-word;">{{ cp.strip() | nl2br | safe }}</p>
                                         {% endfor %}
@@ -213,7 +225,7 @@
                             <span class="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-slate-400 block mb-1.5">
                                 Enunciado de la Pregunta
                             </span>
-                            <h3 class="text-base sm:text-lg font-bold text-white leading-relaxed sm:leading-snug" style="text-align: justify; text-justify: inter-word; text-align-last: left; word-break: break-word;">
+                            <h3 class="stem-text-content text-base sm:text-lg font-bold text-white leading-relaxed sm:leading-snug" style="text-align: justify; text-justify: inter-word; text-align-last: left; word-break: break-word;">
                                 {{ q.stem }}
                             </h3>
                         </div>
@@ -386,6 +398,11 @@
         <button type="button" onclick="openOpticalSheetModal()" 
                 class="py-2.5 px-3 rounded-xl bg-blue-600/20 hover:bg-blue-600/30 text-blue-300 border border-blue-500/30 font-bold text-xs flex items-center justify-center gap-1 active:scale-95 transition-all">
             <i class="fa-solid fa-table-cells text-xs"></i> <span id="mobile-bar-answered-count">{{ savedAnswers | length }}/{{ questions | length }}</span>
+        </button>
+
+        <button type="button" id="mobile-nav-speak" onclick="toggleSpeakSimulator(currentQuestion)" 
+                class="py-2.5 px-3 rounded-xl bg-slate-800 text-slate-300 hover:text-blue-300 border border-slate-700/60 font-bold text-xs flex items-center justify-center active:scale-95 transition-all" title="Escuchar pregunta actual con voz">
+            <i id="mobile-nav-speak-icon" class="fa-solid fa-volume-high text-xs text-blue-400"></i>
         </button>
 
         <button type="button" id="mobile-nav-mark" onclick="toggleReviewMark(currentQuestion)" 
@@ -754,6 +771,10 @@
     function goToQuestion(qNum) {
         if (qNum < 1 || qNum > totalQuestions) return;
 
+        if (window.DianSpeechReader) {
+            window.DianSpeechReader.stop();
+        }
+
         const prevQuestion = currentQuestion;
         const currentCard = document.getElementById(`question-card-${currentQuestion}`);
         if (currentCard) currentCard.classList.add('hidden');
@@ -776,6 +797,55 @@
 
         updateMobileUI();
         window.scrollTo({ top: 90, behavior: 'smooth' });
+    }
+
+    function toggleSpeakSimulator(qNum) {
+        if (!window.DianSpeechReader) return;
+
+        const card = document.getElementById(`question-card-${qNum}`);
+        if (!card) return;
+
+        const parts = [];
+        parts.push(`Pregunta número ${qNum}.`);
+
+        // Caso situacional
+        const caseEl = card.querySelector('.case-text-content');
+        if (caseEl) {
+            const caseText = caseEl.innerText.trim();
+            if (caseText) {
+                parts.push("Caso situacional: " + caseText);
+            }
+        }
+
+        // Enunciado
+        const stemEl = card.querySelector('.stem-text-content');
+        if (stemEl) {
+            const stemText = stemEl.innerText.trim();
+            if (stemText) {
+                parts.push("Enunciado: " + stemText);
+            }
+        }
+
+        // Opciones de respuesta
+        const optionLabels = card.querySelectorAll('.option-label');
+        if (optionLabels.length > 0) {
+            parts.push("Opciones de respuesta:");
+            optionLabels.forEach(lbl => {
+                const letter = lbl.getAttribute('data-letter') || '';
+                const txtEl = card.querySelector(`#option-text-${qNum}-${letter}`);
+                const text = txtEl ? txtEl.innerText.trim() : '';
+                if (letter && text) {
+                    parts.push(`Opción ${letter}: ${text}`);
+                }
+            });
+        }
+
+        const buttonConfigs = [
+            { btnId: `btn-speak-${qNum}`, iconId: `icon-speak-${qNum}`, textId: `text-speak-${qNum}` },
+            { btnId: `mobile-nav-speak`, iconId: `mobile-nav-speak-icon`, textId: null }
+        ];
+
+        window.DianSpeechReader.toggle(`sim_${qNum}`, parts, buttonConfigs);
     }
 
     function goToNextOrSubmit() {
@@ -1035,6 +1105,7 @@
     }
 
     function confirmSubmitModal() {
+        if (window.DianSpeechReader) window.DianSpeechReader.stop();
         const answered = answeredSet.size;
         const unanswered = totalQuestions - answered;
 
@@ -1056,6 +1127,7 @@
     }
 
     function confirmPauseModal() {
+        if (window.DianSpeechReader) window.DianSpeechReader.stop();
         const pauseInput = document.getElementById('pause_time_spent_seconds');
         if (pauseInput) pauseInput.value = secondsSpent;
         document.getElementById('modal-pause-confirm').classList.remove('hidden');
@@ -1066,6 +1138,7 @@
     }
 
     function doSubmitForm() {
+        if (window.DianSpeechReader) window.DianSpeechReader.stop();
         clearInterval(timerInterval);
         if (typeof heartbeatTimer !== 'undefined') clearInterval(heartbeatTimer);
         timeSpentInput.value = secondsSpent;

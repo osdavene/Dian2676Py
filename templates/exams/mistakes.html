@@ -30,7 +30,7 @@
     <div class="space-y-4 sm:space-y-5">
         {% for q in failedQuestions %}
             {% set idx = loop.index0 %}
-            <div class="bg-slate-900 border border-rose-500/30 rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-xl space-y-3.5 sm:space-y-4">
+            <div id="mistake-card-{{ q.id }}" class="bg-slate-900 border border-rose-500/30 rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-xl space-y-3.5 sm:space-y-4">
                 
                 {# Encabezado #}
                 <div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-800">
@@ -48,15 +48,24 @@
                         </span>
                     </div>
 
-                    <span class="text-xs text-emerald-400 font-bold flex items-center gap-1.5">
-                        <i class="fa-solid fa-circle-check"></i>
-                        Opción correcta: {{ q.correct_option }}
-                    </span>
+                    <div class="flex items-center gap-2.5">
+                        <button type="button" onclick="toggleSpeakMistake({{ q.id }})"
+                                id="mistake-btn-speak-{{ q.id }}"
+                                class="text-xs px-2.5 sm:px-3 py-1 rounded-xl bg-slate-800 hover:bg-blue-600/20 text-slate-300 hover:text-blue-300 border border-slate-700/60 font-semibold transition-colors flex items-center gap-1.5"
+                                title="Escuchar caso, pregunta y opciones con voz">
+                            <i id="mistake-icon-speak-{{ q.id }}" class="fa-solid fa-volume-high text-blue-400"></i>
+                            <span id="mistake-text-speak-{{ q.id }}">Escuchar</span>
+                        </button>
+                        <span class="text-xs text-emerald-400 font-bold flex items-center gap-1.5">
+                            <i class="fa-solid fa-circle-check"></i>
+                            Opción correcta: {{ q.correct_option }}
+                        </span>
+                    </div>
                 </div>
 
                 {# Caso Situacional #}
                 {% if q.case_text %}
-                    <div class="p-4 rounded-xl bg-slate-950/60 border border-slate-800 text-slate-300 text-xs sm:text-sm whitespace-pre-line leading-relaxed text-justify [text-justify:inter-word]">
+                    <div class="mistake-case-content p-4 rounded-xl bg-slate-950/60 border border-slate-800 text-slate-300 text-xs sm:text-sm whitespace-pre-line leading-relaxed text-justify [text-justify:inter-word]">
                         <div class="text-blue-400 font-bold text-xs uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
                             <i class="fa-solid fa-book-bookmark"></i>
                             Contexto de Análisis
@@ -66,7 +75,7 @@
                 {% endif %}
 
                 {# Enunciado #}
-                <p class="text-sm font-semibold text-white leading-relaxed text-justify [text-justify:inter-word]">
+                <p class="mistake-stem-content text-sm font-semibold text-white leading-relaxed text-justify [text-justify:inter-word]">
                     {{ q.stem }}
                 </p>
 
@@ -74,11 +83,11 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
                     {% for let, txt in q.options_map.items() %}
                         {% if txt %}
-                            <div class="p-3.5 rounded-xl border flex items-start gap-2.5 {{ 'bg-emerald-950/30 border-emerald-500/60 text-emerald-100 font-medium' if let == q.correct_option else 'bg-slate-950/40 border-slate-800/80 text-slate-400' }}">
-                                <span class="w-6 h-6 rounded-lg text-xs font-bold flex items-center justify-center shrink-0 {{ 'bg-emerald-600 text-white' if let == q.correct_option else 'bg-slate-800 text-slate-400' }}">
+                            <div class="mistake-option-item p-3.5 rounded-xl border flex items-start gap-2.5 {{ 'bg-emerald-950/30 border-emerald-500/60 text-emerald-100 font-medium' if let == q.correct_option else 'bg-slate-950/40 border-slate-800/80 text-slate-400' }}">
+                                <span class="mistake-option-letter w-6 h-6 rounded-lg text-xs font-bold flex items-center justify-center shrink-0 {{ 'bg-emerald-600 text-white' if let == q.correct_option else 'bg-slate-800 text-slate-400' }}">
                                     {{ let }}
                                 </span>
-                                <span class="leading-relaxed text-justify [text-justify:inter-word]">{{ txt }}</span>
+                                <span class="mistake-option-text leading-relaxed text-justify [text-justify:inter-word]">{{ txt }}</span>
                             </div>
                         {% endif %}
                     {% endfor %}
@@ -115,4 +124,48 @@
     </div>
 
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function toggleSpeakMistake(qid) {
+    if (!window.DianSpeechReader) return;
+
+    const card = document.getElementById(`mistake-card-${qid}`);
+    if (!card) return;
+
+    const parts = [];
+    parts.push(`Pregunta.`);
+
+    const caseEl = card.querySelector('.mistake-case-content');
+    if (caseEl) {
+        const caseText = caseEl.innerText.trim();
+        if (caseText) parts.push("Contexto: " + caseText);
+    }
+
+    const stemEl = card.querySelector('.mistake-stem-content');
+    if (stemEl) {
+        const stemText = stemEl.innerText.trim();
+        if (stemText) parts.push("Enunciado: " + stemText);
+    }
+
+    const optEls = card.querySelectorAll('.mistake-option-item');
+    if (optEls.length > 0) {
+        parts.push("Opciones de respuesta:");
+        optEls.forEach(el => {
+            const letter = el.querySelector('.mistake-option-letter')?.innerText.trim() || '';
+            const text = el.querySelector('.mistake-option-text')?.innerText.trim() || '';
+            if (letter && text) {
+                parts.push(`Opción ${letter}: ${text}`);
+            }
+        });
+    }
+
+    const buttonConfigs = [
+        { btnId: `mistake-btn-speak-${qid}`, iconId: `mistake-icon-speak-${qid}`, textId: `mistake-text-speak-${qid}` }
+    ];
+
+    window.DianSpeechReader.toggle(`mistake_${qid}`, parts, buttonConfigs);
+}
+</script>
 {% endblock %}
