@@ -49,12 +49,13 @@
                     </div>
 
                     <div class="flex items-center gap-2.5">
-                        <button type="button" onclick="toggleSpeakMistake({{ q.id }})"
-                                id="mistake-btn-speak-{{ q.id }}"
+                        {# Botón Escuchar Pregunta #}
+                        <button type="button" onclick="window.DianNeuralAudio.toggle({{ q.id }}, 'pregunta', 'mistake-btn-stem-{{ q.id }}', 'mistake-icon-stem-{{ q.id }}', 'mistake-text-stem-{{ q.id }}', 'Escuchar Pregunta')"
+                                id="mistake-btn-stem-{{ q.id }}"
                                 class="text-xs px-2.5 sm:px-3 py-1 rounded-xl bg-slate-800 hover:bg-blue-600/20 text-slate-300 hover:text-blue-300 border border-slate-700/60 font-semibold transition-colors flex items-center gap-1.5"
-                                title="Escuchar caso, pregunta y opciones con voz">
-                            <i id="mistake-icon-speak-{{ q.id }}" class="fa-solid fa-volume-high text-blue-400"></i>
-                            <span id="mistake-text-speak-{{ q.id }}">Escuchar</span>
+                                title="Escuchar pregunta y opciones con voz">
+                            <i id="mistake-icon-stem-{{ q.id }}" class="fa-solid fa-volume-high text-blue-400"></i>
+                            <span id="mistake-text-stem-{{ q.id }}">Escuchar Pregunta</span>
                         </button>
                         <span class="text-xs text-emerald-400 font-bold flex items-center gap-1.5">
                             <i class="fa-solid fa-circle-check"></i>
@@ -66,9 +67,19 @@
                 {# Caso Situacional #}
                 {% if q.case_text %}
                     <div class="mistake-case-content p-4 rounded-xl bg-slate-950/60 border border-slate-800 text-slate-300 text-xs sm:text-sm whitespace-pre-line leading-relaxed text-justify [text-justify:inter-word]">
-                        <div class="text-blue-400 font-bold text-xs uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
-                            <i class="fa-solid fa-book-bookmark"></i>
-                            Contexto de Análisis
+                        <div class="flex items-center justify-between gap-2 mb-1.5">
+                            <div class="text-blue-400 font-bold text-xs uppercase tracking-wider flex items-center gap-1.5">
+                                <i class="fa-solid fa-book-bookmark"></i>
+                                Contexto de Análisis
+                            </div>
+                            {# Botón Escuchar Caso #}
+                            <button type="button" onclick="window.DianNeuralAudio.toggle({{ q.id }}, 'caso', 'mistake-btn-case-{{ q.id }}', 'mistake-icon-case-{{ q.id }}', 'mistake-text-case-{{ q.id }}', 'Escuchar Caso')"
+                                    id="mistake-btn-case-{{ q.id }}"
+                                    class="text-xs px-2.5 py-1 rounded-xl bg-slate-800 hover:bg-blue-600/20 text-slate-300 hover:text-blue-300 border border-slate-700/60 font-semibold transition-colors flex items-center gap-1.5"
+                                    title="Escuchar caso situacional con voz">
+                                <i id="mistake-icon-case-{{ q.id }}" class="fa-solid fa-volume-high text-blue-400"></i>
+                                <span id="mistake-text-case-{{ q.id }}">Escuchar Caso</span>
+                            </button>
                         </div>
                         {{ q.case_text }}
                     </div>
@@ -127,45 +138,4 @@
 {% endblock %}
 
 {% block scripts %}
-<script>
-function toggleSpeakMistake(qid) {
-    if (!window.DianSpeechReader) return;
-
-    const card = document.getElementById(`mistake-card-${qid}`);
-    if (!card) return;
-
-    const parts = [];
-    parts.push(`Pregunta.`);
-
-    const caseEl = card.querySelector('.mistake-case-content');
-    if (caseEl) {
-        const caseText = caseEl.innerText.trim();
-        if (caseText) parts.push("Contexto: " + caseText);
-    }
-
-    const stemEl = card.querySelector('.mistake-stem-content');
-    if (stemEl) {
-        const stemText = stemEl.innerText.trim();
-        if (stemText) parts.push("Enunciado: " + stemText);
-    }
-
-    const optEls = card.querySelectorAll('.mistake-option-item');
-    if (optEls.length > 0) {
-        parts.push("Opciones de respuesta:");
-        optEls.forEach(el => {
-            const letter = el.querySelector('.mistake-option-letter')?.innerText.trim() || '';
-            const text = el.querySelector('.mistake-option-text')?.innerText.trim() || '';
-            if (letter && text) {
-                parts.push(`Opción ${letter}: ${text}`);
-            }
-        });
-    }
-
-    const buttonConfigs = [
-        { btnId: `mistake-btn-speak-${qid}`, iconId: `mistake-icon-speak-${qid}`, textId: `mistake-text-speak-${qid}` }
-    ];
-
-    window.DianSpeechReader.toggle(`mistake_${qid}`, parts, buttonConfigs);
-}
-</script>
 {% endblock %}

@@ -492,62 +492,48 @@
         document.getElementById('ai-tutor-modal').classList.add('hidden');
     };
 
-    {# Motor Global de Lectura de Preguntas por Voz (Web Speech API - 100% Nativo y Gratuito) #}
-    window.DianSpeechReader = {
-        currentId: null,
-        activeButtons: [],
-        keepAliveTimer: null,
-        isSpeaking: false,
-
-        getVoice: function() {
-            if (!('speechSynthesis' in window)) return null;
-            const voices = window.speechSynthesis.getVoices() || [];
-            return voices.find(v => v.lang === 'es-CO') ||
-                   voices.find(v => v.lang === 'es-US') ||
-                   voices.find(v => v.lang === 'es-MX') ||
-                   voices.find(v => v.lang === 'es-ES') ||
-                   voices.find(v => v.lang && v.lang.toLowerCase().startsWith('es')) ||
-                   null;
-        },
+    {# Reproductor Global de Audio Neuronal (MP3 Natural - Calidad Estudio sin Cortes en Celulares) #}
+    window.DianNeuralAudio = {
+        audio: null,
+        currentKey: null,
+        activeBtnId: null,
+        activeIconId: null,
+        activeTextId: null,
 
         stop: function() {
-            if (this.keepAliveTimer) {
-                clearInterval(this.keepAliveTimer);
-                this.keepAliveTimer = null;
+            if (this.audio) {
+                try {
+                    this.audio.pause();
+                    this.audio.currentTime = 0;
+                } catch (e) {}
+                this.audio = null;
             }
-            if ('speechSynthesis' in window) {
-                window.speechSynthesis.cancel();
+            if (this.activeBtnId) {
+                const btn = document.getElementById(this.activeBtnId);
+                const icon = document.getElementById(this.activeIconId);
+                const text = document.getElementById(this.activeTextId);
+                if (btn) {
+                    btn.classList.remove('bg-rose-500/25', 'text-rose-300', 'border-rose-500/50', 'bg-amber-500/20', 'text-amber-300', 'border-amber-500/40');
+                    btn.classList.add('bg-slate-800/80', 'text-slate-300', 'border-slate-700/60');
+                }
+                if (icon) {
+                    icon.className = 'fa-solid fa-volume-high text-blue-400';
+                }
+                if (text) {
+                    text.textContent = text.getAttribute('data-original-text') || 'Escuchar';
+                }
             }
-            if (this.activeButtons && this.activeButtons.length) {
-                this.activeButtons.forEach(cfg => {
-                    const btn = document.getElementById(cfg.btnId);
-                    const icon = document.getElementById(cfg.iconId);
-                    const text = document.getElementById(cfg.textId);
-                    if (btn) {
-                        btn.classList.remove('bg-rose-500/20', 'text-rose-300', 'border-rose-500/40');
-                        btn.classList.add('bg-slate-800/80', 'text-slate-300', 'border-slate-700/60');
-                    }
-                    if (icon) {
-                        icon.className = 'fa-solid fa-volume-high text-blue-400';
-                    }
-                    if (text) {
-                        text.textContent = 'Escuchar';
-                    }
-                });
-            }
-            this.currentId = null;
-            this.activeButtons = [];
-            this.isSpeaking = false;
+            this.currentKey = null;
+            this.activeBtnId = null;
+            this.activeIconId = null;
+            this.activeTextId = null;
         },
 
-        toggle: function(id, textParts, buttonConfigs) {
-            if (!('speechSynthesis' in window)) {
-                alert('Tu navegador o dispositivo no soporta la lectura de voz nativa.');
-                return;
-            }
+        toggle: function(questionId, part, btnId, iconId, textId, defaultLabel) {
+            const key = `${questionId}_${part}`;
 
-            // Si se hace clic en la que ya está sonando, detenerla
-            if (this.isSpeaking && this.currentId === id) {
+            // Si se hace clic en el mismo que ya está sonando -> detenerlo
+            if (this.currentKey === key && this.audio) {
                 this.stop();
                 return;
             }
@@ -555,21 +541,40 @@
             // Detener cualquier reproducción previa
             this.stop();
 
-            const fullText = (Array.isArray(textParts) ? textParts.filter(Boolean).join(". ") : String(textParts || '')).trim();
-            if (!fullText) return;
+            const btn = document.getElementById(btnId);
+            const icon = document.getElementById(iconId);
+            const text = document.getElementById(textId);
 
-            this.currentId = id;
-            this.activeButtons = Array.isArray(buttonConfigs) ? buttonConfigs : [buttonConfigs];
-            this.isSpeaking = true;
+            if (text && !text.getAttribute('data-original-text')) {
+                text.setAttribute('data-original-text', defaultLabel || text.textContent.trim());
+            }
 
-            // Actualizar botones a estado activo (Detener)
-            this.activeButtons.forEach(cfg => {
-                const btn = document.getElementById(cfg.btnId);
-                const icon = document.getElementById(cfg.iconId);
-                const text = document.getElementById(cfg.textId);
+            this.currentKey = key;
+            this.activeBtnId = btnId;
+            this.activeIconId = iconId;
+            this.activeTextId = textId;
+
+            // Estado: Cargando audio neuronal
+            if (btn) {
+                btn.classList.remove('bg-slate-800/80', 'text-slate-300', 'border-slate-700/60');
+                btn.classList.add('bg-amber-500/20', 'text-amber-300', 'border-amber-500/40');
+            }
+            if (icon) {
+                icon.className = 'fa-solid fa-spinner fa-spin text-amber-400';
+            }
+            if (text) {
+                text.textContent = 'Cargando...';
+            }
+
+            const audioUrl = `/audio/pregunta/${questionId}/${part}?v=1`;
+            const sound = new Audio(audioUrl);
+            this.audio = sound;
+
+            sound.onplay = () => {
+                if (this.currentKey !== key) return;
                 if (btn) {
-                    btn.classList.remove('bg-slate-800/80', 'text-slate-300', 'border-slate-700/60');
-                    btn.classList.add('bg-rose-500/20', 'text-rose-300', 'border-rose-500/40');
+                    btn.classList.remove('bg-amber-500/20', 'text-amber-300', 'border-amber-500/40');
+                    btn.classList.add('bg-rose-500/25', 'text-rose-300', 'border-rose-500/50');
                 }
                 if (icon) {
                     icon.className = 'fa-solid fa-stop text-rose-400 animate-pulse';
@@ -577,44 +582,27 @@
                 if (text) {
                     text.textContent = 'Detener';
                 }
+            };
+
+            sound.onended = () => {
+                this.stop();
+            };
+
+            sound.onerror = (e) => {
+                console.warn('Error al cargar audio neuronal:', e);
+                this.stop();
+            };
+
+            sound.play().catch(err => {
+                console.warn('Reproducción de audio no iniciada:', err);
+                this.stop();
             });
-
-            const utter = new SpeechSynthesisUtterance(fullText);
-            utter.lang = 'es-CO';
-            utter.rate = 0.98;
-            utter.pitch = 1.0;
-
-            const voice = this.getVoice();
-            if (voice) utter.voice = voice;
-
-            utter.onend = () => {
-                this.stop();
-            };
-            utter.onerror = () => {
-                this.stop();
-            };
-
-            // Keepalive para textos largos en Chrome/Android
-            this.keepAliveTimer = setInterval(() => {
-                if (window.speechSynthesis && window.speechSynthesis.speaking) {
-                    window.speechSynthesis.pause();
-                    window.speechSynthesis.resume();
-                } else {
-                    clearInterval(this.keepAliveTimer);
-                }
-            }, 10000);
-
-            window.speechSynthesis.speak(utter);
         }
     };
 
-    if ('speechSynthesis' in window) {
-        window.speechSynthesis.onvoiceschanged = () => {
-            if (window.DianSpeechReader) window.DianSpeechReader.getVoice();
-        };
-    }
+    window.DianSpeechReader = window.DianNeuralAudio;
     window.addEventListener('beforeunload', () => {
-        if (window.DianSpeechReader) window.DianSpeechReader.stop();
+        if (window.DianNeuralAudio) window.DianNeuralAudio.stop();
     });
     </script>
 

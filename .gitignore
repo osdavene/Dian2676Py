@@ -31,3 +31,6 @@ Thumbs.db
 /storage/app/backups/*.json
 /storage/app/ai_config.json
 /storage/app/ai_custom_docs.json
+
+# Audio cache
+/storage/app/audio/*.mp3

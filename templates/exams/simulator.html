@@ -160,16 +160,6 @@
                             </div>
 
                             <div class="flex items-center gap-1.5 sm:gap-2">
-                                {# Botón Escuchar Pregunta por Voz #}
-                                <button type="button" onclick="toggleSpeakSimulator({{ index + 1 }})" 
-                                        id="btn-speak-{{ index + 1 }}"
-                                        class="text-xs px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-800/80 hover:bg-blue-600/20 text-slate-300 hover:text-blue-300 border border-slate-700/60 transition-colors flex items-center gap-1.5 font-semibold"
-                                        title="Escuchar caso, pregunta y opciones con voz">
-                                    <i id="icon-speak-{{ index + 1 }}" class="fa-solid fa-volume-high text-blue-400"></i>
-                                    <span id="text-speak-{{ index + 1 }}" class="hidden sm:inline">Escuchar</span>
-                                    <span class="sm:hidden">Voz</span>
-                                </button>
-
                                 {# Botón Marcar para Revisar #}
                                 <button type="button" onclick="toggleReviewMark({{ index + 1 }})" 
                                         id="btn-mark-{{ index + 1 }}"
@@ -193,11 +183,21 @@
                                             <i class="fa-solid fa-link text-blue-400"></i>
                                             <span>Pregunta vinculada al Caso Situacional anterior</span>
                                         </div>
-                                        <button type="button" onclick="toggleCaseDetails({{ index + 1 }})" 
-                                                class="text-xs font-bold text-blue-400 hover:text-blue-300 flex items-center gap-1 px-2.5 py-1 rounded-lg bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/20 transition-all">
-                                            <span id="case-toggle-text-{{ index + 1 }}">Ver texto del caso</span>
-                                            <i id="case-toggle-icon-{{ index + 1 }}" class="fa-solid fa-chevron-down text-[10px] transition-transform"></i>
-                                        </button>
+                                        <div class="flex items-center gap-2">
+                                            {# Botón Escuchar Caso #}
+                                            <button type="button" onclick="window.DianNeuralAudio.toggle({{ q.id }}, 'caso', 'btn-speak-case-{{ index + 1 }}', 'icon-speak-case-{{ index + 1 }}', 'text-speak-case-{{ index + 1 }}', 'Escuchar Caso')"
+                                                    id="btn-speak-case-{{ index + 1 }}"
+                                                    class="text-xs px-2.5 py-1 rounded-lg bg-slate-800/80 hover:bg-blue-600/20 text-slate-300 hover:text-blue-300 border border-slate-700/60 transition-colors flex items-center gap-1.5 font-semibold"
+                                                    title="Escuchar caso situacional">
+                                                <i id="icon-speak-case-{{ index + 1 }}" class="fa-solid fa-volume-high text-blue-400"></i>
+                                                <span id="text-speak-case-{{ index + 1 }}">Escuchar Caso</span>
+                                            </button>
+                                            <button type="button" onclick="toggleCaseDetails({{ index + 1 }})" 
+                                                    class="text-xs font-bold text-blue-400 hover:text-blue-300 flex items-center gap-1 px-2.5 py-1 rounded-lg bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/20 transition-all">
+                                                <span id="case-toggle-text-{{ index + 1 }}">Ver texto del caso</span>
+                                                <i id="case-toggle-icon-{{ index + 1 }}" class="fa-solid fa-chevron-down text-[10px] transition-transform"></i>
+                                            </button>
+                                        </div>
                                     </div>
                                     <div id="case-body-{{ index + 1 }}" class="case-text-content hidden mt-3 pt-3 border-t border-slate-800 text-xs sm:text-sm leading-relaxed text-slate-300">
                                         {% for cp in q.case_text.strip().replace('\r\n', '\n').split('\n\n') %}
@@ -207,9 +207,19 @@
                                 </div>
                             {% else %}
                                 <div class="mb-5 sm:mb-7 p-4 sm:p-6 rounded-2xl bg-gradient-to-r from-slate-950 via-slate-900 to-indigo-950/20 border-l-4 border-blue-500 border-y border-r border-slate-800 text-slate-200 shadow-inner">
-                                    <div class="flex items-center gap-2 text-xs sm:text-sm font-extrabold text-blue-400 uppercase tracking-wider mb-2.5">
-                                        <i class="fa-solid fa-file-lines text-sm sm:text-base"></i>
-                                        Caso de Estudio Situacional &bull; Concurso DIAN
+                                    <div class="flex items-center justify-between gap-2 mb-2.5">
+                                        <div class="flex items-center gap-2 text-xs sm:text-sm font-extrabold text-blue-400 uppercase tracking-wider">
+                                            <i class="fa-solid fa-file-lines text-sm sm:text-base"></i>
+                                            Caso de Estudio Situacional &bull; Concurso DIAN
+                                        </div>
+                                        {# Botón Escuchar Caso #}
+                                        <button type="button" onclick="window.DianNeuralAudio.toggle({{ q.id }}, 'caso', 'btn-speak-case-{{ index + 1 }}', 'icon-speak-case-{{ index + 1 }}', 'text-speak-case-{{ index + 1 }}', 'Escuchar Caso')"
+                                                id="btn-speak-case-{{ index + 1 }}"
+                                                class="text-xs px-2.5 sm:px-3 py-1 rounded-xl bg-slate-800/80 hover:bg-blue-600/20 text-slate-300 hover:text-blue-300 border border-slate-700/60 transition-colors flex items-center gap-1.5 font-semibold"
+                                                title="Escuchar caso situacional">
+                                            <i id="icon-speak-case-{{ index + 1 }}" class="fa-solid fa-volume-high text-blue-400"></i>
+                                            <span id="text-speak-case-{{ index + 1 }}">Escuchar Caso</span>
+                                        </button>
                                     </div>
                                     <div class="case-text-content text-sm sm:text-base leading-relaxed sm:leading-loose text-slate-200 font-normal">
                                         {% for cp in q.case_text.strip().replace('\r\n', '\n').split('\n\n') %}
@@ -222,9 +232,19 @@
 
                         {# Enunciado de la Pregunta (Mayor Tamaño en Móvil y Justificado) #}
                         <div class="mb-5 sm:mb-7">
-                            <span class="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-slate-400 block mb-1.5">
-                                Enunciado de la Pregunta
-                            </span>
+                            <div class="flex items-center justify-between gap-2 mb-1.5">
+                                <span class="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-slate-400 block">
+                                    Enunciado de la Pregunta
+                                </span>
+                                {# Botón Escuchar Pregunta #}
+                                <button type="button" onclick="window.DianNeuralAudio.toggle({{ q.id }}, 'pregunta', 'btn-speak-stem-{{ index + 1 }}', 'icon-speak-stem-{{ index + 1 }}', 'text-speak-stem-{{ index + 1 }}', 'Escuchar Pregunta')"
+                                        id="btn-speak-stem-{{ index + 1 }}"
+                                        class="text-xs px-2.5 sm:px-3 py-1 rounded-xl bg-slate-800/80 hover:bg-blue-600/20 text-slate-300 hover:text-blue-300 border border-slate-700/60 transition-colors flex items-center gap-1.5 font-semibold"
+                                        title="Escuchar pregunta y opciones de respuesta">
+                                    <i id="icon-speak-stem-{{ index + 1 }}" class="fa-solid fa-volume-high text-blue-400"></i>
+                                    <span id="text-speak-stem-{{ index + 1 }}">Escuchar Pregunta</span>
+                                </button>
+                            </div>
                             <h3 class="stem-text-content text-base sm:text-lg font-bold text-white leading-relaxed sm:leading-snug" style="text-align: justify; text-justify: inter-word; text-align-last: left; word-break: break-word;">
                                 {{ q.stem }}
                             </h3>
@@ -398,11 +418,6 @@
         <button type="button" onclick="openOpticalSheetModal()" 
                 class="py-2.5 px-3 rounded-xl bg-blue-600/20 hover:bg-blue-600/30 text-blue-300 border border-blue-500/30 font-bold text-xs flex items-center justify-center gap-1 active:scale-95 transition-all">
             <i class="fa-solid fa-table-cells text-xs"></i> <span id="mobile-bar-answered-count">{{ savedAnswers | length }}/{{ questions | length }}</span>
-        </button>
-
-        <button type="button" id="mobile-nav-speak" onclick="toggleSpeakSimulator(currentQuestion)" 
-                class="py-2.5 px-3 rounded-xl bg-slate-800 text-slate-300 hover:text-blue-300 border border-slate-700/60 font-bold text-xs flex items-center justify-center active:scale-95 transition-all" title="Escuchar pregunta actual con voz">
-            <i id="mobile-nav-speak-icon" class="fa-solid fa-volume-high text-xs text-blue-400"></i>
         </button>
 
         <button type="button" id="mobile-nav-mark" onclick="toggleReviewMark(currentQuestion)" 
@@ -771,8 +786,8 @@
     function goToQuestion(qNum) {
         if (qNum < 1 || qNum > totalQuestions) return;
 
-        if (window.DianSpeechReader) {
-            window.DianSpeechReader.stop();
+        if (window.DianNeuralAudio) {
+            window.DianNeuralAudio.stop();
         }
 
         const prevQuestion = currentQuestion;
@@ -797,55 +812,6 @@
 
         updateMobileUI();
         window.scrollTo({ top: 90, behavior: 'smooth' });
-    }
-
-    function toggleSpeakSimulator(qNum) {
-        if (!window.DianSpeechReader) return;
-
-        const card = document.getElementById(`question-card-${qNum}`);
-        if (!card) return;
-
-        const parts = [];
-        parts.push(`Pregunta número ${qNum}.`);
-
-        // Caso situacional
-        const caseEl = card.querySelector('.case-text-content');
-        if (caseEl) {
-            const caseText = caseEl.innerText.trim();
-            if (caseText) {
-                parts.push("Caso situacional: " + caseText);
-            }
-        }
-
-        // Enunciado
-        const stemEl = card.querySelector('.stem-text-content');
-        if (stemEl) {
-            const stemText = stemEl.innerText.trim();
-            if (stemText) {
-                parts.push("Enunciado: " + stemText);
-            }
-        }
-
-        // Opciones de respuesta
-        const optionLabels = card.querySelectorAll('.option-label');
-        if (optionLabels.length > 0) {
-            parts.push("Opciones de respuesta:");
-            optionLabels.forEach(lbl => {
-                const letter = lbl.getAttribute('data-letter') || '';
-                const txtEl = card.querySelector(`#option-text-${qNum}-${letter}`);
-                const text = txtEl ? txtEl.innerText.trim() : '';
-                if (letter && text) {
-                    parts.push(`Opción ${letter}: ${text}`);
-                }
-            });
-        }
-
-        const buttonConfigs = [
-            { btnId: `btn-speak-${qNum}`, iconId: `icon-speak-${qNum}`, textId: `text-speak-${qNum}` },
-            { btnId: `mobile-nav-speak`, iconId: `mobile-nav-speak-icon`, textId: null }
-        ];
-
-        window.DianSpeechReader.toggle(`sim_${qNum}`, parts, buttonConfigs);
     }
 
     function goToNextOrSubmit() {
@@ -1105,7 +1071,7 @@
     }
 
     function confirmSubmitModal() {
-        if (window.DianSpeechReader) window.DianSpeechReader.stop();
+        if (window.DianNeuralAudio) window.DianNeuralAudio.stop();
         const answered = answeredSet.size;
         const unanswered = totalQuestions - answered;
 
@@ -1127,7 +1093,7 @@
     }
 
     function confirmPauseModal() {
-        if (window.DianSpeechReader) window.DianSpeechReader.stop();
+        if (window.DianNeuralAudio) window.DianNeuralAudio.stop();
         const pauseInput = document.getElementById('pause_time_spent_seconds');
         if (pauseInput) pauseInput.value = secondsSpent;
         document.getElementById('modal-pause-confirm').classList.remove('hidden');
@@ -1138,7 +1104,7 @@
     }
 
     function doSubmitForm() {
-        if (window.DianSpeechReader) window.DianSpeechReader.stop();
+        if (window.DianNeuralAudio) window.DianNeuralAudio.stop();
         clearInterval(timerInterval);
         if (typeof heartbeatTimer !== 'undefined') clearInterval(heartbeatTimer);
         timeSpentInput.value = secondsSpent;

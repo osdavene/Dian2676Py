@@ -5,7 +5,7 @@ from datetime import datetime
 from types import SimpleNamespace
 from typing import Any, Dict, List, Optional
 from fastapi import APIRouter, Depends, Request, HTTPException
-from fastapi.responses import JSONResponse, RedirectResponse
+from fastapi.responses import JSONResponse, RedirectResponse, FileResponse
 from sqlalchemy import or_
 from sqlalchemy.orm import Session, joinedload
 from app.database import get_db
@@ -1154,4 +1154,25 @@ def history(request: Request, db: Session = Depends(get_db)):
             "criticalAxes": critical_axes,
         },
         db,
+    )
+
+
+@router.get("/audio/pregunta/{question_id}/{part}")
+async def stream_question_audio(
+    question_id: int,
+    part: str,
+    db: Session = Depends(get_db),
+):
+    from app.tts_service import get_or_generate_audio_file
+    audio_path = await get_or_generate_audio_file(question_id, part, db)
+    if not audio_path or not audio_path.exists():
+        raise HTTPException(status_code=404, detail="Audio no disponible para esta pregunta o parte.")
+
+    return FileResponse(
+        path=str(audio_path),
+        media_type="audio/mpeg",
+        headers={
+            "Accept-Ranges": "bytes",
+            "Cache-Control": "public, max-age=864000",
+        },
     )
