@@ -1,4 +1,5 @@
 import json
+import unicodedata
 from datetime import datetime
 from typing import Dict, List, Optional, Any
 from sqlalchemy import (
@@ -188,14 +189,36 @@ class Question(Base):
         if not job_id:
             return cls.is_active.is_(True)
         job = db.query(JobProfile).filter(JobProfile.id == job_id).first()
-        level = job.level if job else None
+        if not job:
+            return cls.is_active.is_(True)
+
+        raw_level = (job.level or "").lower()
+        norm_level = "".join(
+            c for c in unicodedata.normalize("NFD", raw_level) if unicodedata.category(c) != "Mn"
+        )
+        is_tecnico = "tecnico" in norm_level
+        is_profesional = "profesional" in norm_level
+
+        axis_ids = [
+            row[0]
+            for row in db.query(ThematicAxis.id)
+            .filter(ThematicAxis.job_profile_id == job_id)
+            .all()
+        ]
 
         conditions = [
             cls.job_profile_id == job_id,
-            and_(cls.is_shared.is_(True), cls.scope_level == "todos"),
+            cls.is_shared.is_(True),
+            cls.job_profile_id.is_(None),
+            cls.scope_level.in_(["transversal", "todos"]),
         ]
-        if level:
-            conditions.append(and_(cls.is_shared.is_(True), cls.scope_level == level))
+        if axis_ids:
+            conditions.append(cls.thematic_axis_id.in_(axis_ids))
+        if is_tecnico:
+            conditions.append(cls.scope_level == "tecnico")
+        if is_profesional:
+            conditions.append(cls.scope_level == "profesional")
+
         return or_(*conditions)
 
     @classmethod

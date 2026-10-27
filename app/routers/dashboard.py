@@ -38,6 +38,7 @@ def _count_questions_for_axis(db: Session, axis: ThematicAxis) -> int:
                     or_(
                         Question.is_shared.is_(True),
                         Question.scope_level == "profesional",
+                        Question.scope_level == "tecnico",
                         Question.scope_level == "transversal",
                     )
                     & Question.thematic_axis.has(ThematicAxis.name == axis.name)

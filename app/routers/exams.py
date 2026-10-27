@@ -926,6 +926,7 @@ def practice_selection(request: Request, db: Session = Depends(get_db)):
                         or_(
                             Question.is_shared.is_(True),
                             Question.scope_level == "profesional",
+                            Question.scope_level == "tecnico",
                             Question.scope_level == "transversal",
                         )
                         & Question.thematic_axis.has(ThematicAxis.name == axis.name)
@@ -970,6 +971,7 @@ def practice_axis(axis_id: int, request: Request, db: Session = Depends(get_db))
                     or_(
                         Question.is_shared.is_(True),
                         Question.scope_level == "profesional",
+                        Question.scope_level == "tecnico",
                         Question.scope_level == "transversal",
                     )
                     & Question.thematic_axis.has(ThematicAxis.name == axis.name)
