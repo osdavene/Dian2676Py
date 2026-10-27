@@ -250,11 +250,20 @@
                             </div>
                         </div>
 
-                        <a href="/simulacro/{{ s.id }}/resultado"
-                           class="w-full py-2.5 rounded-xl bg-blue-600/20 hover:bg-blue-600/30 text-blue-300 font-bold text-xs flex items-center justify-center gap-1.5 transition-colors border border-blue-500/30 active:scale-95">
-                            <span>Ver Resultados y Diagnóstico</span>
-                            <i class="fa-solid fa-arrow-right text-[10px]"></i>
-                        </a>
+                        <div class="flex items-center gap-2">
+                            <a href="/simulacro/{{ s.id }}/resultado"
+                               class="flex-1 py-2.5 rounded-xl bg-blue-600/20 hover:bg-blue-600/30 text-blue-300 font-bold text-xs flex items-center justify-center gap-1.5 transition-colors border border-blue-500/30 active:scale-95">
+                                <span>Ver Resultados y Diagnóstico</span>
+                                <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                            </a>
+                            {% if user and user.is_admin() %}
+                                <form method="POST" action="/admin/sesiones/{{ s.id }}/eliminar" onsubmit="return confirm('¿Eliminar este simulacro #{{ s.id }}?');" class="shrink-0">
+                                    <button type="submit" class="p-2.5 rounded-xl bg-rose-500/10 hover:bg-rose-500/25 text-rose-400 hover:text-rose-300 border border-rose-500/30 transition-colors" title="Eliminar examen (Admin)">
+                                        <i class="fa-solid fa-trash-can text-xs"></i>
+                                    </button>
+                                </form>
+                            {% endif %}
+                        </div>
                     </div>
                 {% endfor %}
             </div>
@@ -327,11 +336,20 @@
                                     {% endif %}
                                 </td>
                                 <td class="py-3.5 px-3 text-right">
-                                    <a href="/simulacro/{{ s.id }}/resultado"
-                                       class="px-3 py-1.5 rounded-xl bg-blue-600/20 hover:bg-blue-600/40 text-blue-300 font-semibold transition-colors text-xs inline-flex items-center gap-1">
-                                        <span>Resultados</span>
-                                        <i class="fa-solid fa-arrow-right text-[10px]"></i>
-                                    </a>
+                                    <div class="flex items-center justify-end gap-1.5">
+                                        <a href="/simulacro/{{ s.id }}/resultado"
+                                           class="px-3 py-1.5 rounded-xl bg-blue-600/20 hover:bg-blue-600/40 text-blue-300 font-semibold transition-colors text-xs inline-flex items-center gap-1">
+                                            <span>Resultados</span>
+                                            <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                                        </a>
+                                        {% if user and user.is_admin() %}
+                                            <form method="POST" action="/admin/sesiones/{{ s.id }}/eliminar" onsubmit="return confirm('¿Eliminar este simulacro #{{ s.id }}?');" class="inline">
+                                                <button type="submit" class="p-1.5 rounded-xl bg-rose-500/10 hover:bg-rose-500/25 text-rose-400 hover:text-rose-300 border border-rose-500/30 transition-colors text-xs" title="Eliminar examen (Admin)">
+                                                    <i class="fa-solid fa-trash-can"></i>
+                                                </button>
+                                            </form>
+                                        {% endif %}
+                                    </div>
                                 </td>
                             </tr>
                         {% endfor %}

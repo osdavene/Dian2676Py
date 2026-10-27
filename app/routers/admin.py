@@ -777,6 +777,55 @@ def reset_attempts(
     return RedirectResponse(url=referer, status_code=302)
 
 
+@router.post("/sesiones/{session_id}/eliminar")
+@router.post("/simulacros/{session_id}/eliminar")
+@router.delete("/sesiones/{session_id}")
+@router.delete("/simulacros/{session_id}")
+def delete_single_session(
+    session_id: int, request: Request, db: Session = Depends(get_db)
+):
+    admin_user = _require_admin(request, db)
+    if not admin_user:
+        return RedirectResponse(url="/dashboard", status_code=302)
+
+    session = db.query(ExamSession).filter(ExamSession.id == session_id).first()
+    if not session:
+        flash(
+            request,
+            "error",
+            f"La sesión de simulacro #{session_id} no fue encontrada o ya fue eliminada.",
+        )
+        referer = request.headers.get("referer") or "/admin/sesiones"
+        return RedirectResponse(url=referer, status_code=302)
+
+    user_name = session.user.name if session.user else f"Usuario #{session.user_id}"
+    user_id = session.user_id
+
+    # Eliminar respuestas asociadas primero (evitar restricción de integridad referencial)
+    db.query(SessionAnswer).filter(
+        SessionAnswer.exam_session_id == session.id
+    ).delete()
+
+    db.delete(session)
+    db.commit()
+
+    flash(
+        request,
+        "success",
+        f"Se ha eliminado exitosamente el simulacro #{session_id} de {user_name}.",
+    )
+    referer = request.headers.get("referer")
+    if (
+        referer
+        and "/resultado" not in referer
+        and f"/simulacro/{session_id}" not in referer
+    ):
+        return RedirectResponse(url=referer, status_code=302)
+    if user_id:
+        return RedirectResponse(url=f"/admin/usuarios/{user_id}", status_code=302)
+    return RedirectResponse(url="/admin/sesiones", status_code=302)
+
+
 @router.get("/simulacros")
 @router.get("/sesiones")
 def exam_sessions(

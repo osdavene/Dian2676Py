@@ -130,17 +130,23 @@
                         </div>
                     </div>
 
-                    <div>
+                    <div class="flex items-center gap-2">
                         {% if s.completed_at %}
                             <a href="/simulacro/{{ s.id }}/resultado" 
-                               class="w-full py-2 rounded-lg bg-blue-600/20 hover:bg-blue-600/40 text-blue-300 font-semibold transition-colors text-xs flex items-center justify-center gap-1.5">
+                               class="flex-1 py-2 rounded-lg bg-blue-600/20 hover:bg-blue-600/40 text-blue-300 font-semibold transition-colors text-xs flex items-center justify-center gap-1.5">
                                 <i class="fa-solid fa-file-lines text-[11px]"></i> Ver Examen Completo
                             </a>
                         {% else %}
-                            <div class="w-full py-1.5 text-center text-slate-500 text-xs font-mono">
+                            <div class="flex-1 py-1.5 text-center text-slate-500 text-xs font-mono">
                                 Examen en desarrollo
                             </div>
                         {% endif %}
+                        <form method="POST" action="/admin/sesiones/{{ s.id }}/eliminar" onsubmit="return confirm('¿Eliminar el simulacro #{{ s.id }}? Esta acción no se puede deshacer.');" class="shrink-0">
+                            <button type="submit" class="px-2.5 py-2 rounded-lg bg-rose-500/10 hover:bg-rose-500/25 text-rose-400 hover:text-rose-300 border border-rose-500/20 transition-colors text-xs flex items-center gap-1" title="Eliminar este examen">
+                                <i class="fa-solid fa-trash-can text-[11px]"></i>
+                                <span class="text-[11px] font-semibold">Borrar</span>
+                            </button>
+                        </form>
                     </div>
                 </div>
             {% else %}
@@ -211,14 +217,21 @@
                                 {{ s.created_at | format_date('%d/%m/%Y %H:%M') if s.created_at else 'N/A' }}
                             </td>
                             <td class="py-3.5 px-3 text-right">
-                                {% if s.completed_at %}
-                                    <a href="/simulacro/{{ s.id }}/resultado" 
-                                       class="px-2.5 py-1 rounded-lg bg-blue-600/20 hover:bg-blue-600/40 text-blue-300 font-semibold transition-colors text-[11px]">
-                                        Ver Examen
-                                    </a>
-                                {% else %}
-                                    <span class="text-slate-500 text-[11px]">En progreso</span>
-                                {% endif %}
+                                <div class="flex items-center justify-end gap-1.5">
+                                    {% if s.completed_at %}
+                                        <a href="/simulacro/{{ s.id }}/resultado" 
+                                           class="px-2.5 py-1 rounded-lg bg-blue-600/20 hover:bg-blue-600/40 text-blue-300 font-semibold transition-colors text-[11px]">
+                                            Ver Examen
+                                        </a>
+                                    {% else %}
+                                        <span class="text-slate-500 text-[11px]">En progreso</span>
+                                    {% endif %}
+                                    <form method="POST" action="/admin/sesiones/{{ s.id }}/eliminar" onsubmit="return confirm('¿Eliminar el simulacro #{{ s.id }}? Esta acción no se puede deshacer.');" class="inline">
+                                        <button type="submit" class="p-1 rounded-lg bg-rose-500/10 hover:bg-rose-500/25 text-rose-400 hover:text-rose-300 border border-rose-500/20 transition-colors text-[11px]" title="Eliminar este examen">
+                                            <i class="fa-solid fa-trash-can"></i>
+                                        </button>
+                                    </form>
+                                </div>
                             </td>
                         </tr>
                     {% else %}

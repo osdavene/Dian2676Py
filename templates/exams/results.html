@@ -87,6 +87,15 @@
                         <i class="fa-solid fa-house"></i>
                         Ir al Inicio
                     </a>
+
+                    {% if user and user.is_admin() %}
+                        <form method="POST" action="/admin/sesiones/{{ session.id }}/eliminar" onsubmit="return confirm('¿Eliminar este simulacro #{{ session.id }} definitivamente de la base de datos?');" class="w-full sm:w-auto inline">
+                            <button type="submit" class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-rose-500/15 hover:bg-rose-500/25 text-rose-300 hover:text-white border border-rose-500/30 font-semibold text-xs transition-colors flex items-center justify-center gap-1.5" title="Eliminar examen (Superadmin)">
+                                <i class="fa-solid fa-trash-can"></i>
+                                Borrar este Examen
+                            </button>
+                        </form>
+                    {% endif %}
                 </div>
             </div>
 
