@@ -1157,7 +1157,7 @@ def history(request: Request, db: Session = Depends(get_db)):
     )
 
 
-@router.get("/audio/pregunta/{question_id}/{part}")
+@router.api_route("/audio/pregunta/{question_id}/{part}", methods=["GET", "HEAD"])
 async def stream_question_audio(
     question_id: int,
     part: str,
