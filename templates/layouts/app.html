@@ -368,44 +368,66 @@
     {% endif %}
 
     {# Modal Global del Tutor Jurídico IA por Pregunta #}
-    <div id="ai-tutor-modal" class="hidden fixed inset-0 z-50 overflow-y-auto bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="bg-slate-900 border border-indigo-500/40 rounded-2xl max-w-2xl w-full p-6 shadow-2xl relative text-slate-100 max-h-[90vh] flex flex-col">
-            <div class="flex items-center justify-between pb-4 border-b border-slate-800">
-                <div class="flex items-center gap-2.5">
-                    <div class="w-9 h-9 rounded-xl bg-indigo-600/30 border border-indigo-500/40 flex items-center justify-center text-amber-400">
-                        <i class="fa-solid fa-scale-balanced"></i>
+    <div id="ai-tutor-modal"
+         onclick="if (event.target === this) window.closeAiTutorModal()"
+         class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-5">
+        <div class="bg-slate-900 border border-indigo-500/50 rounded-2xl max-w-2xl w-full shadow-2xl text-slate-100 flex flex-col h-[88vh] max-h-[88vh] overflow-hidden">
+            {# Header fijo #}
+            <div class="flex items-center justify-between px-4 sm:px-6 py-3.5 border-b border-slate-800 bg-slate-950/80 shrink-0">
+                <div class="flex items-center gap-2.5 min-w-0">
+                    <div class="w-9 h-9 rounded-xl bg-indigo-600/30 border border-indigo-500/40 flex items-center justify-center text-amber-400 shrink-0">
+                        <i class="fa-solid fa-scale-balanced text-sm"></i>
                     </div>
-                    <div>
-                        <h3 class="text-sm sm:text-base font-extrabold text-white">
+                    <div class="min-w-0">
+                        <h3 class="text-sm sm:text-base font-extrabold text-white truncate">
                             Tutor Jurídico IA — Análisis de Caso CNSC
                         </h3>
-                        <p id="ai-tutor-subtitle" class="text-[11px] text-indigo-300">Desglose de distractores y fundamento normativo DIAN 2676</p>
+                        <p id="ai-tutor-subtitle" class="text-[11px] text-indigo-300 truncate">Desglose de distractores y fundamento normativo DIAN 2676</p>
                     </div>
                 </div>
-                <button type="button" onclick="window.closeAiTutorModal()" class="text-slate-400 hover:text-white p-1.5 rounded-lg">
+                <button type="button"
+                        onclick="window.closeAiTutorModal()"
+                        class="text-slate-400 hover:text-white hover:bg-slate-800 p-2 rounded-xl transition-colors shrink-0 ml-2"
+                        title="Cerrar ventana (Esc)">
                     <i class="fa-solid fa-xmark text-lg"></i>
                 </button>
             </div>
 
-            <div id="ai-tutor-body" class="py-4 overflow-y-auto flex-1 text-xs sm:text-sm leading-relaxed space-y-3 text-slate-200">
-                <div class="flex items-center gap-3 text-indigo-300 py-8 justify-center">
+            {# Body scrollable con min-h-0 #}
+            <div id="ai-tutor-body" class="p-4 sm:p-6 overflow-y-auto flex-1 min-h-0 text-xs sm:text-sm leading-relaxed space-y-3.5 text-slate-200 select-text">
+                <div class="flex items-center gap-3 text-indigo-300 py-12 justify-center">
                     <i class="fa-solid fa-spinner fa-spin text-xl text-amber-400"></i>
                     <span class="font-bold">Analizando el caso situacional, distractores y base legal...</span>
                 </div>
             </div>
 
-            <form onsubmit="event.preventDefault(); window.sendAiTutorFollowup();" class="pt-3 border-t border-slate-800 flex gap-2">
-                <input type="text"
-                       id="ai-tutor-followup-input"
-                       placeholder="Haz una pregunta adicional sobre este caso (ej. ¿Por qué no aplica otra opción?)..."
-                       class="flex-1 rounded-xl bg-slate-800 border border-slate-700 px-3.5 py-2.5 text-xs text-white placeholder-slate-400 focus:border-indigo-500 focus:outline-none">
-                <button type="submit"
-                        id="ai-tutor-followup-btn"
-                        class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-4 py-2.5 rounded-xl text-xs transition flex items-center gap-1.5 flex-shrink-0">
-                    <i class="fa-solid fa-paper-plane"></i>
-                    <span>Preguntar</span>
-                </button>
-            </form>
+            {# Footer fijo con input y botón cerrar prominente #}
+            <div class="p-3 sm:p-4 border-t border-slate-800 bg-slate-950/90 shrink-0 space-y-2.5">
+                <form onsubmit="event.preventDefault(); window.sendAiTutorFollowup();" class="flex gap-2">
+                    <input type="text"
+                           id="ai-tutor-followup-input"
+                           placeholder="Pregunta adicional sobre este caso (ej. ¿Por qué no aplica otra opción?)..."
+                           class="flex-1 rounded-xl bg-slate-900 border border-slate-700/80 px-3.5 py-2 text-xs text-white placeholder-slate-400 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none">
+                    <button type="submit"
+                            id="ai-tutor-followup-btn"
+                            class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-3.5 py-2 rounded-xl text-xs transition flex items-center gap-1.5 shrink-0 shadow-md shadow-indigo-600/30">
+                        <i class="fa-solid fa-paper-plane text-[11px]"></i>
+                        <span class="hidden sm:inline">Preguntar</span>
+                    </button>
+                </form>
+
+                <div class="flex items-center justify-between pt-1 gap-2">
+                    <span class="text-slate-500 text-[11px] hidden sm:flex items-center gap-1">
+                        <i class="fa-regular fa-keyboard text-[10px]"></i> Presiona <kbd class="px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 font-mono text-[10px] border border-slate-700">ESC</kbd> o clic afuera para cerrar
+                    </span>
+                    <button type="button"
+                            onclick="window.closeAiTutorModal()"
+                            class="w-full sm:w-auto ml-auto px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 active:bg-slate-600 text-slate-200 hover:text-white font-bold text-xs transition flex items-center justify-center gap-2 border border-slate-700/80 shadow-sm">
+                        <i class="fa-solid fa-xmark text-rose-400 text-sm"></i>
+                        <span>Cerrar Ventana</span>
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -430,8 +452,9 @@
         const input = document.getElementById('ai-tutor-followup-input');
         if (input) input.value = '';
         modal.classList.remove('hidden');
+        document.body.classList.add('overflow-hidden');
         sub.textContent = 'Pregunta #' + questionId + (selectedOption ? ' • Opción marcada: ' + selectedOption : '');
-        body.innerHTML = '<div class="flex items-center gap-3 text-indigo-300 py-8 justify-center"><i class="fa-solid fa-spinner fa-spin text-xl text-amber-400"></i><span class="font-bold">Analizando el caso situacional, distractores y base legal...</span></div>';
+        body.innerHTML = '<div class="flex items-center gap-3 text-indigo-300 py-12 justify-center"><i class="fa-solid fa-spinner fa-spin text-xl text-amber-400"></i><span class="font-bold">Analizando el caso situacional, distractores y base legal...</span></div>';
         try {
             const resp = await fetch('/ia/tutor-pregunta', {
                 method: 'POST',
@@ -489,8 +512,19 @@
         }
     };
     window.closeAiTutorModal = function() {
-        document.getElementById('ai-tutor-modal').classList.add('hidden');
+        const modal = document.getElementById('ai-tutor-modal');
+        if (modal) modal.classList.add('hidden');
+        document.body.classList.remove('overflow-hidden');
     };
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' || e.key === 'Esc') {
+            const modal = document.getElementById('ai-tutor-modal');
+            if (modal && !modal.classList.contains('hidden')) {
+                window.closeAiTutorModal();
+            }
+        }
+    });
 
     {# Reproductor Global de Audio Neuronal (MP3 Natural - Calidad Estudio sin Cortes en Celulares) #}
     window.DianNeuralAudio = {
