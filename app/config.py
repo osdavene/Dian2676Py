@@ -30,8 +30,17 @@ class Settings:
     )
 
     BREVO_API_KEY: str = os.getenv("BREVO_API_KEY", "")
-    MAIL_FROM_ADDRESS: str = os.getenv("MAIL_FROM_ADDRESS", "no-reply@dian2676.com")
+
+    # Configuración de Correo Electrónico (Amazon SES / SMTP)
+    MAIL_MAILER: str = os.getenv("MAIL_MAILER", "smtp")
+    MAIL_HOST: str = os.getenv("MAIL_HOST") or os.getenv("EMAIL_HOST", "email-smtp.us-east-1.amazonaws.com")
+    MAIL_PORT: int = int(os.getenv("MAIL_PORT") or os.getenv("EMAIL_PORT", "587"))
+    MAIL_USERNAME: str = os.getenv("MAIL_USERNAME") or os.getenv("EMAIL_HOST_USER", "")
+    MAIL_PASSWORD: str = os.getenv("MAIL_PASSWORD") or os.getenv("EMAIL_HOST_PASSWORD", "")
+    MAIL_ENCRYPTION: str = os.getenv("MAIL_ENCRYPTION") or os.getenv("EMAIL_USE_TLS", "tls")
+    MAIL_FROM_ADDRESS: str = os.getenv("MAIL_FROM_ADDRESS") or os.getenv("DEFAULT_FROM_EMAIL", "notificaciones@servigest.online")
     MAIL_FROM_NAME: str = os.getenv("MAIL_FROM_NAME", "Simulador DIAN 2676")
+    MAIL_ADMIN_RECIPIENT: str = os.getenv("MAIL_ADMIN_RECIPIENT", "vega.oscar@live.com")
 
     SUPPORT_WHATSAPP_PHONE: str = os.getenv("SUPPORT_WHATSAPP_PHONE", "573192570557")
 

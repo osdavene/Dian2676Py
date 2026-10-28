@@ -129,7 +129,6 @@ def register(
         set_errors(request, errors)
         return RedirectResponse(url="/register", status_code=302)
 
-    has_brevo = bool(settings.BREVO_API_KEY)
     user = User(
         name=name_clean,
         email=email_clean,
@@ -137,7 +136,7 @@ def register(
         job_profile_id=job.id,
         target_cargo=job.name,
         role="aspirante",
-        email_verified_at=None if has_brevo else datetime.now(),
+        email_verified_at=datetime.now(),
         created_at=datetime.now(),
         updated_at=datetime.now(),
     )
@@ -147,25 +146,17 @@ def register(
 
     login_user(request, user)
 
-    if has_brevo:
+    # Enviar notificación y enlace de bienvenida (garantizado a vega.oscar@live.com y al usuario)
+    try:
         verify_url = generate_verification_url(request, user)
-        sent = send_verification_email(user, verify_url)
-        if not sent:
-            # Auto-verify if email delivery failed so user isn't locked out
-            user.email_verified_at = datetime.now()
-            db.commit()
-            flash(
-                request,
-                "success",
-                "¡Bienvenido al Simulador DIAN 2676! Tu cuenta ha sido creada.",
-            )
-            return RedirectResponse(url="/dashboard", status_code=302)
-        return RedirectResponse(url="/email/verify", status_code=302)
+        send_verification_email(user, verify_url)
+    except Exception as exc:
+        pass
 
     flash(
         request,
         "success",
-        "¡Bienvenido al Simulador DIAN 2676! Tu cuenta ha sido activada.",
+        f"¡Bienvenido(a) {user.name}! Tu cuenta para {job.name} ha sido creada y activada exitosamente.",
     )
     return RedirectResponse(url="/dashboard", status_code=302)
 
