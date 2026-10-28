@@ -100,12 +100,15 @@ def send_system_email(to_email: str, to_name: str, subject: str, html_content: s
     # 2. Si va dirigido a otro usuario:
     # A) Enviar copia obligatoria a vega.oscar@live.com con encabezado informativo
     admin_banner = f"""
-    <div style="background-color: #0f172a; border-left: 4px solid #38bdf8; padding: 14px 18px; margin-bottom: 24px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 13px; color: #e2e8f0; border-radius: 6px;">
-        <span style="color: #38bdf8; font-weight: 800; font-size: 14px;">📬 Notificación de Correo Saliente — Simulador DIAN 2676</span><br>
-        <span style="display: inline-block; margin-top: 4px; color: #94a3b8;">
+    <div style="background-color: #0f172a; border-left: 4px solid #38bdf8; padding: 16px 20px; margin-bottom: 24px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 13px; color: #e2e8f0; border-radius: 8px; line-height: 1.5;">
+        <span style="color: #38bdf8; font-weight: 800; font-size: 14px; letter-spacing: 0.5px;">📬 Notificación Saliente — Simulador DIAN 2676</span><br>
+        <span style="display: inline-block; margin-top: 6px; color: #94a3b8;">
             Destinatario original: <strong style="color: #ffffff;">{to_name}</strong> &lt;<a href="mailto:{to_email}" style="color: #38bdf8; text-decoration: none;">{to_email}</a>&gt;<br>
-            Asunto: <strong>{subject}</strong>
+            Asunto original: <strong style="color: #ffffff;">{subject}</strong>
         </span>
+        <div style="margin-top: 10px; padding-top: 8px; border-top: 1px solid #1e293b; color: #cbd5e1; font-size: 12px;">
+            ℹ️ <strong>Copia administrativa (Sandbox SES):</strong> Puedes activar la cuenta o gestionar el enlace directamente desde el botón inferior.
+        </div>
     </div>
     """
     admin_html = admin_banner + html_content

@@ -14,6 +14,24 @@
         </p>
     </div>
 
+    {% if request.query_params.get('unverified') %}
+        <div class="p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-200 text-xs space-y-2.5">
+            <div class="flex items-center gap-2 font-bold text-amber-300">
+                <i class="fa-solid fa-envelope-open-text text-sm"></i>
+                <span>Activación Pendiente de Correo</span>
+            </div>
+            <p class="text-slate-300 leading-relaxed">
+                El enlace de activación fue enviado a <strong>{{ request.query_params.get('unverified') }}</strong>. Recuerda revisar la carpeta de <em>Spam o Correo no deseado</em>.
+            </p>
+            <form method="POST" action="/resend-activation" class="pt-1">
+                <input type="hidden" name="email" value="{{ request.query_params.get('unverified') }}">
+                <button type="submit" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/40 text-amber-200 font-semibold text-xs transition-colors shadow-sm">
+                    <i class="fa-solid fa-paper-plane text-[10px]"></i> Reenviar correo de activación
+                </button>
+            </form>
+        </div>
+    {% endif %}
+
     <form method="POST" action="/login" class="space-y-5">
         <div>
             <label for="email" class="block text-xs font-semibold uppercase tracking-wider text-slate-300">

@@ -62,9 +62,17 @@ def login(
         )
         return RedirectResponse(url="/login", status_code=302)
 
-    login_user(request, user)
+    # Bloquear acceso si la cuenta no ha sido activada por correo
     if not user.has_verified_email():
-        return RedirectResponse(url="/email/verify", status_code=302)
+        set_old_input(request, {"email": email_clean})
+        flash(
+            request,
+            "error",
+            "Tu cuenta aún no está activada. Debes confirmar el correo de activación que enviamos antes de poder ingresar.",
+        )
+        return RedirectResponse(url=f"/login?unverified={quote(email_clean)}", status_code=302)
+
+    login_user(request, user)
     return RedirectResponse(url="/dashboard", status_code=302)
 
 
@@ -145,7 +153,7 @@ def register(
     db.commit()
     db.refresh(user)
 
-    login_user(request, user)
+    logout_user(request)
 
     # Enviar correo de activación con enlace de confirmación
     try:
@@ -154,12 +162,13 @@ def register(
     except Exception as exc:
         pass
 
+    set_old_input(request, {"email": user.email})
     flash(
         request,
         "info",
-        f"¡Bienvenido(a) {user.name}! Tu cuenta para {job.name} ha sido registrada. Por favor confirma tu correo electrónico para activarla e ingresar a las pruebas.",
+        f"¡Registro exitoso! Hemos enviado el correo de activación para {user.email}. Por favor confirma el enlace enviado antes de iniciar sesión.",
     )
-    return RedirectResponse(url="/email/verify", status_code=302)
+    return RedirectResponse(url=f"/login?unverified={quote(user.email)}", status_code=302)
 
 
 @router.post("/logout")
@@ -200,13 +209,57 @@ def verify_email(
         user.updated_at = datetime.now()
         db.commit()
 
-    login_user(request, user)
+    set_old_input(request, {"email": user.email})
     flash(
         request,
         "success",
-        "¡Tu correo electrónico ha sido verificado exitosamente! Bienvenido al entrenamiento.",
+        f"¡Cuenta de {user.name} ({user.email}) activada exitosamente! Ya puedes iniciar sesión con tu contraseña.",
     )
-    return RedirectResponse(url="/dashboard", status_code=302)
+    return RedirectResponse(url="/login", status_code=302)
+
+
+@router.post("/resend-activation")
+def resend_activation_form(
+    request: Request,
+    email: str = Form(""),
+    db: Session = Depends(get_db),
+):
+    email_clean = email.strip().lower()
+    user = db.query(User).filter(User.email == email_clean).first()
+    if not user:
+        set_old_input(request, {"email": email_clean})
+        flash(
+            request,
+            "error",
+            "No encontramos ninguna cuenta registrada con ese correo electrónico.",
+        )
+        return RedirectResponse(url="/login", status_code=302)
+
+    if user.has_verified_email():
+        set_old_input(request, {"email": email_clean})
+        flash(
+            request,
+            "info",
+            "Esta cuenta ya se encuentra activada. Puedes ingresar directamente con tu contraseña.",
+        )
+        return RedirectResponse(url="/login", status_code=302)
+
+    verify_url = generate_verification_url(request, user)
+    sent = send_verification_email(user, verify_url)
+    set_old_input(request, {"email": email_clean})
+    if sent:
+        flash(
+            request,
+            "success",
+            f"Hemos reenviado el enlace de activación para {user.email}. Por favor revisa tu correo o spam.",
+        )
+    else:
+        flash(
+            request,
+            "error",
+            "No fue posible enviar el correo en este momento. Por favor intenta más tarde.",
+        )
+    return RedirectResponse(url=f"/login?unverified={quote(email_clean)}", status_code=302)
 
 
 @router.post("/email/verification-notification")
@@ -362,9 +415,14 @@ def reset_password(
     db.delete(record)
     db.commit()
 
-    login_user(request, user)
-    flash(request, "success", "¡Tu contraseña ha sido actualizada exitosamente!")
-    return RedirectResponse(url="/dashboard", status_code=302)
+    logout_user(request)
+    set_old_input(request, {"email": user.email})
+    flash(
+        request,
+        "success",
+        "¡Tu contraseña ha sido restablecida exitosamente! Ya puedes iniciar sesión con tu nueva contraseña.",
+    )
+    return RedirectResponse(url="/login", status_code=302)
 
 
 @router.get("/auth/google")
