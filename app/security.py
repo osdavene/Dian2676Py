@@ -78,13 +78,19 @@ def get_email_verification_hash(email: str) -> str:
     return hashlib.sha1(email.lower().strip().encode("utf-8")).hexdigest()
 
 
+def get_base_url_from_request(request: Request) -> str:
+    proto = request.headers.get("x-forwarded-proto") or request.url.scheme
+    host = request.headers.get("x-forwarded-host") or request.headers.get("host")
+    if host:
+        return f"{proto}://{host}".rstrip("/")
+    if settings.APP_URL and "127.0.0.1" not in settings.APP_URL and "localhost" not in settings.APP_URL:
+        return settings.APP_URL.rstrip("/")
+    return str(request.base_url).rstrip("/")
+
+
 def generate_verification_url(request: Request, user: User) -> str:
     h = get_email_verification_hash(user.email)
-    base = (
-        settings.APP_URL.rstrip("/")
-        if settings.APP_URL and "127.0.0.1" not in settings.APP_URL
-        else str(request.base_url).rstrip("/")
-    )
+    base = get_base_url_from_request(request)
     return f"{base}/email/verify/{user.id}/{h}"
 
 

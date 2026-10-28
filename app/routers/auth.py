@@ -19,6 +19,7 @@ from app.security import (
     set_old_input,
     get_email_verification_hash,
     generate_verification_url,
+    get_base_url_from_request,
 )
 from app.mail import (
     send_verification_email,
@@ -136,7 +137,7 @@ def register(
         job_profile_id=job.id,
         target_cargo=job.name,
         role="aspirante",
-        email_verified_at=datetime.now(),
+        email_verified_at=None,
         created_at=datetime.now(),
         updated_at=datetime.now(),
     )
@@ -146,7 +147,7 @@ def register(
 
     login_user(request, user)
 
-    # Enviar notificación y enlace de bienvenida (garantizado a vega.oscar@live.com y al usuario)
+    # Enviar correo de activación con enlace de confirmación
     try:
         verify_url = generate_verification_url(request, user)
         send_verification_email(user, verify_url)
@@ -155,10 +156,10 @@ def register(
 
     flash(
         request,
-        "success",
-        f"¡Bienvenido(a) {user.name}! Tu cuenta para {job.name} ha sido creada y activada exitosamente.",
+        "info",
+        f"¡Bienvenido(a) {user.name}! Tu cuenta para {job.name} ha sido registrada. Por favor confirma tu correo electrónico para activarla e ingresar a las pruebas.",
     )
-    return RedirectResponse(url="/dashboard", status_code=302)
+    return RedirectResponse(url="/email/verify", status_code=302)
 
 
 @router.post("/logout")
@@ -221,15 +222,11 @@ def resend_verification(request: Request, db: Session = Depends(get_db)):
     if sent:
         flash(request, "status", "verification-link-sent")
     else:
-        # If no mail server configured, verify directly so the user can proceed
-        user.email_verified_at = datetime.now()
-        db.commit()
         flash(
             request,
-            "success",
-            "Cuenta verificada automáticamente (entorno local).",
+            "error",
+            "No fue posible reenviar el correo en este momento. Por favor verifica tu conexión o intenta de nuevo.",
         )
-        return RedirectResponse(url="/dashboard", status_code=302)
 
     return RedirectResponse(url="/email/verify", status_code=302)
 
@@ -276,11 +273,7 @@ def send_reset_link(
         )
     db.commit()
 
-    base = (
-        settings.APP_URL.rstrip("/")
-        if settings.APP_URL and "127.0.0.1" not in settings.APP_URL
-        else str(request.base_url).rstrip("/")
-    )
+    base = get_base_url_from_request(request)
     reset_url = f"{base}/reset-password/{raw_token}?{urlencode({'email': email_clean})}"
     send_password_reset_email(user, reset_url)
 
@@ -536,7 +529,7 @@ def complete_google_profile(
     request.session.pop("google_pending_user", None)
     login_user(request, user)
 
-    base = str(request.base_url).rstrip("/")
+    base = get_base_url_from_request(request)
     send_welcome_email(user, job.name, f"{base}/dashboard")
 
     flash(

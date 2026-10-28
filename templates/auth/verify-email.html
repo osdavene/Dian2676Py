@@ -20,8 +20,14 @@
         <div class="p-4 rounded-xl bg-emerald-950/60 border border-emerald-500/40 text-emerald-200 text-xs flex items-start gap-3">
             <i class="fa-solid fa-circle-check text-emerald-400 text-base mt-0.5"></i>
             <div>
-                <p class="font-bold text-emerald-300">Correo reenviado</p>
-                <p class="mt-0.5">{{ flashes.get('status') }}</p>
+                <p class="font-bold text-emerald-300">Correo enviado</p>
+                <p class="mt-0.5">
+                    {% if flashes.get('status') == 'verification-link-sent' %}
+                        Hemos enviado un nuevo enlace de activación a tu correo electrónico. Por favor revisa tu bandeja de entrada o la carpeta de spam.
+                    {% else %}
+                        {{ flashes.get('status') }}
+                    {% endif %}
+                </p>
             </div>
         </div>
     {% endif %}
