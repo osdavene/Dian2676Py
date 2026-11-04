@@ -15,6 +15,7 @@ class Settings:
     APP_DEBUG: bool = os.getenv("APP_DEBUG", "true").lower() in ("true", "1", "yes")
     APP_URL: str = os.getenv("APP_URL", "http://127.0.0.1:8000")
     APP_TIMEZONE: str = os.getenv("APP_TIMEZONE", "America/Bogota")
+    SESSION_LIFETIME_SECONDS: int = int(os.getenv("SESSION_LIFETIME_SECONDS", "1800"))  # 30 minutos (1800s)
 
     DB_CONNECTION: str = os.getenv("DB_CONNECTION", "pgsql").lower()
     DB_HOST: str = os.getenv("DB_HOST", "127.0.0.1")

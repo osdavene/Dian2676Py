@@ -35,6 +35,7 @@ def verify_password(plain_password: str, hashed_password: Optional[str]) -> bool
 
 def login_user(request: Request, user: User) -> None:
     request.session["user_id"] = int(user.id)
+    request.session["last_activity"] = int(time.time())
     if "csrf_token" not in request.session:
         request.session["csrf_token"] = secrets.token_hex(16)
 
@@ -47,6 +48,23 @@ def get_current_user(request: Request, db: Session) -> Optional[User]:
     user_id = request.session.get("user_id")
     if not user_id:
         return None
+
+    last_activity = request.session.get("last_activity")
+    now = int(time.time())
+    timeout = getattr(settings, "SESSION_LIFETIME_SECONDS", 1800)
+
+    # Si pasaron más de 30 minutos sin actividad, cerrar sesión automáticamente
+    if last_activity and (now - last_activity > timeout):
+        request.session.clear()
+        flash(
+            request,
+            "info",
+            "Tu sesión se cerró automáticamente por inactividad (30 minutos sin uso). Por favor inicia sesión nuevamente.",
+        )
+        return None
+
+    # Refrescar marca de tiempo en cada petición activa
+    request.session["last_activity"] = now
     return db.query(User).filter(User.id == user_id).first()
 
 

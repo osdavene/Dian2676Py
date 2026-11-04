@@ -76,7 +76,7 @@ app.add_middleware(
     SessionMiddleware,
     secret_key=settings.SECRET_KEY,
     session_cookie="dian2676_py_session",
-    max_age=86400 * 7,
+    max_age=settings.SESSION_LIFETIME_SECONDS,
     same_site="lax",
 )
 
