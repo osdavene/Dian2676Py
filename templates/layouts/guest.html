@@ -7,7 +7,7 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="csrf-token" content="{{ csrf_token }}">
-    <title>{{ settings.APP_NAME }} — {% block title %}Acceso{% endblock %}</title>
+    <title>{{ settings.APP_NAME }} — {% block title %}Acceso{% endblock %} | ServiGest</title>
 
     <!-- Fuentes Google -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -26,8 +26,14 @@
 <body class="min-h-full font-sans antialiased text-slate-100 bg-gradient-to-br from-slate-950 via-slate-900 to-blue-950 flex flex-col justify-center py-6 px-4 sm:py-12 sm:px-6 lg:px-8 touch-action-manipulation">
     
     <div class="sm:mx-auto sm:w-full sm:max-w-md text-center mb-5">
-        <div class="inline-flex items-center justify-center p-3 bg-blue-600/20 border border-blue-500/30 rounded-2xl shadow-xl shadow-blue-500/10 mb-4 backdrop-blur-md">
-            <i class="fa-solid fa-scale-balanced text-3xl text-blue-400"></i>
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/35 text-emerald-300 text-xs font-bold mb-3 shadow-sm backdrop-blur-md">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+            Plataforma de Entrenamiento ServiGest
+        </div>
+        <div>
+            <div class="inline-flex items-center justify-center p-3 bg-blue-600/20 border border-blue-500/30 rounded-2xl shadow-xl shadow-blue-500/10 mb-4 backdrop-blur-md">
+                <i class="fa-solid fa-scale-balanced text-3xl text-blue-400"></i>
+            </div>
         </div>
         <h2 class="text-3xl font-black tracking-tight text-white uppercase">
             CONCURSO DIAN 2676
@@ -67,7 +73,7 @@
         </div>
 
         <p class="mt-6 text-center text-xs text-slate-400">
-            &copy; {{ now.year }} Simulador DIAN 2676 &bull; Basado en acuerdos de convocatoria y pruebas reales
+            &copy; {{ now.year }} <strong class="text-slate-300 font-semibold">Simulador DIAN 2676</strong> &bull; Respaldado por <strong class="text-emerald-400 font-bold">ServiGest Soluciones</strong>
         </p>
     </div>
 

@@ -100,14 +100,14 @@ def send_verification_email(user: User, verify_url: str) -> bool:
     html = f"""
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #f8fafc; padding: 30px; border-radius: 16px; border: 1px solid #e2e8f0;">
         <div style="text-align: center; margin-bottom: 24px;">
-            <div style="display: inline-block; background-color: #1e3a8a; color: #ffffff; font-weight: 900; padding: 12px 24px; border-radius: 12px; font-size: 18px; letter-spacing: 1px;">
-                SIMULADOR CNSC DIAN 2676
+            <div style="display: inline-block; background-color: #0f172a; color: #ffffff; font-weight: 900; padding: 12px 24px; border-radius: 12px; font-size: 17px; letter-spacing: 0.5px; border: 1px solid #1e293b;">
+                SIMULADOR CNSC DIAN 2676 <span style="color: #10b981; font-weight: 800; font-size: 13px; margin-left: 6px;">| SERVIGEST</span>
             </div>
         </div>
         <div style="background-color: #ffffff; padding: 30px; border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.04);">
             <h2 style="color: #0f172a; margin-top: 0;">¡Hola, {user.name}! 👋</h2>
             <p style="color: #475569; font-size: 15px; line-height: 1.6;">
-                Gracias por registrarte en la Plataforma de Entrenamiento Intensivo para el <strong>Concurso de Méritos DIAN 2676</strong>.
+                Gracias por registrarte en la Plataforma de Entrenamiento Intensivo para el <strong>Concurso de Méritos DIAN 2676</strong>, desarrollada por <strong>ServiGest</strong>.
                 Para activar tu cuenta y acceder a los simulacros cronometrados, por favor confirma tu dirección de correo electrónico haciendo clic en el siguiente botón:
             </p>
             <div style="text-align: center; margin: 30px 0;">
@@ -120,12 +120,16 @@ def send_verification_email(user: User, verify_url: str) -> bool:
                 <a href="{verify_url}" style="color: #2563eb; word-break: break-all;">{verify_url}</a>
             </p>
         </div>
+        <div style="text-align: center; margin-top: 20px; font-size: 11px; color: #94a3b8;">
+            &copy; 2026 ServiGest Soluciones Tecnológicas &bull; Plataforma Especializada Concurso DIAN 2676<br>
+            <a href="https://dian2676.servigest.online" style="color: #3b82f6; text-decoration: none;">dian2676.servigest.online</a>
+        </div>
     </div>
     """
     return send_system_email(
         user.email,
         user.name,
-        "Activa tu cuenta - Simulador DIAN 2676",
+        "Activa tu cuenta - Simulador DIAN 2676 | ServiGest",
         html,
     )
 
@@ -134,14 +138,14 @@ def send_password_reset_email(user: User, reset_url: str) -> bool:
     html = f"""
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #f8fafc; padding: 30px; border-radius: 16px; border: 1px solid #e2e8f0;">
         <div style="text-align: center; margin-bottom: 24px;">
-            <div style="display: inline-block; background-color: #1e3a8a; color: #ffffff; font-weight: 900; padding: 12px 24px; border-radius: 12px; font-size: 18px; letter-spacing: 1px;">
-                SIMULADOR CNSC DIAN 2676
+            <div style="display: inline-block; background-color: #0f172a; color: #ffffff; font-weight: 900; padding: 12px 24px; border-radius: 12px; font-size: 17px; letter-spacing: 0.5px; border: 1px solid #1e293b;">
+                SIMULADOR CNSC DIAN 2676 <span style="color: #10b981; font-weight: 800; font-size: 13px; margin-left: 6px;">| SERVIGEST</span>
             </div>
         </div>
         <div style="background-color: #ffffff; padding: 30px; border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.04);">
             <h2 style="color: #0f172a; margin-top: 0;">Recuperación de Contraseña 🔐</h2>
             <p style="color: #475569; font-size: 15px; line-height: 1.6;">
-                Hola <strong>{user.name}</strong>, recibimos una solicitud para restablecer la contraseña de tu cuenta en el Simulador DIAN 2676.
+                Hola <strong>{user.name}</strong>, recibimos una solicitud para restablecer la contraseña de tu cuenta en el Simulador DIAN 2676 (ServiGest).
             </p>
             <div style="text-align: center; margin: 30px 0;">
                 <a href="{reset_url}" style="background-color: #2563eb; color: #ffffff; text-decoration: none; padding: 14px 28px; border-radius: 10px; font-weight: bold; font-size: 15px; display: inline-block;">
@@ -156,12 +160,16 @@ def send_password_reset_email(user: User, reset_url: str) -> bool:
                 <a href="{reset_url}" style="color: #2563eb; word-break: break-all;">{reset_url}</a>
             </p>
         </div>
+        <div style="text-align: center; margin-top: 20px; font-size: 11px; color: #94a3b8;">
+            &copy; 2026 ServiGest Soluciones Tecnológicas &bull; Plataforma Especializada Concurso DIAN 2676<br>
+            <a href="https://dian2676.servigest.online" style="color: #3b82f6; text-decoration: none;">dian2676.servigest.online</a>
+        </div>
     </div>
     """
     return send_system_email(
         user.email,
         user.name,
-        "Restablecer Contraseña - Simulador DIAN 2676",
+        "Restablecer Contraseña - Simulador DIAN 2676 | ServiGest",
         html,
     )
 
@@ -170,14 +178,14 @@ def send_welcome_email(user: User, cargo_name: str, dashboard_url: str) -> bool:
     html = f"""
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #f8fafc; padding: 30px; border-radius: 16px; border: 1px solid #e2e8f0;">
         <div style="text-align: center; margin-bottom: 24px;">
-            <div style="display: inline-block; background-color: #1e3a8a; color: #ffffff; font-weight: 900; padding: 12px 24px; border-radius: 12px; font-size: 18px; letter-spacing: 1px;">
-                SIMULADOR CNSC DIAN 2676
+            <div style="display: inline-block; background-color: #0f172a; color: #ffffff; font-weight: 900; padding: 12px 24px; border-radius: 12px; font-size: 17px; letter-spacing: 0.5px; border: 1px solid #1e293b;">
+                SIMULADOR CNSC DIAN 2676 <span style="color: #10b981; font-weight: 800; font-size: 13px; margin-left: 6px;">| SERVIGEST</span>
             </div>
         </div>
         <div style="background-color: #ffffff; padding: 30px; border-radius: 12px;">
             <h2 style="color: #0f172a; margin-top: 0;">¡Bienvenido(a) a bordo, {user.name}! 🚀</h2>
             <p style="color: #475569; font-size: 15px; line-height: 1.6;">
-                Tu cuenta ha sido configurada exitosamente para el cargo objetivo: <strong>{cargo_name}</strong>.
+                Tu cuenta ha sido configurada exitosamente para el cargo objetivo: <strong>{cargo_name}</strong> en el <strong>Simulador DIAN 2676 | ServiGest</strong>.
             </p>
             <div style="text-align: center; margin: 28px 0;">
                 <a href="{dashboard_url}" style="background-color: #10b981; color: #ffffff; text-decoration: none; padding: 14px 28px; border-radius: 10px; font-weight: bold; font-size: 15px; display: inline-block;">
@@ -185,11 +193,15 @@ def send_welcome_email(user: User, cargo_name: str, dashboard_url: str) -> bool:
                 </a>
             </div>
         </div>
+        <div style="text-align: center; margin-top: 20px; font-size: 11px; color: #94a3b8;">
+            &copy; 2026 ServiGest Soluciones Tecnológicas &bull; Plataforma Especializada Concurso DIAN 2676<br>
+            <a href="https://dian2676.servigest.online" style="color: #3b82f6; text-decoration: none;">dian2676.servigest.online</a>
+        </div>
     </div>
     """
     return send_system_email(
         user.email,
         user.name,
-        "¡Bienvenido al Simulador DIAN 2676!",
+        "¡Bienvenido al Simulador DIAN 2676 | ServiGest!",
         html,
     )
