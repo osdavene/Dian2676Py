@@ -28,6 +28,7 @@ jobs:
             SITE_USER="dian2676"
 
             sudo git config --global --add safe.directory "$SITE_DIR"
+            sudo -u "$SITE_USER" rm -f "$SITE_DIR/.git/index.lock" 2>/dev/null || true
 
             sudo -u "$SITE_USER" bash << 'EOF'
             set -e
