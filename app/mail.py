@@ -1,12 +1,4 @@
 import logging
-import httpx
-from app.config import settings
-from app.models import User
-
-logger = logging.getLogger(__name__)
-
-
-import logging
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -84,46 +76,24 @@ def _send_brevo_email(to_email: str, to_name: str, subject: str, html_content: s
 
 def send_system_email(to_email: str, to_name: str, subject: str, html_content: str) -> bool:
     """
-    Envía un correo del sistema garantizando que SIEMPRE llegue una copia a vega.oscar@live.com
-    (y al destinatario si no está restringido por el Sandbox de Amazon SES).
+    Envía un correo directamente al destinatario especificado (to_email).
+    Utiliza Amazon SES (SMTP) como proveedor principal y Brevo como respaldo.
     """
-    admin_target = getattr(settings, "MAIL_ADMIN_RECIPIENT", "vega.oscar@live.com").strip().lower()
     clean_to = (to_email or "").strip().lower()
+    if not clean_to:
+        logger.warning("Intento de envío de correo sin dirección de destino.")
+        return False
 
-    # 1. Si el correo va dirigido a vega.oscar@live.com, enviarlo directo
-    if clean_to == admin_target:
-        sent = _send_smtp_message(clean_to, subject, html_content)
-        if not sent:
-            sent = _send_brevo_email(clean_to, to_name, subject, html_content)
-        return sent
+    sent = _send_smtp_message(clean_to, subject, html_content)
+    if not sent:
+        logger.info(f"Fallo envío SMTP a {clean_to}, intentando proveedor secundario (Brevo)...")
+        sent = _send_brevo_email(clean_to, to_name, subject, html_content)
 
-    # 2. Si va dirigido a otro usuario:
-    # A) Enviar copia obligatoria a vega.oscar@live.com con encabezado informativo
-    admin_banner = f"""
-    <div style="background-color: #0f172a; border-left: 4px solid #38bdf8; padding: 16px 20px; margin-bottom: 24px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 13px; color: #e2e8f0; border-radius: 8px; line-height: 1.5;">
-        <span style="color: #38bdf8; font-weight: 800; font-size: 14px; letter-spacing: 0.5px;">📬 Notificación Saliente — Simulador DIAN 2676</span><br>
-        <span style="display: inline-block; margin-top: 6px; color: #94a3b8;">
-            Destinatario original: <strong style="color: #ffffff;">{to_name}</strong> &lt;<a href="mailto:{to_email}" style="color: #38bdf8; text-decoration: none;">{to_email}</a>&gt;<br>
-            Asunto original: <strong style="color: #ffffff;">{subject}</strong>
-        </span>
-        <div style="margin-top: 10px; padding-top: 8px; border-top: 1px solid #1e293b; color: #cbd5e1; font-size: 12px;">
-            ℹ️ <strong>Copia administrativa (Sandbox SES):</strong> Puedes activar la cuenta o gestionar el enlace directamente desde el botón inferior.
-        </div>
-    </div>
-    """
-    admin_html = admin_banner + html_content
-    admin_subject = f"[DIAN 2676 -> {to_email}] {subject}"
-    admin_sent = _send_smtp_message(admin_target, admin_subject, admin_html)
-    if not admin_sent:
-        _send_brevo_email(admin_target, "Oscar Vega", admin_subject, admin_html)
-
-    # B) Intentar enviar al destinatario original
-    user_sent = _send_smtp_message(clean_to, subject, html_content)
-    if not user_sent:
-        user_sent = _send_brevo_email(clean_to, to_name, subject, html_content)
-
-    # Si se entregó a vega.oscar@live.com o al usuario, consideramos la acción exitosa
-    return admin_sent or user_sent
+    if sent:
+        logger.info(f"Correo '{subject}' enviado exitosamente a {clean_to}")
+    else:
+        logger.error(f"No fue posible entregar el correo '{subject}' a {clean_to}")
+    return sent
 
 
 def send_verification_email(user: User, verify_url: str) -> bool:

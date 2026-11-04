@@ -40,7 +40,7 @@ class Settings:
     MAIL_ENCRYPTION: str = os.getenv("MAIL_ENCRYPTION") or os.getenv("EMAIL_USE_TLS", "tls")
     MAIL_FROM_ADDRESS: str = os.getenv("MAIL_FROM_ADDRESS") or os.getenv("DEFAULT_FROM_EMAIL", "notificaciones@servigest.online")
     MAIL_FROM_NAME: str = os.getenv("MAIL_FROM_NAME", "Simulador DIAN 2676")
-    MAIL_ADMIN_RECIPIENT: str = os.getenv("MAIL_ADMIN_RECIPIENT", "vega.oscar@live.com")
+    MAIL_ADMIN_RECIPIENT: str = os.getenv("MAIL_ADMIN_RECIPIENT", "")
 
     SUPPORT_WHATSAPP_PHONE: str = os.getenv("SUPPORT_WHATSAPP_PHONE", "573192570557")
 
