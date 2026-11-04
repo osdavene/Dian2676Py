@@ -434,48 +434,16 @@
         {% block content %}{% endblock %}
     </main>
 
-    {# Footer Oficial ServiGest #}
-    <footer class="border-t border-slate-900 bg-slate-950/90 py-8 text-xs text-slate-400 mt-auto">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex flex-col md:flex-row items-center justify-between gap-5 pb-6 border-b border-slate-900">
-                <div class="flex items-center gap-3">
-                    <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-emerald-600 via-teal-600 to-cyan-500 flex items-center justify-center text-white font-black text-sm shadow-lg shadow-emerald-500/25">
-                        SG
-                    </div>
-                    <div class="text-left">
-                        <div class="flex items-center gap-2">
-                            <span class="font-black text-white text-sm tracking-wide">ServiGest</span>
-                            <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 uppercase tracking-wider">
-                                Soluciones Tecnológicas
-                            </span>
-                        </div>
-                        <p class="text-[11px] text-slate-400 mt-0.5">
-                            Plataforma de Entrenamiento y Simulación Situacional CNSC &bull; Convocatoria DIAN 2676
-                        </p>
-                    </div>
-                </div>
-
-                <div class="flex flex-wrap items-center gap-4 text-xs">
-                    <a href="/soporte" target="_blank" rel="noopener noreferrer" 
-                       class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 font-semibold transition-all shadow-sm">
-                        <i class="fa-brands fa-whatsapp text-emerald-400 text-sm"></i>
-                        <span>Soporte Oficial ServiGest</span>
-                    </a>
-                    <span class="text-slate-700 hidden sm:inline">&bull;</span>
-                    <a href="https://dian2676.servigest.online" class="text-slate-400 hover:text-slate-200 transition-colors font-mono text-[11px] hidden sm:inline">
-                        dian2676.servigest.online
-                    </a>
-                </div>
-            </div>
-
-            <div class="pt-5 flex flex-col sm:flex-row items-center justify-between gap-2.5 text-[11px] text-slate-400 text-center sm:text-left">
-                <p>
-                    &copy; {{ now.year if now else '2026' }} <strong class="text-slate-300 font-semibold">ServiGest Soluciones Tecnológicas</strong>. Todos los derechos reservados.
-                </p>
-                <p class="text-slate-500">
-                    Estatuto Tributario Nacional &bull; Dec. 1165 de 2019 &bull; CPACA &bull; Código de Integridad DIAN
-                </p>
-            </div>
+    {# Footer #}
+    <footer class="border-t border-slate-900 bg-slate-950/80 py-5 text-center text-xs text-slate-500">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-1">
+            <p class="flex items-center justify-center gap-2 text-slate-400">
+                <span class="inline-flex items-center justify-center w-5 h-5 rounded-md bg-emerald-500/15 border border-emerald-500/30 text-[10px] font-black text-emerald-400">SG</span>
+                <span>&copy; {{ now.year if now else '2026' }} <strong class="text-slate-300 font-semibold">ServiGest</strong> &bull; Simulador Concurso DIAN Convocatoria 2676</span>
+            </p>
+            <p class="text-[11px] text-slate-600">
+                Estatuto Tributario Nacional &bull; Decreto 1165 de 2019 &bull; CPACA &bull; Código de Integridad DIAN
+            </p>
         </div>
     </footer>
 
