@@ -20,6 +20,8 @@ from app.security import (
     get_email_verification_hash,
     generate_verification_url,
     get_base_url_from_request,
+    make_sso_token,
+    verify_sso_token,
 )
 from app.mail import (
     send_verification_email,
@@ -425,6 +427,27 @@ def reset_password(
     return RedirectResponse(url="/login", status_code=302)
 
 
+
+@router.get("/auth/sso-transfer")
+def sso_transfer(
+    request: Request,
+    token: str = "",
+    next_url: str = "/dashboard",
+    db: Session = Depends(get_db),
+):
+    if not token:
+        return RedirectResponse(url="/login", status_code=302)
+    user_id = verify_sso_token(token)
+    if not user_id:
+        flash(request, "error", "El token de inicio de sesión ha expirado o no es válido.")
+        return RedirectResponse(url="/login", status_code=302)
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        return RedirectResponse(url="/login", status_code=302)
+    login_user(request, user)
+    safe_next = next_url if next_url.startswith("/") and not next_url.startswith("//") else "/dashboard"
+    return RedirectResponse(url=safe_next, status_code=302)
+
 @router.get("/auth/google")
 def redirect_to_google(request: Request):
     client_id = settings.GOOGLE_CLIENT_ID
@@ -511,6 +534,20 @@ def handle_google_callback(
                 existing.email_verified_at = datetime.now()
             existing.updated_at = datetime.now()
             db.commit()
+
+            canonical = (
+                settings.APP_URL.rstrip("/")
+                if settings.APP_URL and "127.0.0.1" not in settings.APP_URL and "localhost" not in settings.APP_URL
+                else ""
+            )
+            current_host = (request.headers.get("x-forwarded-host") or request.headers.get("host") or "").lower()
+            if canonical and "servigest.online" in canonical and "servigest.online" not in current_host:
+                token = make_sso_token(existing.id)
+                return RedirectResponse(
+                    url=f"{canonical}/auth/sso-transfer?token={token}&next_url=/dashboard",
+                    status_code=302,
+                )
+
             login_user(request, existing)
             return RedirectResponse(url="/dashboard", status_code=302)
 
@@ -585,8 +622,22 @@ def complete_google_profile(
     db.refresh(user)
 
     request.session.pop("google_pending_user", None)
-    login_user(request, user)
 
+    canonical = (
+        settings.APP_URL.rstrip("/")
+        if settings.APP_URL and "127.0.0.1" not in settings.APP_URL and "localhost" not in settings.APP_URL
+        else ""
+    )
+    current_host = (request.headers.get("x-forwarded-host") or request.headers.get("host") or "").lower()
+    if canonical and "servigest.online" in canonical and "servigest.online" not in current_host:
+        token = make_sso_token(user.id)
+        send_welcome_email(user, job.name, f"{canonical}/dashboard")
+        return RedirectResponse(
+            url=f"{canonical}/auth/sso-transfer?token={token}&next_url=/dashboard",
+            status_code=302,
+        )
+
+    login_user(request, user)
     base = get_base_url_from_request(request)
     send_welcome_email(user, job.name, f"{base}/dashboard")
 

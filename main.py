@@ -1,3 +1,8 @@
+from urllib.parse import quote
+from fastapi import Request
+from fastapi.responses import RedirectResponse
+from starlette.middleware.base import BaseHTTPMiddleware
+from app.security import make_sso_token
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.responses import FileResponse
@@ -23,6 +28,42 @@ async def lifespan(app: FastAPI):
     yield
 
 
+
+
+class CanonicalDomainMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request: Request, call_next):
+        canonical = (
+            settings.APP_URL.rstrip("/")
+            if settings.APP_URL and "127.0.0.1" not in settings.APP_URL and "localhost" not in settings.APP_URL
+            else ""
+        )
+        host = (request.headers.get("x-forwarded-host") or request.headers.get("host") or "").lower()
+        path = request.url.path
+
+        # If accessed through duckdns.org or any non-canonical domain
+        if canonical and "servigest.online" in canonical and "duckdns.org" in host:
+            # Let Google OAuth callback pass so token can be received and processed
+            if path.startswith("/auth/google"):
+                return await call_next(request)
+
+            # If user has an active session on duckdns, transfer them seamlessly to servigest.online
+            session = request.scope.get("session") or {}
+            user_id = session.get("user_id")
+            if user_id:
+                token = make_sso_token(user_id)
+                safe_path = path if path.startswith("/") and not path.startswith("//") else "/dashboard"
+                target = f"{canonical}/auth/sso-transfer?token={token}&next_url={quote(safe_path)}"
+                return RedirectResponse(url=target, status_code=302)
+
+            # If not logged in, permanently redirect to canonical servigest.online
+            target = f"{canonical}{path}"
+            if request.url.query:
+                target += f"?{request.url.query}"
+            return RedirectResponse(url=target, status_code=301)
+
+        return await call_next(request)
+
+
 app = FastAPI(
     title="Simulador Oficial Concurso DIAN 2676 — CNSC (Python / FastAPI)",
     description="Plataforma de preparación y simulacros para la Convocatoria DIAN 2676 conectada a PostgreSQL.",
@@ -30,6 +71,7 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+app.add_middleware(CanonicalDomainMiddleware)
 app.add_middleware(
     SessionMiddleware,
     secret_key=settings.SECRET_KEY,

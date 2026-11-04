@@ -1,3 +1,5 @@
+import hmac
+import time
 import hashlib
 import secrets
 from datetime import datetime
@@ -79,12 +81,12 @@ def get_email_verification_hash(email: str) -> str:
 
 
 def get_base_url_from_request(request: Request) -> str:
+    if settings.APP_URL and "127.0.0.1" not in settings.APP_URL and "localhost" not in settings.APP_URL:
+        return settings.APP_URL.rstrip("/")
     proto = request.headers.get("x-forwarded-proto") or request.url.scheme
     host = request.headers.get("x-forwarded-host") or request.headers.get("host")
     if host:
         return f"{proto}://{host}".rstrip("/")
-    if settings.APP_URL and "127.0.0.1" not in settings.APP_URL and "localhost" not in settings.APP_URL:
-        return settings.APP_URL.rstrip("/")
     return str(request.base_url).rstrip("/")
 
 
@@ -162,3 +164,30 @@ def ensure_default_users(db: Session) -> None:
         db.commit()
     except Exception:
         db.rollback()
+
+
+def make_sso_token(user_id: int) -> str:
+    timestamp = int(time.time())
+    data = f"{user_id}:{timestamp}"
+    signature = hmac.new(settings.SECRET_KEY.encode("utf-8"), data.encode("utf-8"), hashlib.sha256).hexdigest()
+    return f"{data}:{signature}"
+
+
+def verify_sso_token(token: str) -> Optional[int]:
+    try:
+        parts = token.split(":")
+        if len(parts) != 3:
+            return None
+        user_id = int(parts[0])
+        timestamp = int(parts[1])
+        signature = parts[2]
+        # Valid for 3 minutes (180 seconds)
+        if time.time() - timestamp > 180 or time.time() - timestamp < -10:
+            return None
+        data = f"{user_id}:{timestamp}"
+        expected = hmac.new(settings.SECRET_KEY.encode("utf-8"), data.encode("utf-8"), hashlib.sha256).hexdigest()
+        if hmac.compare_digest(signature, expected):
+            return user_id
+    except Exception:
+        return None
+    return None
